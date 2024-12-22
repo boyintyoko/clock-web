@@ -1,101 +1,133 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import { useBackground } from "./context/backgroundContext";
+import ChangeImageButton from "./components/changeImageButton";
+import ElectronicClock from "./components/electronicClock";
+import SecondHand from "./components/secondHand";
+import MinuteHand from "./components/minuteHand";
+import HourHand from "./components/hourHand";
 import Image from "next/image";
+import Setting from "./components/settingComponents/setting";
 
 export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+  const [user, setUser] = useState<string>("");
+  const [isDarkMode, setIsDarkMode] = useState<boolean>(false);
+  const [isSettingOpen, setIsSettingOpen] = useState<boolean>(false);
+  const { background } = useBackground();
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+  useEffect(() => {
+    setUser(background);
+  }, [background]);
+
+  useEffect(() => {
+    const isDarkMode = localStorage.getItem("isDarkMode");
+    if (!isDarkMode) return;
+    setIsDarkMode(JSON.parse(isDarkMode));
+  }, []);
+
+  const handleSwitchChange = () => {
+    setIsDarkMode(!isDarkMode);
+    localStorage.setItem("isDarkMode", !isDarkMode ? "true" : "false");
+  };
+
+  const checkImage = (user: string) => {
+    if (!user) {
+      return "url(/photo-1731331344306-ad4f902691a3.avif)";
+    }
+
+    if (user.startsWith("https")) {
+      return `url(${user})`;
+    }
+
+    return `url(/${user}.png)`;
+  };
+
+  return (
+    <div
+      className="flex flex-col justify-center items-center h-screen w-full bg-center bg-no-repeat bg-cover"
+      style={{
+        backgroundImage: checkImage(user),
+      }}
+    >
+      <label
+        className="absolute top-1 right-1 flex items-center cursor-pointer mb-4"
+        htmlFor="switch"
+        aria-label="Toggle dark mode"
+      >
+        <input
+          className="sr-only"
+          type="checkbox"
+          id="switch"
+          checked={isDarkMode}
+          onChange={handleSwitchChange}
+        />
+        <div
+          className={`w-14 h-8 rounded-2xl p-1 transition-all ${
+            isDarkMode ? "bg-gray-700" : "bg-gray-300"
+          }`}
+        >
+          <div
+            className={`h-6 w-6 bg-blue-500 rounded-full shadow-md transform transition-transform ${
+              isDarkMode ? "translate-x-6" : ""
+            }`}
+          ></div>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+      </label>
+
+      <ChangeImageButton />
+      <ElectronicClock isDarkMode={isDarkMode} />
+      <div
+        className={`relative flex justify-center items-center h-96 w-96 rounded-full border-8 ${
+          isDarkMode ? "border-black" : "border-white"
+        } shadow-2xl transition-all top-0 hover:top-1 bg-white bg-opacity-25 backdrop-blur-md hover:backdrop-blur-0`}
+      >
+        {[...Array(12)].map((_, index) => {
+          const number = (index + 12) % 12 || 12;
+          const rotation = index * 30;
+          return (
+            <div
+              key={index}
+              className={`absolute flex justify-center items-center w-10 ${
+                isDarkMode ? "text-black" : "text-white"
+              }  h-10 font-black text-xl`}
+              style={{
+                transform: `rotate(${rotation}deg) translate(0, -140px) rotate(-${rotation}deg)`,
+              }}
+            >
+              {number}
+            </div>
+          );
+        })}
+        <div
+          className={`dot h-5 w-5 rounded-full ${
+            isDarkMode ? "bg-black" : "bg-white"
+          }  z-10`}
+          style={{
+            boxShadow: `0px 0px 4px ${isDarkMode ? "#000" : "#fff"}`,
+          }}
+        ></div>
+        <SecondHand isDarkMode={isDarkMode} />
+        <MinuteHand isDarkMode={isDarkMode} />
+        <HourHand isDarkMode={isDarkMode} />
+      </div>
+      <button
+        className={`absolute bottom-2 hover:bottom-1 right-2 transition-all ${
+          isDarkMode ? "bg-black" : "bg-white"
+        } rounded-full p-3`}
+        onClick={() => setIsSettingOpen(!isSettingOpen)}
+      >
+        <Image
+          src={`${isDarkMode ? "/settingWhite.svg" : "/settingBlack.svg"}`}
+          alt="setting"
+          height={30}
+          width={30}
+        />
+      </button>
+      <Setting
+        isSettingOpen={isSettingOpen}
+        setIsSettingOpen={setIsSettingOpen}
+      />
     </div>
   );
 }
