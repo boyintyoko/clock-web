@@ -7,15 +7,11 @@ interface isDarkModeType {
 
 export default function SecondHand({ isDarkMode }: isDarkModeType) {
   const [angle, setAngle] = useState(0);
-  const [isAnimation, setIsAnimation] = useState<boolean>(false);
 
   useEffect(() => {
     const updateAngle = () => {
       const seconds = new Date().getSeconds();
       setAngle(seconds * 6 - 90);
-      if (angle === 270) {
-        setIsAnimation(true);
-      }
     };
 
     updateAngle();
@@ -28,7 +24,7 @@ export default function SecondHand({ isDarkMode }: isDarkModeType) {
     <div
       className={`absolute left-1/2 ${
         isDarkMode ? "bg-black" : "bg-white"
-      } w-44 transition-all ${isAnimation ?? ""} `}
+      } w-44  `}
       style={{
         height: "2px",
         borderRadius: "9999px",

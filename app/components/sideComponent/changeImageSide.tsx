@@ -13,8 +13,9 @@ type ChangeImageSideProps = {
 };
 
 export default function ChangeImageSide({ isChange }: ChangeImageSideProps) {
-  const [images, setImages] = useState<ImageType[]>();
+  const [images, setImages] = useState<ImageType[]>([]);
   const [searchText, setSearchText] = useState<string>("");
+  const [searchError, setSearchError] = useState<string>("");
 
   const { setBackground } = useBackground();
 
@@ -32,14 +33,25 @@ export default function ChangeImageSide({ isChange }: ChangeImageSideProps) {
     setBackground(imageUrl);
   };
 
-  const searchSubmitHandler = (e: React.FormEvent<HTMLFormElement>) => {
+  const searchSubmitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    axios
-      .get(
-        `https://api.unsplash.com/search/photos?query=${searchText}&clisent_id=TiAoupzP1ia4t_iuBsKpVUKvhAnfgrS5Ql97j9Vb9aU`
-      )
-      .then((res) => setImages(res.data.results))
-      .catch((e) => console.log(e));
+    try {
+      const res = await axios.get(
+        `https://api.unsplash.com/search/photos?query=${searchText}&client_id=TiAoupzP1ia4t_iuBsKpVUKvhAnfgrS5Ql97j9Vb9aU`
+      );
+      if (res.data.results.length === 0) {
+        setSearchError("No results found.");
+        setImages([]);
+        setSearchText("");
+        return;
+      }
+      setImages(res.data.results);
+      setSearchError("");
+      setSearchText("");
+    } catch (error) {
+      console.error(error);
+      setSearchError("An error occurred. Please try again.");
+    }
   };
 
   return (
@@ -57,13 +69,17 @@ export default function ChangeImageSide({ isChange }: ChangeImageSideProps) {
                 setSearchText(e.target.value)
               }
               type="text"
+              value={searchText}
               placeholder="Search..."
               className="border rounded-md px-3 py-1 w-40 focus:outline-none focus:ring focus:ring-blue-300"
             />
           </form>
         </div>
         <SingleColor />
-        <div className="grid grid-cols-1 gap-6">
+
+        {searchError && <p className="text-red-500">{searchError}</p>}
+
+        <div className="grid grid-cols-1 gap-6 pt-3">
           {images?.map((image, index) => (
             <div key={index} className="bg-white rounded-lg shadow-lg p-4">
               <Link

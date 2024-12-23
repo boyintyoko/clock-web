@@ -69,7 +69,7 @@ export default function Home() {
         >
           <div
             className={`h-6 w-6 bg-blue-500 rounded-full shadow-md transform transition-transform ${
-              isDarkMode ? "translate-x-6" : ""
+              isDarkMode && "translate-x-6"
             }`}
           ></div>
         </div>
