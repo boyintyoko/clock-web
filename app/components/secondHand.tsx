@@ -22,7 +22,7 @@ export default function SecondHand({ isDarkMode }: isDarkModeType) {
 
   return (
     <div
-      className={`absolute left-1/2 ${
+      className={`absolute left-1/2 transition-all ${
         isDarkMode ? "bg-black" : "bg-white"
       } w-44  `}
       style={{
