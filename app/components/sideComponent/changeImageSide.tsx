@@ -77,7 +77,9 @@ export default function ChangeImageSide({ isChange }: ChangeImageSideProps) {
         </div>
         <SingleColor />
 
-        {searchError && <p className="text-red-500">{searchError}</p>}
+        {searchError && (
+          <p className="text-red-500 font-black">{searchError}</p>
+        )}
 
         <div className="grid grid-cols-1 gap-6 pt-3">
           {images?.map((image, index) => (
