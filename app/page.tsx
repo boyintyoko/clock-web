@@ -75,7 +75,7 @@ export default function Home() {
         </div>
       </label>
 
-      <ChangeImageButton />
+      <ChangeImageButton isDarkMode={isDarkMode} />
       <ElectronicClock isDarkMode={isDarkMode} />
       <div
         className={`relative flex justify-center items-center h-96 w-96 rounded-full border-8 ${

@@ -1,10 +1,14 @@
 "use client";
 
+interface isDarkModeType {
+  isDarkMode: boolean;
+}
+
 import { useState } from "react";
 import ChangeImageSide from "./sideComponent/changeImageSide";
 import Mask from "./sideComponent/mask";
 
-export default function ChangeImageButton() {
+export default function ChangeImageButton({ isDarkMode }: isDarkModeType) {
   const [isChange, setIsChange] = useState<boolean>(false);
 
   return (
@@ -17,19 +21,23 @@ export default function ChangeImageButton() {
       >
         <span
           style={{ height: "2px", top: "calc(100% / 2 + -5px)" }}
-          className={`absolute w-1/2  bg-black`}
+          className={`absolute w-1/2  ${isDarkMode ? "bg-black" : "bg-white"}`}
         ></span>
         <span
           style={{ height: "1px", top: "calc(100% / 2 + 10px)" }}
-          className="absolute w-1/4 bg-black"
+          className={`absolute w-1/4 ${isDarkMode ? "bg-black" : "bg-white"}`}
         ></span>
         <span
           style={{ height: "1px", top: "calc(100% / 2 + -10px)" }}
-          className="absolute w-1/4 right-0 bg-black"
+          className={`absolute w-1/4 right-0 ${
+            isDarkMode ? "bg-black" : "bg-white"
+          }`}
         ></span>
         <span
           style={{ height: "3px", top: "calc(100% / 2 + 10px)" }}
-          className="absolute w-1/2 right-0 bg-black"
+          className={`absolute w-1/2 right-0 ${
+            isDarkMode ? "bg-black" : "bg-white"
+          }`}
         ></span>
       </button>
       <Mask isChange={isChange} setIsChange={setIsChange} />
