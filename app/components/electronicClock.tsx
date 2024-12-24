@@ -40,7 +40,7 @@ export default function ElectronicClock({ isDarkMode }: isDarkModeType) {
     <div>
       <div className="relative flex justify-center bg-opacity-25 bg-white items-center w-64 rounded-xl mb-2 shadow-md transition-all top-0 hover:top-1">
         <div
-          className={`flex items-center justify-center gap-5 w-full text-sm ${
+          className={`flex items-center justify-center transition-all gap-5 w-full text-sm ${
             isDarkMode ? "text-black" : "text-white"
           }`}
         >
@@ -57,7 +57,7 @@ export default function ElectronicClock({ isDarkMode }: isDarkModeType) {
         }  s=54v . top-0 hover:top-1`}
       >
         <div className="flex items-center text-3xl z-10">
-          {(hour % 12 || 12).toString().padStart(2, "0")}
+          {hour.toString().padStart(2, "0")}
         </div>
         <div className="text-3xl  z-10 mx-1">:</div>
         <div className="flex items-center text-3xl  z-10">

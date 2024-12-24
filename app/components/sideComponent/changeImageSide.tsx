@@ -10,12 +10,17 @@ import Link from "next/link";
 
 type ChangeImageSideProps = {
   isChange: boolean;
+  setIsChange: (isChange: boolean) => void;
 };
 
-export default function ChangeImageSide({ isChange }: ChangeImageSideProps) {
+export default function ChangeImageSide({
+  isChange,
+  setIsChange,
+}: ChangeImageSideProps) {
   const [images, setImages] = useState<ImageType[]>([]);
   const [searchText, setSearchText] = useState<string>("");
   const [searchError, setSearchError] = useState<string>("");
+  const [goods, setGoods] = useState<string[]>([]);
 
   const { setBackground } = useBackground();
 
@@ -26,6 +31,12 @@ export default function ChangeImageSide({ isChange }: ChangeImageSideProps) {
       )
       .then((res) => setImages(res.data.results))
       .catch((e) => console.log(e));
+  }, []);
+
+  useEffect(() => {
+    const goods = localStorage.getItem("goods");
+    if (!goods) return;
+    setGoods(JSON.parse(goods));
   }, []);
 
   const imageChangeHandler = (imageUrl: string): void => {
@@ -54,6 +65,20 @@ export default function ChangeImageSide({ isChange }: ChangeImageSideProps) {
     }
   };
 
+  useEffect(() => {
+    localStorage.setItem("goods", JSON.stringify(goods));
+  }, [goods]);
+
+  const goodClickHandler = (url: string) => {
+    setGoods((prevGoods) => {
+      if (prevGoods.includes(url)) {
+        return prevGoods.filter((good) => good !== url);
+      } else {
+        return [...prevGoods, url];
+      }
+    });
+  };
+
   return (
     <div
       className={`absolute top-0 ${
@@ -62,8 +87,14 @@ export default function ChangeImageSide({ isChange }: ChangeImageSideProps) {
     >
       <div className="p-4">
         <div className="flex justify-between items-center mb-4">
+          <button
+            onClick={() => setIsChange(!isChange)}
+            className="flex justify-center items-center"
+          >
+            <Image src="/back.png" alt="back image" height={25} width={25} />
+          </button>
           <p className="text-xl font-bold text-gray-800">Images</p>
-          <form onSubmit={searchSubmitHandler}>
+          <form onSubmit={searchSubmitHandler} className="relative">
             <input
               onInput={(e: React.ChangeEvent<HTMLInputElement>) =>
                 setSearchText(e.target.value)
@@ -71,38 +102,59 @@ export default function ChangeImageSide({ isChange }: ChangeImageSideProps) {
               type="text"
               value={searchText}
               placeholder="Search..."
-              className="border rounded-md px-3 py-1 w-40 focus:outline-none focus:ring focus:ring-blue-300"
+              className="border border-gray-300 rounded-md px-3 py-2 w-40 focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
             />
           </form>
         </div>
         <SingleColor />
 
         {searchError && (
-          <p className="text-red-500 font-black">{searchError}</p>
+          <p className="text-red-500 font-bold mt-2">{searchError}</p>
         )}
 
-        <div className="grid grid-cols-1 gap-6 pt-3">
+        <div className="grid grid-cols-1 gap-4 pt-4">
           {images?.map((image, index) => (
-            <div key={index} className="bg-white rounded-lg shadow-lg p-4">
-              <Link
-                target="_blank"
-                href={image.user.links.html}
-                className="flex items-center mb-3 hover:underline"
-              >
-                <Image
-                  src={image.user.profile_image.large}
-                  alt={`${image.user.name}'s profile`}
-                  height={40}
-                  width={40}
-                  className="rounded-full border border-gray-300"
-                />
-                <p className="ml-3 font-medium text-gray-700 text-ellipsis overflow-hidden whitespace-nowrap">
-                  {image.user.name}
-                </p>
-              </Link>
+            <div
+              key={index}
+              className="bg-white rounded-lg shadow-md p-4 hover:shadow-lg transition-shadow duration-200"
+            >
+              <div className="flex items-center justify-between mb-3">
+                <Link
+                  target="_blank"
+                  href={image.user.links.html}
+                  className="flex items-center hover:underline"
+                >
+                  <div className="flex items-center">
+                    <Image
+                      src={image.user.profile_image.large}
+                      alt={`${image.user.name}'s profile`}
+                      height={40}
+                      width={40}
+                      className="rounded-full border border-gray-300"
+                    />
+                    <p className="ml-3 font-medium text-gray-700 truncate">
+                      {image.user.name}
+                    </p>
+                  </div>
+                </Link>
+                <button
+                  onClick={() => goodClickHandler(image.urls.regular)}
+                  className={`transition-all ${
+                    goods.includes(image.urls.regular)
+                      ? "text-red-500"
+                      : "text-gray-600 hover:text-red-500"
+                  }`}
+                >
+                  <i
+                    className={`fa-${
+                      goods.includes(image.urls.regular) ? "solid" : "regular"
+                    } fa-heart fa-lg`}
+                  ></i>
+                </button>
+              </div>
               <div
                 onClick={() => imageChangeHandler(image.urls.regular)}
-                className="rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-transform hover:scale-105 duration-200 cursor-pointer"
+                className="rounded-lg overflow-hidden hover:shadow-lg transition-transform hover:scale-105 duration-200 cursor-pointer"
               >
                 <Image
                   src={image.urls.regular}

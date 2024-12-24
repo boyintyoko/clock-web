@@ -1,5 +1,6 @@
 import React from "react";
 import SettingMask from "./settingMask";
+import SettingContent from "./settingContent";
 
 interface SettingType {
   isSettingOpen: boolean;
@@ -32,6 +33,7 @@ export default function Setting({
         <div className="p-6">
           <h2 className="text-2xl font-black mb-4">Settings</h2>
         </div>
+        <SettingContent />
       </div>
     </div>
   );

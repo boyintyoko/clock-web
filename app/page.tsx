@@ -9,6 +9,7 @@ import MinuteHand from "./components/minuteHand";
 import HourHand from "./components/hourHand";
 import Image from "next/image";
 import Setting from "./components/settingComponents/setting";
+import Loading from "./components/loading/loading";
 
 export default function Home() {
   const [user, setUser] = useState<string>("");
@@ -33,14 +34,14 @@ export default function Home() {
 
   const checkImage = (user: string) => {
     if (!user) {
-      return "url(/photo-1731331344306-ad4f902691a3.avif)";
+      return "url(/initialValuePhoto.avif)";
     }
 
     if (user.startsWith("https")) {
       return `url(${user})`;
     }
 
-    return `url(/${user}.png)`;
+    return `url(/color/${user}.png)`;
   };
 
   return (
@@ -50,6 +51,7 @@ export default function Home() {
         backgroundImage: checkImage(user),
       }}
     >
+      <Loading />
       <label
         className="absolute top-1 right-1 flex items-center cursor-pointer mb-4"
         htmlFor="switch"
@@ -88,7 +90,7 @@ export default function Home() {
           return (
             <div
               key={index}
-              className={`absolute flex justify-center items-center w-10 ${
+              className={`absolute transition-all flex justify-center items-center w-10 ${
                 isDarkMode ? "text-black" : "text-white"
               }  h-10 font-black text-xl`}
               style={{
@@ -111,19 +113,39 @@ export default function Home() {
         <MinuteHand isDarkMode={isDarkMode} />
         <HourHand isDarkMode={isDarkMode} />
       </div>
-      <button
-        className={`absolute bottom-2 hover:bottom-1 right-2 transition-all ${
-          isDarkMode ? "bg-black" : "bg-white"
-        } rounded-full p-3`}
-        onClick={() => setIsSettingOpen(!isSettingOpen)}
-      >
-        <Image
-          src={`${isDarkMode ? "/settingWhite.svg" : "/settingBlack.svg"}`}
-          alt="setting"
-          height={30}
-          width={30}
-        />
-      </button>
+      <div className="flex gap-2 absolute right-2 bottom-2">
+        <button
+          className={`transition-all shadow-xl ${
+            isDarkMode ? "bg-black" : "bg-white"
+          } rounded-full p-3 hover:translate-y-1`}
+          onClick={() => setIsSettingOpen(!isSettingOpen)}
+        >
+          <Image
+            src={`${
+              isDarkMode ? "/icons/heartWhite.svg" : "/icons/heartBlack.svg"
+            }`}
+            alt="heart"
+            height={30}
+            width={30}
+          />
+        </button>
+        <button
+          className={`transition-all shadow-xl ${
+            isDarkMode ? "bg-black" : "bg-white"
+          } rounded-full p-3 hover:translate-y-1`}
+          onClick={() => setIsSettingOpen(!isSettingOpen)}
+        >
+          <Image
+            src={`${
+              isDarkMode ? "/icons/settingWhite.svg" : "/icons/settingBlack.svg"
+            }`}
+            alt="setting"
+            height={30}
+            width={30}
+          />
+        </button>
+      </div>
+
       <Setting
         isSettingOpen={isSettingOpen}
         setIsSettingOpen={setIsSettingOpen}

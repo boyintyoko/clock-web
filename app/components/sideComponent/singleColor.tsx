@@ -20,7 +20,7 @@ export default function SingleColor() {
         >
           <div className="h-12 w-12 overflow-hidden rounded-full">
             <Image
-              src={`/${color}.png`}
+              src={`/color/${color}.png`}
               height={50}
               width={50}
               alt={color}

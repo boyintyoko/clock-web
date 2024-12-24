@@ -25,7 +25,7 @@ export default function HourHand({ isDarkMode }: isDarkModeType) {
 
   return (
     <div
-      className={`absolute left-1/2 ${
+      className={`absolute left-1/2 transition-all ${
         isDarkMode ? "bg-black" : "bg-white"
       } w-20`}
       style={{
