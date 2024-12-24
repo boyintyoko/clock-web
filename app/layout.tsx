@@ -16,6 +16,9 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Image clock",
   description: "綺麗な画像とともに時間を確認できます",
+  icons: {
+    icon: "/clock.ico",
+  },
 };
 
 export default function RootLayout({
@@ -30,7 +33,6 @@ export default function RootLayout({
           rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
         />
-        <link rel="icon" href="/clock.png" />
       </head>
 
       <body
