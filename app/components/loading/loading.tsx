@@ -6,9 +6,6 @@ export default function Loading() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   useEffect(() => {
-    const url = localStorage.getItem("background");
-
-    if (!url) return;
     setTimeout(() => {
       setIsLoading(true);
     }, 3000);
