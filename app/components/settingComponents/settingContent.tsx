@@ -12,9 +12,9 @@ export default function SettingContent() {
       <div className="mb-6">
         <p className="font-black text-xl mb-2">言語</p>
         <select className="border rounded-lg p-2 w-full">
-          <option value="ja">日本語</option>
           <option value="en">English</option>
-          <option value="it">Italiano</option>
+          <option value="it">Italian</option>
+          <option value="ja">日本語</option>
         </select>
       </div>
     </div>

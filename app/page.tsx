@@ -10,11 +10,13 @@ import HourHand from "./components/hourHand";
 import Image from "next/image";
 import Setting from "./components/settingComponents/setting";
 import Loading from "./components/loading/loading";
+import Goods from "./components/goodsComponents/goods";
 
 export default function Home() {
   const [user, setUser] = useState<string>("");
   const [isDarkMode, setIsDarkMode] = useState<boolean>(false);
   const [isSettingOpen, setIsSettingOpen] = useState<boolean>(false);
+  const [isGoodsOpen, setIsGoodsOpen] = useState<boolean>(false);
   const { background } = useBackground();
 
   useEffect(() => {
@@ -53,7 +55,7 @@ export default function Home() {
     >
       <Loading />
       <label
-        className="absolute top-1 right-1 flex items-center cursor-pointer mb-4"
+        className="absolute top-1 right-1 flex items-center cursor-pointer mb-4 transition-all hover:top-2"
         htmlFor="switch"
         aria-label="Toggle dark mode"
       >
@@ -118,7 +120,7 @@ export default function Home() {
           className={`transition-all shadow-xl ${
             isDarkMode ? "bg-black" : "bg-white"
           } rounded-full p-3 hover:translate-y-1`}
-          onClick={() => setIsSettingOpen(!isSettingOpen)}
+          onClick={() => setIsGoodsOpen(!isGoodsOpen)}
         >
           <Image
             src={`${
@@ -145,7 +147,7 @@ export default function Home() {
           />
         </button>
       </div>
-
+      <Goods isGoodsOpen={isGoodsOpen} setIsGoodsOpen={setIsGoodsOpen} />
       <Setting
         isSettingOpen={isSettingOpen}
         setIsSettingOpen={setIsSettingOpen}

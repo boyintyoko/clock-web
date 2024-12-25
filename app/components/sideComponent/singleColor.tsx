@@ -1,14 +1,33 @@
+"use client";
+
 import Image from "next/image";
 import colors from "@/data/colorData";
 import { useBackground } from "@/app/context/backgroundContext";
+import { useEffect, useState } from "react";
 
 export default function SingleColor() {
-  const { setBackground } = useBackground();
+  const { setBackground, background } = useBackground();
+  const [isNowBackground, setIsNowBackground] = useState<string>("");
 
   const colorChangeHandler = (color: string) => {
+    localStorage.getItem("background");
     localStorage.setItem("background", color);
     setBackground(color);
+    setIsNowBackground(color);
   };
+
+  useEffect(() => {
+    if (background.startsWith("https")) {
+      setIsNowBackground("");
+    }
+  }, [background]);
+
+  useEffect(() => {
+    const url = localStorage.getItem("background");
+    if (url?.startsWith("https")) return;
+    if (!url) return;
+    setIsNowBackground(url);
+  }, []);
 
   return (
     <div className="flex flex-nowrap overflow-auto gap-2 border-b pb-3">
@@ -16,7 +35,9 @@ export default function SingleColor() {
         <button
           key={i}
           onClick={() => colorChangeHandler(color)}
-          className="flex items-center justify-center p-0 border-none bg-transparent"
+          className={`flex border-2 transition-all rounded-full items-center ${
+            isNowBackground === color && "border-blue-500"
+          } justify-center p-1 bg-transparent`}
         >
           <div className="h-12 w-12 overflow-hidden rounded-full">
             <Image

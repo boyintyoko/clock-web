@@ -81,7 +81,7 @@ export default function ChangeImageSide({
 
   return (
     <div
-      className={`absolute top-0 ${
+      className={`side-bar absolute top-0 ${
         isChange ? "right-0" : "-right-96"
       } z-20 h-screen w-96 bg-gradient-to-b from-gray-100 to-white shadow-lg border-l border-gray-200 transition-all overflow-auto`}
     >
@@ -139,7 +139,7 @@ export default function ChangeImageSide({
                 </Link>
                 <button
                   onClick={() => goodClickHandler(image.urls.regular)}
-                  className={`transition-all ${
+                  className={`transition-all hover:-translate-y-1 ${
                     goods.includes(image.urls.regular)
                       ? "text-red-500"
                       : "text-gray-600 hover:text-red-500"
