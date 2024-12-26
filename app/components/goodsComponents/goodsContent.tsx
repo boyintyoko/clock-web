@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import { useBackground } from "@/app/context/backgroundContext";
+import { useGoods } from "@/app/context/goodContext";
 
 interface GoodsType {
   isGoodsOpen: boolean;
@@ -12,6 +13,7 @@ export default function GoodsContent({ isGoodsOpen }: GoodsType) {
   const [goods, setGoods] = useState<string[]>([]);
 
   const { setBackground } = useBackground();
+  const { setIsNowGoods } = useGoods();
 
   const setImageBackground = (url: string) => {
     setBackground(url);
@@ -39,6 +41,7 @@ export default function GoodsContent({ isGoodsOpen }: GoodsType) {
   const goodDeleteHandle = (url: string) => {
     const updatedGoods = goods.filter((good) => good !== url);
     setGoods(updatedGoods);
+    setIsNowGoods(updatedGoods);
     localStorage.setItem("goods", JSON.stringify(updatedGoods));
   };
 

@@ -1,6 +1,7 @@
 import React from "react";
 import SettingMask from "./settingMask";
 import SettingContent from "./settingContent";
+import Image from "next/image";
 
 interface SettingType {
   isSettingOpen: boolean;
@@ -31,9 +32,19 @@ export default function Setting({
         }}
       >
         <div className="p-6">
-          <h2 className="text-2xl font-black mb-4">Settings</h2>
+          <div className="flex items-center gap-5">
+            <button
+              onClick={() => setIsSettingOpen(!isSettingOpen)}
+              className="flex justify-center items-center"
+            >
+              <Image src="/back.png" alt="back image" height={25} width={25} />
+            </button>
+            <h2 className="text-2xl font-extrabold text-gray-800">Settings</h2>
+          </div>
         </div>
-        <SettingContent />
+        <div className="p-6">
+          <SettingContent />
+        </div>
       </div>
     </div>
   );

@@ -7,6 +7,7 @@ import ImageType from "@/app/types/ImagesType";
 import SingleColor from "./singleColor";
 import { useBackground } from "@/app/context/backgroundContext";
 import Link from "next/link";
+import { useGoods } from "@/app/context/goodContext";
 
 type ChangeImageSideProps = {
   isChange: boolean;
@@ -23,6 +24,11 @@ export default function ChangeImageSide({
   const [goods, setGoods] = useState<string[]>([]);
 
   const { setBackground } = useBackground();
+  const { isNowGoods } = useGoods();
+
+  useEffect(() => {
+    setGoods(isNowGoods);
+  }, [isNowGoods]);
 
   useEffect(() => {
     axios

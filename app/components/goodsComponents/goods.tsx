@@ -1,5 +1,6 @@
 import GoodsContent from "./goodsContent";
 import GoodsMask from "./goodsMask";
+import Image from "next/image";
 
 interface GoodsType {
   isGoodsOpen: boolean;
@@ -23,7 +24,24 @@ export default function Goods({ isGoodsOpen, setIsGoodsOpen }: GoodsType) {
         }}
       >
         <div className="p-6">
-          <h2 className="text-2xl font-black mb-4">Goods</h2>
+          <div>
+            <div className="flex items-center gap-5">
+              <button
+                onClick={() => setIsGoodsOpen(!isGoodsOpen)}
+                className="flex justify-center items-center"
+              >
+                <Image
+                  src="/back.png"
+                  alt="back image"
+                  height={25}
+                  width={25}
+                />
+              </button>
+              <h2 className="text-2xl font-extrabold text-gray-800">Goods</h2>
+            </div>
+          </div>
+        </div>
+        <div className="p-6">
           <GoodsContent isGoodsOpen={isGoodsOpen} />
         </div>
       </div>
