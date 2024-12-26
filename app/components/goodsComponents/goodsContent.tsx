@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import { useBackground } from "@/app/context/backgroundContext";
 import { useGoods } from "@/app/context/goodContext";
+import { useLanguage } from "@/app/context/languageContext";
 
 interface GoodsType {
   isGoodsOpen: boolean;
@@ -14,6 +15,7 @@ export default function GoodsContent({ isGoodsOpen }: GoodsType) {
 
   const { setBackground } = useBackground();
   const { setIsNowGoods } = useGoods();
+  const { isNowLanguage } = useLanguage();
 
   const setImageBackground = (url: string) => {
     setBackground(url);
@@ -76,7 +78,16 @@ export default function GoodsContent({ isGoodsOpen }: GoodsType) {
           ))}
         </div>
       ) : (
-        <p className="font-bold">No goods available</p>
+        <p className="font-bold">
+          {(() => {
+            if (isNowLanguage === "en") {
+              return "Nothing.";
+            } else if (isNowLanguage === "it") {
+              return "Niente.";
+            }
+            return "何もありません。";
+          })()}
+        </p>
       )}
     </div>
   );

@@ -1,4 +1,4 @@
-/** @type {import('next').NextConfig} */
+// next.config.ts
 const nextConfig = {
   images: {
     remotePatterns: [
@@ -8,6 +8,10 @@ const nextConfig = {
       },
     ],
   },
+  i18n: {
+    locales: ["en", "ja", "it"],
+    defaultLocale: "ja",
+  },
 };
 
-module.exports = nextConfig;
+export default nextConfig;

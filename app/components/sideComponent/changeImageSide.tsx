@@ -8,6 +8,7 @@ import SingleColor from "./singleColor";
 import { useBackground } from "@/app/context/backgroundContext";
 import Link from "next/link";
 import { useGoods } from "@/app/context/goodContext";
+import { useLanguage } from "@/app/context/languageContext";
 
 type ChangeImageSideProps = {
   isChange: boolean;
@@ -25,6 +26,7 @@ export default function ChangeImageSide({
 
   const { setBackground } = useBackground();
   const { isNowGoods } = useGoods();
+  const { isNowLanguage } = useLanguage();
 
   useEffect(() => {
     setGoods(isNowGoods);
@@ -99,7 +101,16 @@ export default function ChangeImageSide({
           >
             <Image src="/back.png" alt="back image" height={25} width={25} />
           </button>
-          <p className="text-xl font-bold text-gray-800">Images</p>
+          <p className="text-xl font-bold text-gray-800">
+            {(() => {
+              if (isNowLanguage === "en") {
+                return "Image.";
+              } else if (isNowLanguage === "it") {
+                return "Immagine.";
+              }
+              return "何もありません。";
+            })()}
+          </p>
           <form onSubmit={searchSubmitHandler} className="relative">
             <input
               onInput={(e: React.ChangeEvent<HTMLInputElement>) =>

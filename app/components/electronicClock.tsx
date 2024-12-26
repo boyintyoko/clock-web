@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
+import { useLanguage } from "../context/languageContext";
 
 interface isDarkModeType {
   isDarkMode: boolean;
@@ -15,6 +16,7 @@ export default function ElectronicClock({ isDarkMode }: isDarkModeType) {
   const [period, setPeriod] = useState<string>("");
 
   const [days, setDays] = useState<string[]>([]);
+  const { isNowLanguage } = useLanguage();
 
   useEffect(() => {
     const updateTime = () => {
@@ -28,13 +30,32 @@ export default function ElectronicClock({ isDarkMode }: isDarkModeType) {
       setPeriod(hour >= 12 ? "PM" : "AM");
     };
 
-    setDays(["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]);
+    {
+      (() => {
+        if (isNowLanguage === "en") {
+          setDays(["Sun.", "Mon.", "Tue.", "Wed.", "Thu.", "Fri.", "Sat."]);
+          return;
+        } else if (isNowLanguage === "it") {
+          setDays(["Dom.", "Lun.", "Mar.", "Mer.", "Gio.", "Ven.", "Sab."]);
+          return;
+        }
+        setDays([
+          "日曜日",
+          "月曜日",
+          "火曜日",
+          "水曜日",
+          "木曜日",
+          "金曜日",
+          "土曜日",
+        ]);
+      })();
+    }
 
     updateTime();
     const interval = setInterval(updateTime, 1000);
 
     return () => clearInterval(interval);
-  }, [hour]);
+  }, [hour, isNowLanguage]);
 
   return (
     <div>

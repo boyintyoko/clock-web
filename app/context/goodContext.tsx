@@ -4,7 +4,7 @@ import { createContext, useContext, useState, ReactNode } from "react";
 
 interface GoodsType {
   isNowGoods: string[];
-  setIsNowGoods: (goods: string[]) => void;
+  setIsNowGoods: (isNowGoods: string[]) => void;
 }
 
 const GoodsContext = createContext<GoodsType | undefined>(undefined);
