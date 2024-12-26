@@ -12,7 +12,7 @@ export default function SettingMask({
   return (
     <div
       onClick={() => setIsSettingOpen(!isSettingOpen)}
-      className={`absolute inset-0 bg-black z-40 transition-opacity ${
+      className={`absolute inset-0 bg-black transition-opacity ${
         isSettingOpen ? "bg-opacity-50" : "bg-opacity-0 pointer-events-none"
       }`}
     ></div>

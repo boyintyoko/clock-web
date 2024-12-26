@@ -11,35 +11,36 @@ import Mask from "./sideComponent/mask";
 export default function ChangeImageButton({ isDarkMode }: isDarkModeType) {
   const [isChange, setIsChange] = useState<boolean>(false);
 
+  const openClickHandle = () => {
+    setIsChange(!isChange);
+    localStorage.setItem("isOpen", JSON.stringify(true));
+  };
+
   return (
     <div>
       <button
-        onClick={() => setIsChange(!isChange)}
-        className={`flex flex-col absolute top-1 left-1 h-12 w-12 bg-white hover:top-2 bg-opacity-45 shadow-lg transition-all`}
+        onClick={openClickHandle}
+        className={`flex flex-col items-center justify-center ${
+          !isChange ? "gap-2" : "gap-0 z-50"
+        } absolute top-1 left-1 h-12 w-12 bg-white hover:top-2 bg-opacity-45 shadow-lg transition-all`}
       >
         <span
-          style={{ height: "2px", top: "calc(100% / 2 + -5px)" }}
-          className={`absolute transition-all w-1/2  ${
-            isDarkMode ? "bg-black" : "bg-white"
-          }`}
+          style={{ height: "3px" }}
+          className={`w-8 transition-all ${
+            isChange ? "absolute rotate-45" : ""
+          } ${isDarkMode ? "bg-black" : "bg-white"}`}
         ></span>
         <span
-          style={{ height: "1px", top: "calc(100% / 2 + 10px)" }}
-          className={`absolute transition-all w-1/4 ${
-            isDarkMode ? "bg-black" : "bg-white"
-          }`}
+          style={{ height: "3px" }}
+          className={`w-8 transition-all ${
+            isChange ? "opacity-0 hidden" : "opacity-100"
+          } ${isDarkMode ? "bg-black" : "bg-white"}`}
         ></span>
         <span
-          style={{ height: "1px", top: "calc(100% / 2 + -10px)" }}
-          className={`absolute transition-all w-1/4 right-0 ${
-            isDarkMode ? "bg-black" : "bg-white"
-          }`}
-        ></span>
-        <span
-          style={{ height: "3px", top: "calc(100% / 2 + 10px)" }}
-          className={`absolute transition-all w-1/2 right-0 ${
-            isDarkMode ? "bg-black" : "bg-white"
-          }`}
+          style={{ height: "3px" }}
+          className={`w-8 transition-all ${
+            isChange ? "absolute -rotate-45" : ""
+          } ${isDarkMode ? "bg-black" : "bg-white"}`}
         ></span>
       </button>
       <Mask isChange={isChange} setIsChange={setIsChange} />

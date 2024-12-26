@@ -13,6 +13,7 @@ export default function Loading() {
 
   return (
     <div
+      style={{ zIndex: "500" }}
       className={`flex justify-center items-center transition-all bg-center bg-cover ${
         isLoading ? "opacity-0 pointer-events-none" : "opacity-100"
       } absolute h-screen w-screen bg-white z-50`}

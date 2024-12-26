@@ -52,22 +52,22 @@ export default function ElectronicClock({ isDarkMode }: isDarkModeType) {
         </div>
       </div>
       <div
-        className={`relative flex justify-center bg-opacity-25 bg-white items-center h-20 w-64 rounded-xl mb-5 shadow-md transition-all ${
+        className={`relative flex justify-center bg-opacity-25 bg-white items-center w-64 h-20 rounded-xl mb-6 shadow-md transition-all top-0 hover:top-1 ${
           isDarkMode ? "text-black" : "text-white"
-        }  s=54v . top-0 hover:top-1`}
+        }`}
       >
-        <div className="flex items-center text-3xl z-10">
+        <div className="flex items-center text-3xl">
           {hour.toString().padStart(2, "0")}
         </div>
-        <div className="text-3xl  z-10 mx-1">:</div>
-        <div className="flex items-center text-3xl  z-10">
+        <div className="text-3xl mx-1">:</div>
+        <div className="flex items-center text-3xl">
           {minute.toString().padStart(2, "0")}
         </div>
-        <div className="text-3xl  z-10 mx-1">:</div>
-        <div className="flex items-center text-3xl  z-10">
+        <div className="text-3xl mx-1">:</div>
+        <div className="flex items-center text-3xl">
           {second.toString().padStart(2, "0")}
         </div>
-        <div className="flex h-full items-end  text-sm ml-2 z-10">{period}</div>
+        <div className="flex h-full items-end  text-sm ml-2">{period}</div>
       </div>
     </div>
   );

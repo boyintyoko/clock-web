@@ -24,7 +24,7 @@ export default function Setting({
       />
 
       <div
-        className={`z-50 w-96 h-96 bg-white rounded-lg shadow-xl transition-all duration-300 ease-in-out transform ${
+        className={`w-96 h-96 bg-white rounded-lg shadow-xl transition-all duration-300 ease-in-out transform ${
           isSettingOpen ? "opacity-100 scale-100" : "opacity-0 scale-95"
         }`}
         style={{
