@@ -34,9 +34,7 @@ export default function ChangeImageSide({
 
   useEffect(() => {
     axios
-      .get(
-        "https://api.unsplash.com/search/photos?query=Japan&client_id=TiAoupzP1ia4t_iuBsKpVUKvhAnfgrS5Ql97j9Vb9aU"
-      )
+      .get(process.env.NEXT_PUBLIC_UNSPLASH_API_KEY || "")
       .then((res) => setImages(res.data.results))
       .catch((e) => console.log(e));
   }, []);
@@ -56,7 +54,7 @@ export default function ChangeImageSide({
     e.preventDefault();
     try {
       const res = await axios.get(
-        `https://api.unsplash.com/search/photos?query=${searchText}&client_id=TiAoupzP1ia4t_iuBsKpVUKvhAnfgrS5Ql97j9Vb9aU`
+        `${process.env.NEXT_PUBLIC_UNSPLASH_BASE_URL}query=${searchText}&client_id=${process.env.NEXT_PUBLIC_UNSPLASH_API_END_KEY}`
       );
       if (res.data.results.length === 0) {
         setSearchError("No results found.");
@@ -108,7 +106,7 @@ export default function ChangeImageSide({
               } else if (isNowLanguage === "it") {
                 return "Immagine.";
               }
-              return "画像";
+              return "Image.";
             })()}
           </p>
           <form onSubmit={searchSubmitHandler} className="relative">
