@@ -1,14 +1,10 @@
-"use client";
-
-import { useState, useEffect } from "react";
-import Head from "next/head";
+import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { BackgroundProvider } from "./context/backgroundContext";
 import { GoodsProvider } from "./context/goodContext";
 import { LanguageProvider } from "./context/languageContext";
 import { TimeProvider } from "./context/timeContext";
-import { useLanguage } from "./context/languageContext";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -20,34 +16,24 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+export const metadata: Metadata = {
+  title: "Image clock",
+  description: "綺麗な画像とともに時間を確認できます",
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const [description, setDescription] =
-    useState("綺麗な画像とともに時間を確認できます");
-
-  const { isNowLanguage } = useLanguage();
-
-  useEffect(() => {
-    if (isNowLanguage === "en") {
-      setDescription("You can check the time with beautiful images.");
-      return;
-    } else if (isNowLanguage === "it") {
-      setDescription("È possibile controllare l'ora con bellissime immagini.");
-      return;
-    }
-    setDescription("美しい画像とともに時間を確認できます");
-  }, [isNowLanguage]);
-
   return (
     <html lang="en">
       <head>
-        <Head>
-          <meta name="description" content={description} />
-          <link rel="icon" href="/clock.ico" />
-        </Head>
+        <link
+          rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+        />
+        <link rel="icon" href="/clock.ico" />
       </head>
 
       <body
