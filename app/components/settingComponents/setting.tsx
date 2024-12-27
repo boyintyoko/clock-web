@@ -2,6 +2,7 @@ import React from "react";
 import SettingMask from "./settingMask";
 import SettingContent from "./settingContent";
 import Image from "next/image";
+import { useLanguage } from "@/app/context/languageContext";
 
 interface SettingType {
   isSettingOpen: boolean;
@@ -12,6 +13,8 @@ export default function Setting({
   isSettingOpen,
   setIsSettingOpen,
 }: SettingType) {
+  const { isNowLanguage } = useLanguage();
+
   return (
     <div
       className={`absolute inset-0 flex justify-center items-center ${
@@ -39,7 +42,16 @@ export default function Setting({
             >
               <Image src="/back.png" alt="back image" height={25} width={25} />
             </button>
-            <h2 className="text-2xl font-extrabold text-gray-800">Settings</h2>
+            <h2 className="text-2xl font-extrabold text-gray-800">
+              {(() => {
+                if (isNowLanguage === "en") {
+                  return "Settings.";
+                } else if (isNowLanguage === "it") {
+                  return "Impostazione.";
+                }
+                return "設定";
+              })()}
+            </h2>
           </div>
         </div>
         <div className="p-6">

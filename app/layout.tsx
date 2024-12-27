@@ -4,6 +4,7 @@ import "./globals.css";
 import { BackgroundProvider } from "./context/backgroundContext";
 import { GoodsProvider } from "./context/goodContext";
 import { LanguageProvider } from "./context/languageContext";
+import { TimeProvider } from "./context/timeContext";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -40,11 +41,13 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <LanguageProvider>
-          <BackgroundProvider>
-            <GoodsProvider>{children}</GoodsProvider>
-          </BackgroundProvider>
-        </LanguageProvider>
+        <TimeProvider>
+          <LanguageProvider>
+            <BackgroundProvider>
+              <GoodsProvider>{children}</GoodsProvider>
+            </BackgroundProvider>
+          </LanguageProvider>
+        </TimeProvider>
       </body>
     </html>
   );

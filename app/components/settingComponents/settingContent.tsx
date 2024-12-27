@@ -1,27 +1,34 @@
-import { useEffect, useState } from "react";
+"use client";
+
 import { useLanguage } from "@/app/context/languageContext";
+import { useTime } from "@/app/context/timeContext";
+import { useEffect } from "react";
 
 export default function SettingContent() {
-  const [language, setLanguage] = useState("ja");
-
   const { setIsNowLanguage, isNowLanguage } = useLanguage();
+  const { setIsNowTime, isNowTime } = useTime();
 
   const handleLanguageChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedLanguage = e.target.value;
-    setLanguage(selectedLanguage);
-    localStorage.setItem("language", selectedLanguage);
     setIsNowLanguage(selectedLanguage);
+    localStorage.setItem("language", selectedLanguage);
+  };
+
+  const handleFormatChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const selectedFormat = e.target.value;
+    setIsNowTime(Number(selectedFormat));
+    localStorage.setItem("time", selectedFormat);
   };
 
   useEffect(() => {
+    const time = localStorage.getItem("time");
     const language = localStorage.getItem("language");
-    if (!language) {
-      setIsNowLanguage("ja");
+    if (!(time || language)) {
       return;
     }
-    setLanguage(language);
-    setIsNowLanguage(language);
-  }, [setIsNowLanguage]);
+    setIsNowTime(Number(time));
+    setIsNowLanguage(String(language));
+  }, [setIsNowLanguage, setIsNowTime]);
 
   return (
     <div className="p-4">
@@ -36,7 +43,11 @@ export default function SettingContent() {
             return "時間形式";
           })()}
         </p>
-        <select className="border rounded-lg p-2 w-full">
+        <select
+          onChange={handleFormatChange}
+          value={isNowTime}
+          className="border rounded-lg p-2 w-full"
+        >
           <option value="24">
             {(() => {
               if (isNowLanguage === "en") {
@@ -48,7 +59,6 @@ export default function SettingContent() {
             })()}
           </option>
           <option value="12">
-            {" "}
             {(() => {
               if (isNowLanguage === "en") {
                 return "12-hour format (AM/PM).";
@@ -73,7 +83,7 @@ export default function SettingContent() {
           })()}
         </p>
         <select
-          value={language}
+          value={isNowLanguage}
           onChange={handleLanguageChange}
           className="border rounded-lg p-2 w-full"
         >

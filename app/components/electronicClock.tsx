@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { useLanguage } from "../context/languageContext";
+import { useTime } from "../context/timeContext";
 
 interface isDarkModeType {
   isDarkMode: boolean;
@@ -17,28 +18,34 @@ export default function ElectronicClock({ isDarkMode }: isDarkModeType) {
 
   const [days, setDays] = useState<string[]>([]);
   const { isNowLanguage } = useLanguage();
+  const { isNowTime } = useTime();
+
+  const formatHour = (hour: number): number => {
+    if (isNowTime === 12) {
+      return hour % 12 === 0 ? 12 : hour % 12;
+    }
+    return hour;
+  };
 
   useEffect(() => {
     const updateTime = () => {
       const now = new Date();
-      setHour(now.getHours());
+      const currentHour = now.getHours();
+      setHour(formatHour(currentHour));
       setMinute(now.getMinutes());
       setSecond(now.getSeconds());
       setDay(now.getDay());
       setDate(now.getDate());
       setMonth(now.getMonth() + 1);
-      setPeriod(hour >= 12 ? "PM" : "AM");
+      setPeriod(currentHour >= 12 ? "PM" : "AM");
     };
 
-    {
-      (() => {
-        if (isNowLanguage === "en") {
-          setDays(["Sun.", "Mon.", "Tue.", "Wed.", "Thu.", "Fri.", "Sat."]);
-          return;
-        } else if (isNowLanguage === "it") {
-          setDays(["Dom.", "Lun.", "Mar.", "Mer.", "Gio.", "Ven.", "Sab."]);
-          return;
-        }
+    (() => {
+      if (isNowLanguage === "en") {
+        setDays(["Sun.", "Mon.", "Tue.", "Wed.", "Thu.", "Fri.", "Sat."]);
+      } else if (isNowLanguage === "it") {
+        setDays(["Dom.", "Lun.", "Mar.", "Mer.", "Gio.", "Ven.", "Sab."]);
+      } else {
         setDays([
           "日曜日",
           "月曜日",
@@ -48,14 +55,14 @@ export default function ElectronicClock({ isDarkMode }: isDarkModeType) {
           "金曜日",
           "土曜日",
         ]);
-      })();
-    }
+      }
+    })();
 
     updateTime();
     const interval = setInterval(updateTime, 1000);
 
     return () => clearInterval(interval);
-  }, [hour, isNowLanguage]);
+  }, [isNowLanguage, isNowTime]);
 
   return (
     <div>
@@ -88,7 +95,9 @@ export default function ElectronicClock({ isDarkMode }: isDarkModeType) {
         <div className="flex items-center text-3xl">
           {second.toString().padStart(2, "0")}
         </div>
-        <div className="flex h-full items-end  text-sm ml-2">{period}</div>
+        {isNowTime === 12 && (
+          <div className="flex h-full items-end text-sm ml-2">{period}</div>
+        )}
       </div>
     </div>
   );
