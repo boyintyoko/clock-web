@@ -108,7 +108,7 @@ export default function ChangeImageSide({
               } else if (isNowLanguage === "it") {
                 return "Immagine.";
               }
-              return "何もありません。";
+              return "画像";
             })()}
           </p>
           <form onSubmit={searchSubmitHandler} className="relative">
