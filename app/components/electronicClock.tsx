@@ -62,7 +62,7 @@ export default function ElectronicClock({ isDarkMode }: isDarkModeType) {
     const interval = setInterval(updateTime, 1000);
 
     return () => clearInterval(interval);
-  }, [isNowLanguage, isNowTime]);
+  }, [isNowLanguage, isNowTime, formatHour]);
 
   return (
     <div>
