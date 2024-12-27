@@ -20,14 +20,14 @@ export default function ElectronicClock({ isDarkMode }: isDarkModeType) {
   const { isNowLanguage } = useLanguage();
   const { isNowTime } = useTime();
 
-  const formatHour = (hour: number): number => {
-    if (isNowTime === 12) {
-      return hour % 12 === 0 ? 12 : hour % 12;
-    }
-    return hour;
-  };
-
   useEffect(() => {
+    const formatHour = (hour: number): number => {
+      if (isNowTime === 12) {
+        return hour % 12 === 0 ? 12 : hour % 12;
+      }
+      return hour;
+    };
+
     const updateTime = () => {
       const now = new Date();
       const currentHour = now.getHours();
@@ -62,7 +62,7 @@ export default function ElectronicClock({ isDarkMode }: isDarkModeType) {
     const interval = setInterval(updateTime, 1000);
 
     return () => clearInterval(interval);
-  }, [isNowLanguage, isNowTime, formatHour]);
+  }, [isNowLanguage, isNowTime]);
 
   return (
     <div>
