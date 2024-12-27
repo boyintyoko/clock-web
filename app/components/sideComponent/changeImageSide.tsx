@@ -24,7 +24,7 @@ export default function ChangeImageSide({
   const [searchError, setSearchError] = useState<string>("");
   const [goods, setGoods] = useState<string[]>([]);
 
-  const { setBackground } = useBackground();
+  const { setBackground, background } = useBackground();
   const { isNowGoods } = useGoods();
   const { isNowLanguage } = useLanguage();
 
@@ -169,7 +169,10 @@ export default function ChangeImageSide({
               </div>
               <div
                 onClick={() => imageChangeHandler(image.urls.regular)}
-                className="rounded-lg overflow-hidden hover:shadow-lg transition-transform hover:scale-105 duration-200 cursor-pointer"
+                className={`${
+                  image.urls.regular === background &&
+                  "border-2 border-blue-500"
+                } rounded-lg overflow-hidden border-2 transition-all hover:shadow-lg hover:scale-105 duration-200 cursor-pointer`}
               >
                 <Image
                   src={image.urls.regular}
