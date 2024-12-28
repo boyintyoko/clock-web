@@ -1,4 +1,4 @@
-const colors = [
+const colors: string[] = [
   "Black",
   "BlueViolet",
   "Cyan",
