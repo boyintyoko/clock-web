@@ -17,8 +17,8 @@ export default function Setting({
 
   return (
     <div
-      className={`absolute inset-0 flex justify-center items-center ${
-        !isSettingOpen ? "pointer-events-none" : ""
+      className={`absolute inset-0 flex justify-center items-center transition-all ${
+        isSettingOpen ? "visible opacity-100" : "invisible opacity-0"
       }`}
     >
       <SettingMask
@@ -27,30 +27,28 @@ export default function Setting({
       />
 
       <div
-        className={`w-96 h-96 bg-white rounded-lg shadow-xl transition-all duration-300 ease-in-out transform ${
-          isSettingOpen ? "opacity-100 scale-100" : "opacity-0 scale-95"
+        className={`w-full max-w-md bg-white rounded-2xl shadow-xl transform transition-transform ${
+          isSettingOpen ? "scale-100" : "scale-95"
         }`}
         style={{
-          boxShadow: "0px 10px 20px rgba(0, 0, 0, 0.1)",
+          boxShadow: "0px 10px 30px rgba(0, 0, 0, 0.1)",
         }}
       >
         <div className="p-6">
-          <div className="flex items-center gap-5">
+          <div className="flex items-center gap-4">
             <button
               onClick={() => setIsSettingOpen(!isSettingOpen)}
-              className="flex justify-center items-center"
+              className="p-2 rounded-full hover:bg-gray-200 transition"
+              aria-label="Go back"
             >
-              <Image src="/back.png" alt="back image" height={25} width={25} />
+              <Image src="/back.png" alt="Back" height={25} width={25} />
             </button>
-            <h2 className="text-2xl font-extrabold text-gray-800">
-              {(() => {
-                if (isNowLanguage === "en") {
-                  return "Settings.";
-                } else if (isNowLanguage === "it") {
-                  return "Impostazione.";
-                }
-                return "設定";
-              })()}
+            <h2 className="text-2xl font-bold text-gray-800">
+              {isNowLanguage === "en"
+                ? "Settings"
+                : isNowLanguage === "it"
+                ? "Impostazione"
+                : "設定"}
             </h2>
           </div>
         </div>

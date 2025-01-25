@@ -1,8 +1,6 @@
-"use client";
-
+import React, { useEffect } from "react";
 import { useLanguage } from "@/app/context/languageContext";
 import { useTime } from "@/app/context/timeContext";
-import { useEffect } from "react";
 
 export default function SettingContent() {
   const { setIsNowLanguage, isNowLanguage } = useLanguage();
@@ -23,69 +21,54 @@ export default function SettingContent() {
   useEffect(() => {
     const time = localStorage.getItem("time");
     const language = localStorage.getItem("language");
-    if (!(time || language)) {
-      return;
-    }
-    setIsNowTime(Number(time));
-    setIsNowLanguage(String(language));
+    if (time) setIsNowTime(Number(time));
+    if (language) setIsNowLanguage(language);
   }, [setIsNowLanguage, setIsNowTime]);
 
   return (
-    <div className="p-4">
-      <div className="mb-6">
-        <p className="font-black text-xl mb-2">
-          {(() => {
-            if (isNowLanguage === "en") {
-              return "Time format";
-            } else if (isNowLanguage === "it") {
-              return "Formato dell'orologio";
-            }
-            return "時間形式";
-          })()}
-        </p>
+    <div className="space-y-6">
+      <div>
+        <label className="block font-bold text-lg mb-2">
+          {isNowLanguage === "en"
+            ? "Time format"
+            : isNowLanguage === "it"
+            ? "Formato dell'orologio"
+            : "時間形式"}
+        </label>
         <select
           onChange={handleFormatChange}
           value={isNowTime}
-          className="border rounded-lg p-2 w-full"
+          className="block w-full border rounded-lg p-2"
         >
           <option value="24">
-            {(() => {
-              if (isNowLanguage === "en") {
-                return "24-hour format.";
-              } else if (isNowLanguage === "it") {
-                return "Formato 24 ore.";
-              }
-              return "24時間形式";
-            })()}
+            {isNowLanguage === "en"
+              ? "24-hour format"
+              : isNowLanguage === "it"
+              ? "Formato 24 ore"
+              : "24時間形式"}
           </option>
           <option value="12">
-            {(() => {
-              if (isNowLanguage === "en") {
-                return "12-hour format (AM/PM).";
-              } else if (isNowLanguage === "it") {
-                return "Formato 12 ore (AM/PM).";
-              }
-              return "12時間形式 (AM/PM)";
-            })()}
+            {isNowLanguage === "en"
+              ? "12-hour format (AM/PM)"
+              : isNowLanguage === "it"
+              ? "Formato 12 ore (AM/PM)"
+              : "12時間形式 (AM/PM)"}
           </option>
         </select>
       </div>
 
-      <div className="mb-6">
-        <p className="font-black text-xl mb-2">
-          {(() => {
-            if (isNowLanguage === "en") {
-              return "Language.";
-            } else if (isNowLanguage === "it") {
-              return "Lingua.";
-            }
-            return "言語";
-          })()}
-        </p>
+      <div>
+        <label className="block font-bold text-lg mb-2">
+          {isNowLanguage === "en"
+            ? "Language"
+            : isNowLanguage === "it"
+            ? "Lingua"
+            : "言語"}
+        </label>
         <select
           value={isNowLanguage}
           onChange={handleLanguageChange}
-          className="border rounded-lg p-2 w-full"
+          className="block w-full border rounded-lg p-2"
         >
           <option value="en">English</option>
           <option value="it">Italian</option>

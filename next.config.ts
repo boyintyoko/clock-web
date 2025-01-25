@@ -8,10 +8,6 @@ const nextConfig = {
       },
     ],
   },
-  i18n: {
-    locales: ["en", "ja", "it"],
-    defaultLocale: "ja",
-  },
 };
 
 export default nextConfig;
