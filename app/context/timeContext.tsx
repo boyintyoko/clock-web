@@ -34,7 +34,7 @@ export const TimeProvider = ({ children }: { children: ReactNode }) => {
 export const useTime = () => {
   const context = useContext(TimeContext);
   if (!context) {
-    throw new Error("useGoods must be used within a GoodsProvider");
+    throw new Error("useTime must be used within a TimeProvider");
   }
   return context;
 };

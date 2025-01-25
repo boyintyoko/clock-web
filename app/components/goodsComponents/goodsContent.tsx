@@ -51,7 +51,7 @@ export default function GoodsContent({ isGoodsOpen }: GoodsType) {
     <div>
       {goods.length > 0 ? (
         <div className="flex flex-col gap-4">
-          {goods.map((item, index) => (
+          {[...goods].reverse().map((item, index) => (
             <div
               key={index}
               className="bg-white rounded-lg shadow-md p-4 hover:shadow-lg transition-shadow duration-200 relative"

@@ -1,7 +1,7 @@
 "use client";
 
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import Image from "next/image";
 import ImageType from "@/app/types/ImagesType";
 import SingleColor from "./singleColor";
@@ -23,6 +23,9 @@ export default function ChangeImageSide({
   const [searchText, setSearchText] = useState<string>("");
   const [searchError, setSearchError] = useState<string>("");
   const [goods, setGoods] = useState<string[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [count, setCount] = useState(10);
+  const loaderRef = useRef<HTMLDivElement | null>(null);
 
   const { setBackground, background } = useBackground();
   const { isNowGoods } = useGoods();
@@ -33,17 +36,40 @@ export default function ChangeImageSide({
   }, [isNowGoods]);
 
   useEffect(() => {
-    axios
-      .get(process.env.NEXT_PUBLIC_UNSPLASH_API_KEY || "")
-      .then((res) => setImages(res.data.results))
-      .catch((e) => console.log(e));
-  }, []);
+    const getData = async () => {
+      setLoading(true);
+      try {
+        const photoData = await axios.get(
+          `https://api.unsplash.com/photos/random?client_id=${process.env.NEXT_PUBLIC_UNSPLASH_API_END_KEY}&count=${count}`
+        );
+        setImages((prevImages) => [...prevImages, ...photoData.data]);
+      } catch (err) {
+        console.log(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    getData();
+  }, [count]);
 
   useEffect(() => {
-    const goods = localStorage.getItem("goods");
-    if (!goods) return;
-    setGoods(JSON.parse(goods));
-  }, []);
+    const currentLoader = loaderRef.current;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const target = entries[0];
+        if (target.isIntersecting && !loading) {
+          setCount((prev) => prev + 10);
+        }
+      },
+      { threshold: 0.5 }
+    );
+
+    if (currentLoader) observer.observe(currentLoader);
+
+    return () => {
+      if (currentLoader) observer.unobserve(currentLoader);
+    };
+  }, [loading]);
 
   const imageChangeHandler = (imageUrl: string): void => {
     localStorage.setItem("background", imageUrl);
@@ -52,6 +78,7 @@ export default function ChangeImageSide({
 
   const searchSubmitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setImages([]);
     try {
       const res = await axios.get(
         `${process.env.NEXT_PUBLIC_UNSPLASH_BASE_URL}query=${searchText}&client_id=${process.env.NEXT_PUBLIC_UNSPLASH_API_END_KEY}`
@@ -184,6 +211,9 @@ export default function ChangeImageSide({
               </div>
             </div>
           ))}
+        </div>
+        <div ref={loaderRef} className="h-10 flex justify-center items-center">
+          {loading && <p>Loading...</p>}
         </div>
       </div>
     </div>
