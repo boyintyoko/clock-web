@@ -14,6 +14,7 @@ import Goods from "./components/goodsComponents/goods";
 import styled from "styled-components";
 import colors from "@/data/colorData";
 import colorsRGB from "@/data/colorsDataRGB";
+import Search from "./components/searchComponents/search";
 
 interface MainSelectionProps {
   $background: string;
@@ -122,7 +123,7 @@ export default function Home() {
             );
           })}
           <div
-            className={`dot h-5 w-5 rounded-full ${
+            className={`dot h-5 w-5 rounded-full transition-all ${
               isDarkMode ? "bg-black" : "bg-white"
             }  z-10`}
             style={{
@@ -172,6 +173,7 @@ export default function Home() {
           isSettingOpen={isSettingOpen}
           setIsSettingOpen={setIsSettingOpen}
         />
+        <Search isDarkMode={isDarkMode}/>
       </div>
     </MainSelection>
   );

@@ -19,6 +19,7 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Image clock",
   description: "綺麗な画像とともに時間を確認できます",
+  icons: ["/apple-touch-icon.png"],
   keywords: ["時計", "画像時計", "時間確認", "Image Clock"],
   openGraph: {
     type: "website",
@@ -45,31 +46,20 @@ export default function RootLayout({
   return (
     <html lang="ja">
       <head>
-        <meta
-          name="description"
-          content="綺麗な画像とともに時間を確認できます"
-        />
-        <meta name="keywords" content="時計, 画像時計, 時間確認, Image Clock" />
-        <meta property="og:type" content="website" />
-        <meta property="og:locale" content="ja_JP" />
-        <meta
-          property="og:url"
-          content="https://web-clock-dawoyiteng.vercel.app"
-        />
-        <meta property="og:title" content="Image clock" />
-        <meta
-          property="og:description"
-          content="綺麗な画像とともに時間を確認できます"
-        />
-        <meta
-          property="og:image"
-          content="https://web-clock-dawoyiteng.vercel.app/og-image.jpg"
-        />
         <link
-          rel="stylesheet"
-          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+          rel="icon"
+          type="image/png"
+          href="/favicon-96x96.png"
+          sizes="96x96"
         />
-        <link rel="icon" href="/clock.ico" />
+        <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+        <link
+          rel="apple-touch-icon"
+          sizes="180x180"
+          href="/apple-touch-icon.png"
+        />
+        <meta name="apple-mobile-web-app-title" content="MyWebSite" />
+        <link rel="manifest" href="/site.webmanifest" />
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}

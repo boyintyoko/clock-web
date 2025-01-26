@@ -4,7 +4,7 @@ interface isDarkModeType {
   isDarkMode: boolean;
 }
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ChangeImageSide from "./sideComponent/changeImageSide";
 import Mask from "./sideComponent/mask";
 
@@ -15,6 +15,20 @@ export default function ChangeImageButton({ isDarkMode }: isDarkModeType) {
     setIsChange(!isChange);
     localStorage.setItem("isOpen", JSON.stringify(true));
   };
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "s") {
+        setIsChange(!isChange);
+        localStorage.setItem("isOpen", JSON.stringify(false));
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [isChange]);
 
   return (
     <div>
