@@ -23,6 +23,7 @@ export default function SettingContent() {
     const language = localStorage.getItem("language");
     if (time) setIsNowTime(Number(time));
     if (language) setIsNowLanguage(language);
+    if (!language) setIsNowLanguage("en");
   }, [setIsNowLanguage, setIsNowTime]);
 
   return (
