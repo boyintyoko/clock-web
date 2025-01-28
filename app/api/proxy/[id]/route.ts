@@ -2,13 +2,7 @@ import { NextResponse } from "next/server";
 import axios from "axios";
 import type ImageType from "@/app/types/ImagesType";
 
-interface Params {
-  params: {
-    id: string;
-  };
-}
-
-export async function GET(req: Request, context: Params) {
+export async function GET(req: Request, context: { params: { id: string } }) {
   try {
     const { id } = await context.params;
 
