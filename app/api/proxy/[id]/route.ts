@@ -8,11 +8,11 @@ export async function GET(
 ) {
   try {
     const { id } = await params;
-    const res = await axios.get<ImageType>(
+    const response = await axios.get<ImageType>(
       `https://api.unsplash.com/photos/random?client_id=${process.env.NEXT_PUBLIC_UNSPLASH_API_END_KEY}&count=${id}`
     );
 
-    const data = res.data;
+    const data = response.data;
 
     return NextResponse.json(data);
   } catch (err) {
