@@ -43,8 +43,8 @@ export default function ChangeImageSide({
           `https://api.unsplash.com/photos/random?client_id=${process.env.NEXT_PUBLIC_UNSPLASH_API_END_KEY}&count=${count}`
         );
         setImages((prevImages) => [...prevImages, ...response.data]);
-      } catch (error) {
-        console.error(error);
+      } catch (err) {
+        console.error(err);
       } finally {
         setLoading(false);
       }
@@ -88,8 +88,8 @@ export default function ChangeImageSide({
       }
       setImages(response.data.results);
       setSearchError("");
-    } catch (error) {
-      console.error(error);
+    } catch (err) {
+      console.error(err);
       setSearchError("An error occurred. Please try again.");
     }
   };
