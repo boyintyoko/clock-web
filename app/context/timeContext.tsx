@@ -20,6 +20,10 @@ export const TimeProvider = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     const time = localStorage.getItem("time");
+    if (!(time === "24" || time === "12")) {
+      localStorage.setItem("time", "24");
+      return;
+    }
     if (!time) return;
     setIsNowTime(Number(time));
   }, []);

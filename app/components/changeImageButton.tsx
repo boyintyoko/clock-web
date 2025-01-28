@@ -13,7 +13,6 @@ export default function ChangeImageButton({ isDarkMode }: isDarkModeType) {
 
   const openClickHandle = () => {
     setIsChange(!isChange);
-    localStorage.setItem("isOpen", JSON.stringify(true));
   };
 
   return (

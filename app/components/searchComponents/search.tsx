@@ -4,6 +4,7 @@ import LinkContent from "./linkContent";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import HistoryType from "@/app/types/HistoryType";
+import { useLanguage } from "@/app/context/languageContext";
 
 interface Props {
   isDarkMode: boolean;
@@ -18,6 +19,8 @@ export default function Search({
 }: Props) {
   const [isSearch, setIsSearch] = useState<boolean>(false);
   const [histories, setHistories] = useState<HistoryType[]>([]);
+
+  const { isNowLanguage } = useLanguage();
 
   useEffect(() => {
     const histories = localStorage.getItem("history");
@@ -63,7 +66,13 @@ export default function Search({
             : "bg-opacity-0 hidden pointer-events-none"
         } top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 p-4`}
       >
-        <h2 className="text-xl font-semibold mb-4">Search History</h2>
+        <h2 className="text-xl font-semibold mb-4">
+          {isNowLanguage === "en"
+            ? "Search History"
+            : isNowLanguage === "it"
+            ? "Storia"
+            : "履歴"}
+        </h2>
         {histories.length === 0 ? (
           <p className="text-center text-gray-500">
             No search history available.
@@ -80,7 +89,11 @@ export default function Search({
                   onClick={() => historyDelete(history.id)}
                   className="text-xs text-red-500 hover:text-red-700"
                 >
-                  Delete
+                  {isNowLanguage === "en"
+                    ? "Delete"
+                    : isNowLanguage === "it"
+                    ? "Cancellazione"
+                    : "削除"}
                 </button>
               </li>
             ))}

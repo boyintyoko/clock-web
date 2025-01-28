@@ -11,9 +11,13 @@ export default function SearchContent({ isSearch }: Search) {
   const [historyText, setHistoryText] = useState<HistoryType[]>([]);
 
   useEffect(() => {
-    const histories = localStorage.getItem("history");
-    if (histories) {
+    try {
+      const histories = localStorage.getItem("history");
+      if (!histories) return;
       setHistoryText(JSON.parse(histories));
+    } catch (err) {
+      console.log(err);
+      localStorage.removeItem("history");
     }
   }, []);
 

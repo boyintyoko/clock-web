@@ -44,9 +44,14 @@ export default function Home() {
 
   useEffect(() => {
     const isDarkMode = localStorage.getItem("isDarkMode");
+    if (!(isDarkMode === "true" || isDarkMode === "false")) {
+      localStorage.setItem("isDarkMode", "false");
+      setIsDarkMode(false);
+      return;
+    }
     if (!isDarkMode) return;
     setIsDarkMode(JSON.parse(isDarkMode));
-  }, []);
+  }, [isDarkMode]);
 
   const handleSwitchChange = () => {
     setIsDarkMode(!isDarkMode);

@@ -39,10 +39,8 @@ export default function ChangeImageSide({
     const fetchData = async () => {
       setLoading(true);
       try {
-        const response = await axios.get(
-          `https://api.unsplash.com/photos/random?client_id=${process.env.NEXT_PUBLIC_UNSPLASH_API_END_KEY}&count=${count}`
-        );
-        setImages((prevImages) => [...prevImages, ...response.data]);
+        const res = await axios.get<ImageType[]>(`/api/proxy/${count}`);
+        setImages((prevImages) => [...prevImages, ...res.data]);
       } catch (err) {
         console.error(err);
       } finally {
