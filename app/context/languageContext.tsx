@@ -16,11 +16,16 @@ interface LanguageType {
 const LanguageContext = createContext<LanguageType | undefined>(undefined);
 
 export const LanguageProvider = ({ children }: { children: ReactNode }) => {
-  const [isNowLanguage, setIsNowLanguage] = useState<string>("");
+  const [isNowLanguage, setIsNowLanguage] = useState<string>("jp");
 
   useEffect(() => {
     const language = localStorage.getItem("language");
-    if (!language) return;
+
+    if (!(language === "en" || language === "it" || language === "jp")) {
+      localStorage.setItem("language", "jp");
+      return;
+    }
+
     setIsNowLanguage(language);
   }, []);
 

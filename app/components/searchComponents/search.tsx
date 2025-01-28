@@ -23,7 +23,6 @@ export default function Search({
     const histories = localStorage.getItem("history");
     if (!histories) return;
     setHistories(JSON.parse(histories));
-    console.log("hello");
   }, []);
 
   const historyDelete = (id: number) => {
