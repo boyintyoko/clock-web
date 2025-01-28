@@ -1,14 +1,13 @@
-import { NextResponse } from 'next/server';
-import axios from 'axios';
-import type ImageType from '@/app/types/ImagesType';
+import { NextResponse } from "next/server";
+import axios from "axios";
+import type ImageType from "@/app/types/ImagesType";
 
 export async function GET(
   req: Request,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id } = params;
-
+    const { id } = await context.params;
     const response = await axios.get<ImageType[]>(
       `https://api.unsplash.com/photos/random?client_id=${process.env.NEXT_PUBLIC_UNSPLASH_API_END_KEY}&count=${id}`
     );
@@ -17,9 +16,9 @@ export async function GET(
 
     return NextResponse.json(data);
   } catch (err) {
-    console.error('Error fetching API:', err);
+    console.error("Error fetching API:", err);
     return NextResponse.json(
-      { error: 'Failed to fetch data' },
+      { error: "Failed to fetch data" },
       { status: 500 }
     );
   }
