@@ -36,28 +36,27 @@ export default function ChangeImageSide({
   }, [isNowGoods]);
 
   useEffect(() => {
-    const getData = async () => {
+    const fetchData = async () => {
       setLoading(true);
       try {
-        const photoData = await axios.get(
+        const response = await axios.get(
           `https://api.unsplash.com/photos/random?client_id=${process.env.NEXT_PUBLIC_UNSPLASH_API_END_KEY}&count=${count}`
         );
-        setImages((prevImages) => [...prevImages, ...photoData.data]);
-      } catch (err) {
-        console.log(err);
+        setImages((prevImages) => [...prevImages, ...response.data]);
+      } catch (error) {
+        console.error(error);
       } finally {
         setLoading(false);
       }
     };
-    getData();
+    fetchData();
   }, [count]);
 
   useEffect(() => {
     const currentLoader = loaderRef.current;
     const observer = new IntersectionObserver(
       (entries) => {
-        const target = entries[0];
-        if (target.isIntersecting && !loading) {
+        if (entries[0].isIntersecting && !loading) {
           setCount((prev) => prev + 10);
         }
       },
@@ -80,18 +79,15 @@ export default function ChangeImageSide({
     e.preventDefault();
     setImages([]);
     try {
-      const res = await axios.get(
-        `${process.env.NEXT_PUBLIC_UNSPLASH_BASE_URL}query=${searchText}&client_id=${process.env.NEXT_PUBLIC_UNSPLASH_API_END_KEY}`
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_UNSPLASH_BASE_URL}?query=${searchText}&client_id=${process.env.NEXT_PUBLIC_UNSPLASH_API_END_KEY}`
       );
-      if (res.data.results.length === 0) {
+      if (response.data.results.length === 0) {
         setSearchError("No results found.");
-        setImages([]);
-        setSearchText("");
         return;
       }
-      setImages(res.data.results);
+      setImages(response.data.results);
       setSearchError("");
-      setSearchText("");
     } catch (error) {
       console.error(error);
       setSearchError("An error occurred. Please try again.");
@@ -105,10 +101,9 @@ export default function ChangeImageSide({
   const goodClickHandler = (url: string) => {
     setGoods((prevGoods) => {
       if (prevGoods.includes(url)) {
-        return prevGoods.filter((good) => good !== url);
-      } else {
-        return [...prevGoods, url];
+        return prevGoods.filter((item) => item !== url);
       }
+      return [...prevGoods, url];
     });
   };
 
@@ -127,20 +122,11 @@ export default function ChangeImageSide({
             <Image src="/back.png" alt="back image" height={25} width={25} />
           </button>
           <p className="text-xl font-bold text-gray-800">
-            {(() => {
-              if (isNowLanguage === "en") {
-                return "Image.";
-              } else if (isNowLanguage === "it") {
-                return "Immagine.";
-              }
-              return "Image.";
-            })()}
+            {isNowLanguage === "it" ? "Immagine." : "Image."}
           </p>
           <form onSubmit={searchSubmitHandler} className="relative">
             <input
-              onInput={(e: React.ChangeEvent<HTMLInputElement>) =>
-                setSearchText(e.target.value)
-              }
+              onChange={(e) => setSearchText(e.target.value)}
               type="text"
               value={searchText}
               placeholder="Search..."
@@ -155,7 +141,7 @@ export default function ChangeImageSide({
         )}
 
         <div className="grid grid-cols-1 gap-4 pt-4">
-          {images?.map((image, index) => (
+          {images.map((image, index) => (
             <div
               key={index}
               className="bg-white rounded-lg shadow-md p-4 hover:shadow-lg transition-shadow duration-200"
@@ -181,17 +167,17 @@ export default function ChangeImageSide({
                 </Link>
                 <button
                   onClick={() => goodClickHandler(image.urls.regular)}
-                  className={`transition-all hover:-translate-y-1 ${
-                    goods.includes(image.urls.regular)
-                      ? "text-red-500"
-                      : "text-gray-600 hover:text-red-500"
-                  }`}
+                  className="transition-all hover:-translate-y-1 text-xl"
                 >
-                  <i
-                    className={`fa-${
-                      goods.includes(image.urls.regular) ? "solid" : "regular"
-                    } fa-heart fa-lg`}
-                  ></i>
+                  {goods.includes(image.urls.regular) ? (
+                    <>
+                      <i className="fa-solid fa-heart text-red-500"></i>
+                    </>
+                  ) : (
+                    <>
+                      <i className="fa-regular fa-heart"></i>
+                    </>
+                  )}
                 </button>
               </div>
               <div

@@ -23,6 +23,12 @@ export default function GoodsContent({ isGoodsOpen }: GoodsType) {
   };
 
   useEffect(() => {
+    const goods = localStorage.getItem("goods");
+    if (!goods) return;
+    setIsNowGoods(JSON.parse(goods));
+  }, [setIsNowGoods]);
+
+  useEffect(() => {
     if (!isGoodsOpen) return;
 
     const storedGoods = localStorage.getItem("goods");

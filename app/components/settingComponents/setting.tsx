@@ -27,7 +27,7 @@ export default function Setting({
       />
 
       <div
-        className={`w-full max-w-md bg-white rounded-2xl shadow-xl transform transition-transform ${
+        className={`h-96 w-96 bg-white rounded-2xl shadow-xl transform transition-transform ${
           isSettingOpen ? "scale-100" : "scale-95"
         }`}
         style={{

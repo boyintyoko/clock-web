@@ -1,6 +1,12 @@
 "use client";
 
-import { createContext, useContext, useState, ReactNode } from "react";
+import {
+  createContext,
+  useContext,
+  useState,
+  ReactNode,
+  useEffect,
+} from "react";
 
 interface GoodsType {
   isNowGoods: string[];
@@ -11,6 +17,12 @@ const GoodsContext = createContext<GoodsType | undefined>(undefined);
 
 export const GoodsProvider = ({ children }: { children: ReactNode }) => {
   const [isNowGoods, setIsNowGoods] = useState<string[]>([]);
+
+  useEffect(() => {
+    const goods = localStorage.getItem("goods");
+    if (!goods) return;
+    setIsNowGoods(JSON.parse(goods));
+  }, []);
 
   return (
     <GoodsContext.Provider value={{ isNowGoods, setIsNowGoods }}>

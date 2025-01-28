@@ -1,11 +1,18 @@
 import Link from "next/link";
 import Image from "next/image";
+import History from "./historyComponents/history";
 
-interface Search {
+interface Props {
   isSearch: boolean;
+  isHistoriesOpen: boolean;
+  setIsHistoriesOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export default function LinkContent({ isSearch }: Search) {
+export default function LinkContent({
+  isSearch,
+  isHistoriesOpen,
+  setIsHistoriesOpen,
+}: Props) {
   return (
     <div
       className={`flex items-center justify-evenly absolute ${
@@ -64,6 +71,10 @@ export default function LinkContent({ isSearch }: Search) {
           width={20}
         />
       </Link>
+      <History
+        isHistoriesOpen={isHistoriesOpen}
+        setIsHistoriesOpen={setIsHistoriesOpen}
+      />
     </div>
   );
 }

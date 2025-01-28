@@ -16,7 +16,7 @@ export default function Goods({ isGoodsOpen, setIsGoodsOpen }: GoodsType) {
     >
       <GoodsMask isGoodsOpen={isGoodsOpen} setIsGoodsOpen={setIsGoodsOpen} />
       <div
-        className={`z-50 w-96 h-96 bg-white overflow-auto rounded-lg shadow-xl transition-all duration-300 ease-in-out transform ${
+        className={`z-50 w-96 h-96 bg-white overflow-auto rounded-2xl shadow-xl transition-all duration-300 ease-in-out transform ${
           isGoodsOpen ? "opacity-100 scale-100" : "opacity-0 scale-95"
         }`}
         style={{

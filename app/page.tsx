@@ -35,6 +35,7 @@ export default function Home() {
   const [isDarkMode, setIsDarkMode] = useState<boolean>(false);
   const [isSettingOpen, setIsSettingOpen] = useState<boolean>(false);
   const [isGoodsOpen, setIsGoodsOpen] = useState<boolean>(false);
+  const [isHistoriesOpen, setIsHistoriesOpen] = useState<boolean>(false);
   const { background } = useBackground();
 
   useEffect(() => {
@@ -173,7 +174,11 @@ export default function Home() {
           isSettingOpen={isSettingOpen}
           setIsSettingOpen={setIsSettingOpen}
         />
-        <Search isDarkMode={isDarkMode}/>
+        <Search
+          isDarkMode={isDarkMode}
+          isHistoriesOpen={isHistoriesOpen}
+          setIsHistoriesOpen={setIsHistoriesOpen}
+        />
       </div>
     </MainSelection>
   );

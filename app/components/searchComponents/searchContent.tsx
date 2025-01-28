@@ -1,5 +1,6 @@
 import Image from "next/image";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import HistoryType from "@/app/types/HistoryType";
 
 interface Search {
   isSearch: boolean;
@@ -7,19 +8,33 @@ interface Search {
 
 export default function SearchContent({ isSearch }: Search) {
   const [searchText, setSearchText] = useState<string>("");
+  const [historyText, setHistoryText] = useState<HistoryType[]>([]);
+
+  useEffect(() => {
+    const histories = localStorage.getItem("history");
+    if (histories) {
+      setHistoryText(JSON.parse(histories));
+    }
+  }, []);
 
   const searchHandler = (
     e: React.FormEvent<HTMLFormElement> | React.MouseEvent<HTMLButtonElement>
   ): void => {
     if (searchText.length > 0) {
-      if (e instanceof MouseEvent) {
-        window.open(`https://www.google.com/search?q=${searchText}`);
-        setSearchText("");
-      } else {
-        e.preventDefault();
-        window.open(`https://www.google.com/search?q=${searchText}`);
-        setSearchText("");
-      }
+      e.preventDefault();
+      window.open(`https://www.google.com/search?q=${searchText}`);
+
+      const newHistory: HistoryType = {
+        content: searchText,
+        id: historyText.length,
+        create: new Date().toISOString(),
+      };
+
+      const updatedHistory = [...historyText, newHistory];
+      setHistoryText(updatedHistory);
+      localStorage.setItem("history", JSON.stringify(updatedHistory));
+
+      setSearchText("");
     }
   };
 
