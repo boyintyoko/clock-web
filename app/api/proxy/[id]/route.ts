@@ -2,13 +2,17 @@ import { NextResponse } from "next/server";
 import axios from "axios";
 import type ImageType from "@/app/types/ImagesType";
 
-export async function GET(
-  req: Request,
-  { params }: { params: { id: string } }
-) {
+interface Params {
+  params: {
+    id: string;
+  };
+}
+
+export async function GET(req: Request, context: Params) {
   try {
-    const { id } = params;
-    const response = await axios.get<ImageType>(
+    const { id } = await context.params;
+
+    const response = await axios.get<ImageType[]>(
       `https://api.unsplash.com/photos/random?client_id=${process.env.NEXT_PUBLIC_UNSPLASH_API_END_KEY}&count=${id}`
     );
 
