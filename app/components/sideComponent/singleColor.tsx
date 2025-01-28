@@ -1,16 +1,20 @@
 "use client";
 
 import Image from "next/image";
-import colors from "@/data/colorData";
 import { useBackground } from "@/app/context/backgroundContext";
 import { useEffect, useState } from "react";
+import axios from "axios";
+
+interface ImagesResponse {
+  images: string[];
+}
 
 export default function SingleColor() {
   const { setBackground, background } = useBackground();
   const [isNowBackground, setIsNowBackground] = useState<string>("");
+  const [colors, setColors] = useState<string[]>([]);
 
   const colorChangeHandler = (color: string) => {
-    localStorage.getItem("background");
     localStorage.setItem("background", color);
     setBackground(color);
     setIsNowBackground(color);
@@ -29,6 +33,18 @@ export default function SingleColor() {
     setIsNowBackground(url);
   }, []);
 
+  useEffect(() => {
+    const getImages = async () => {
+      try {
+        const res = await axios.get<ImagesResponse>("/api/images");
+        setColors(res.data.images);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    getImages();
+  }, []);
+
   return (
     <div className="flex flex-nowrap overflow-auto gap-2 border-b pb-3">
       {colors.map((color, i) => (
@@ -41,13 +57,10 @@ export default function SingleColor() {
         >
           <div className="h-12 w-12 overflow-hidden rounded-full">
             <Image
-              src={`/color/${color}.png`}
+              src={`/colors/${color}`}
               height={50}
               width={50}
               alt={color}
-              onError={(e) => {
-                e.currentTarget.src = "/default.png";
-              }}
             />
           </div>
         </button>

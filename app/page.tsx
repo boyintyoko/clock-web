@@ -67,7 +67,7 @@ export default function Home() {
       return `url(${user})`;
     }
 
-    return `url(/color/${user}.png)`;
+    return `url(/colors/${user})`;
   };
 
   return (

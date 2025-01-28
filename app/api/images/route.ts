@@ -4,7 +4,7 @@ import { NextResponse } from "next/server";
 
 export async function GET() {
   try {
-    const colorsDirectory = path.join(process.cwd(), "public", "color");
+    const colorsDirectory = path.join(process.cwd(), "public", "colors");
 
     const files = fs.readdirSync(colorsDirectory);
 
