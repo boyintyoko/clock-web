@@ -24,6 +24,7 @@ export default function SearchContent({ isSearch }: Search) {
   const searchHandler = (
     e: React.FormEvent<HTMLFormElement> | React.MouseEvent<HTMLButtonElement>
   ): void => {
+    e.preventDefault();
     if (searchText.length > 0) {
       e.preventDefault();
       window.open(`https://www.google.com/search?q=${searchText}`);
