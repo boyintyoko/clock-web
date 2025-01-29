@@ -75,7 +75,11 @@ export default function Search({
         </h2>
         {histories.length === 0 ? (
           <p className="text-center text-gray-500">
-            No search history available.
+            {isNowLanguage === "en"
+              ? "No search history available."
+              : isNowLanguage === "it"
+              ? "Non è disponibile la cronologia delle ricerche."
+              : "履歴がありません"}
           </p>
         ) : (
           <ul>
