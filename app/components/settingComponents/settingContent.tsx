@@ -1,11 +1,10 @@
+"use client";
 import React, { useEffect } from "react";
 import { useLanguage } from "@/app/context/languageContext";
 import { useTime } from "@/app/context/timeContext";
-import { useRouter } from "next/navigation";
 export default function SettingContent() {
   const { setIsNowLanguage, isNowLanguage } = useLanguage();
   const { setIsNowTime, isNowTime } = useTime();
-  const router = useRouter();
 
   const handleLanguageChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedLanguage = e.target.value;
@@ -28,13 +27,7 @@ export default function SettingContent() {
   }, [setIsNowLanguage, setIsNowTime]);
 
   const clearMemories = () => {
-    localStorage.removeItem("background");
-    localStorage.removeItem("goods");
-    localStorage.removeItem("history");
-    localStorage.removeItem("language");
-    localStorage.removeItem("isDarkMode");
-    localStorage.removeItem("time");
-    router.refresh();
+    localStorage.clear();
   };
 
   return (

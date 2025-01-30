@@ -74,8 +74,22 @@ export default function ElectronicClock({ isDarkMode }: isDarkModeType) {
         >
           <div>{days[day]}</div>
           <div>
-            {month.toString().padStart(2, "0")}/
-            {date.toString().padStart(2, "0")}
+            {isNowLanguage === "en" ? (
+              <div>
+                {month.toString().padStart(2, "0")}/
+                {date.toString().padStart(2, "0")}
+              </div>
+            ) : isNowLanguage === "it" ? (
+              <div>
+                {date.toString().padStart(2, "0")}/
+                {month.toString().padStart(2, "0")}
+              </div>
+            ) : (
+              <div>
+                {month.toString().padStart(2, "0")}/
+                {date.toString().padStart(2, "0")}
+              </div>
+            )}
           </div>
         </div>
       </div>

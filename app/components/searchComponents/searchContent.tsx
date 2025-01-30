@@ -40,7 +40,8 @@ export default function SearchContent({
       const newHistory: HistoryType = {
         content: searchText,
         id: newId,
-        create: new Date().toISOString(),
+        create_minutes: new Date().getMinutes(),
+        create_hours: new Date().getHours(),
       };
 
       const updatedHistory = [...histories, newHistory];

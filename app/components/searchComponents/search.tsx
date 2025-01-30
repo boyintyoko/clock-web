@@ -96,9 +96,17 @@ export default function Search({
                 key={history.id}
                 className="flex items-center justify-between p-2 mb-2 bg-gray-100 rounded-lg hover:bg-gray-200 transition-all"
               >
-                <div>
-                  <span className="text-xs">{history.create}:</span>
-                  <span className="text-sm"> {history.content}</span>
+                <div className="flex gap-1 items-center">
+                  <div className="flex">
+                    <span className="text-xs">
+                      {history.create_hours.toString().padStart(2, "0")}:
+                    </span>
+                    <span className="text-xs">:</span>
+                    <span className="text-xs">
+                      {history.create_minutes.toString().padStart(2, "0")}
+                    </span>
+                  </div>
+                  <span className="text-xs">{history.content}</span>
                 </div>
                 <button
                   onClick={() => historyDelete(history.id)}
