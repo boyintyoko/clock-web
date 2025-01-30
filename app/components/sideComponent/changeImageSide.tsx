@@ -22,7 +22,8 @@ export default function ChangeImageSide({
   const [images, setImages] = useState<ImageType[]>([]);
   const [searchText, setSearchText] = useState<string>("");
   const [searchError, setSearchError] = useState<string>("");
-  const [goods, setGoods] = useState<string[]>([]);
+  const getInitialGoods = () => { return typeof window !== 'undefined' && JSON.parse(localStorage.getItem("goods") || '[]') };
+  const [goods, setGoods] = useState<string[]>(getInitialGoods);
   const [loading, setLoading] = useState(false);
   const [count, setCount] = useState(10);
   const loaderRef = useRef<HTMLDivElement | null>(null);
