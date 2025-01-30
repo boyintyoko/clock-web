@@ -5,6 +5,7 @@ import { BackgroundProvider } from "./context/backgroundContext";
 import { GoodsProvider } from "./context/goodContext";
 import { LanguageProvider } from "./context/languageContext";
 import { TimeProvider } from "./context/timeContext";
+import { Analytics } from "@vercel/analytics/react";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -71,7 +72,10 @@ export default function RootLayout({
         <TimeProvider>
           <LanguageProvider>
             <BackgroundProvider>
-              <GoodsProvider>{children}</GoodsProvider>
+              <GoodsProvider>
+                {children}
+                <Analytics />
+              </GoodsProvider>
             </BackgroundProvider>
           </LanguageProvider>
         </TimeProvider>
