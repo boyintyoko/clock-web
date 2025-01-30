@@ -13,7 +13,7 @@ import Loading from "./components/loading/loading";
 import Goods from "./components/goodsComponents/goods";
 import styled from "styled-components";
 import colors from "@/data/colorData";
-import colorsRGB from "@/data/colorsDataRGB";
+import colorsRGB from "@/data/colorRGBData";
 import Search from "./components/searchComponents/search";
 
 interface MainSelectionProps {
@@ -24,9 +24,10 @@ const MainSelection = styled.div<MainSelectionProps>`
   ::selection {
     background: ${(props) =>
       colors.includes(props.$background)
-        ? colorsRGB[props.$background]
-        : "#fff"};
-    color: ${(props) => (colors.includes(props.$background) ? "#fff" : "#000")};
+        ? "#fff"
+        : colorsRGB[props.$background.replace(".png", "")]};
+    color: ${(props) =>
+      colors.includes(props.$background.replace(".png", "")) ? "#fff" : "#000"};
   }
 `;
 
@@ -67,10 +68,9 @@ export default function Home() {
       return `url(${user})`;
     }
 
-    if (colors.includes(user)) {
+    if (colors.includes(user) + ".png") {
       return `url(/colors/${user})`;
     } else {
-      localStorage.setItem("background", "/initialValuePhoto.avif");
       return "url(/initialValuePhoto.avif)";
     }
   };
