@@ -67,7 +67,12 @@ export default function Home() {
       return `url(${user})`;
     }
 
-    return `url(/colors/${user})`;
+    if (colors.includes(user)) {
+      return `url(/colors/${user})`;
+    } else {
+      localStorage.setItem("background", "/initialValuePhoto.avif");
+      return "url(/initialValuePhoto.avif)";
+    }
   };
 
   return (

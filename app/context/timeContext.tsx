@@ -24,7 +24,6 @@ export const TimeProvider = ({ children }: { children: ReactNode }) => {
       localStorage.setItem("time", "24");
       return;
     }
-    if (!time) return;
     setIsNowTime(Number(time));
   }, []);
 
