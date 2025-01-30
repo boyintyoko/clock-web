@@ -99,11 +99,13 @@ export default function Search({
                 <div className="flex gap-1 items-center">
                   <div className="flex">
                     <span className="text-xs">
-                      {history.create_hours.toString().padStart(2, "0")}:
+                      {history.create_hours.toString().padStart(2, "0") ?? "--"}
+                      :
                     </span>
                     <span className="text-xs">:</span>
                     <span className="text-xs">
-                      {history.create_minutes.toString().padStart(2, "0")}
+                      {history.create_minutes.toString().padStart(2, "0") ??
+                        "--"}
                     </span>
                   </div>
                   <span className="text-xs">{history.content}</span>
