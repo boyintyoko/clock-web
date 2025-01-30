@@ -23,21 +23,29 @@ export default function Search({
   const { isNowLanguage } = useLanguage();
 
   useEffect(() => {
+    setDataHistories();
+  }, []);
+
+  const setDataHistories = () => {
     const histories = localStorage.getItem("history");
     if (!histories) return;
     setHistories(JSON.parse(histories));
-  }, []);
+  };
 
   const historyDelete = (id: number) => {
     const upDateHistories = histories.filter((history) => history.id !== id);
-    setHistories(upDateHistories);
     localStorage.setItem("history", JSON.stringify(upDateHistories));
+    setHistories(upDateHistories);
   };
 
   return (
     <div>
       <div className="absolute bottom-2 left-2">
-        <SearchContent isSearch={isSearch} />
+        <SearchContent
+          isSearch={isSearch}
+          setHistories={setHistories}
+          histories={histories}
+        />
         <LinkContent
           isSearch={isSearch}
           isHistoriesOpen={isHistoriesOpen}
@@ -88,7 +96,10 @@ export default function Search({
                 key={history.id}
                 className="flex items-center justify-between p-2 mb-2 bg-gray-100 rounded-lg hover:bg-gray-200 transition-all"
               >
-                <span className="text-sm">{history.content}</span>
+                <div>
+                  <span className="text-xs">{history.create}:</span>
+                  <span className="text-sm"> {history.content}</span>
+                </div>
                 <button
                   onClick={() => historyDelete(history.id)}
                   className="text-xs text-red-500 hover:text-red-700"

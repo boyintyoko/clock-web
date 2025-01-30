@@ -4,39 +4,48 @@ import HistoryType from "@/app/types/HistoryType";
 
 interface Search {
   isSearch: boolean;
+  setHistories: React.Dispatch<React.SetStateAction<HistoryType[]>>;
+  histories: HistoryType[];
 }
 
-export default function SearchContent({ isSearch }: Search) {
+export default function SearchContent({
+  isSearch,
+  setHistories,
+  histories,
+}: Search) {
   const [searchText, setSearchText] = useState<string>("");
-  const [historyText, setHistoryText] = useState<HistoryType[]>([]);
 
   useEffect(() => {
     try {
-      const histories = localStorage.getItem("history");
-      if (!histories) return;
-      setHistoryText(JSON.parse(histories));
+      const storedHistories = localStorage.getItem("history");
+      if (!storedHistories) return;
+      setHistories(JSON.parse(storedHistories));
     } catch (err) {
       console.log(err);
       localStorage.removeItem("history");
     }
-  }, []);
+  }, [setHistories]);
 
   const searchHandler = (
     e: React.FormEvent<HTMLFormElement> | React.MouseEvent<HTMLButtonElement>
   ): void => {
     e.preventDefault();
-    if (searchText.length > 0) {
-      e.preventDefault();
+
+    if (searchText.trim().length > 0) {
       window.open(`https://www.google.com/search?q=${searchText}`);
+
+      const newId =
+        histories.length > 0 ? Math.max(...histories.map((h) => h.id)) + 1 : 0;
 
       const newHistory: HistoryType = {
         content: searchText,
-        id: historyText.length,
+        id: newId,
         create: new Date().toISOString(),
       };
 
-      const updatedHistory = [...historyText, newHistory];
-      setHistoryText(updatedHistory);
+      const updatedHistory = [...histories, newHistory];
+
+      setHistories(updatedHistory);
       localStorage.setItem("history", JSON.stringify(updatedHistory));
 
       setSearchText("");
@@ -62,7 +71,7 @@ export default function SearchContent({ isSearch }: Search) {
         className="flex justify-center items-center bg-blue-500 h-16 w-16 rounded-r-full hover:bg-blue-600"
         onClick={searchHandler}
       >
-        <Image src="/search.png" alt="youtube icon" height={30} width={30} />
+        <Image src="/search.png" alt="search icon" height={30} width={30} />
       </button>
     </div>
   );
