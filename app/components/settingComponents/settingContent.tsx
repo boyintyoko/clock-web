@@ -1,10 +1,11 @@
 import React, { useEffect } from "react";
 import { useLanguage } from "@/app/context/languageContext";
 import { useTime } from "@/app/context/timeContext";
-
+import { useRouter } from "next/navigation";
 export default function SettingContent() {
   const { setIsNowLanguage, isNowLanguage } = useLanguage();
   const { setIsNowTime, isNowTime } = useTime();
+  const router = useRouter();
 
   const handleLanguageChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedLanguage = e.target.value;
@@ -26,8 +27,18 @@ export default function SettingContent() {
     if (!language) setIsNowLanguage("en");
   }, [setIsNowLanguage, setIsNowTime]);
 
+  const clearMemories = () => {
+    localStorage.removeItem("background");
+    localStorage.removeItem("goods");
+    localStorage.removeItem("history");
+    localStorage.removeItem("language");
+    localStorage.removeItem("isDarkMode");
+    localStorage.removeItem("time");
+    router.refresh();
+  };
+
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 overflow-auto">
       <div>
         <label className="block font-bold text-lg mb-2">
           {isNowLanguage === "en"
@@ -75,6 +86,15 @@ export default function SettingContent() {
           <option value="it">Italian</option>
           <option value="ja">日本語</option>
         </select>
+      </div>
+
+      <div>
+        <button
+          onClick={clearMemories}
+          className="border-red-500 border p-3 rounded-full text-red-500"
+        >
+          Clear memories
+        </button>
       </div>
     </div>
   );
