@@ -53,7 +53,10 @@ export default function Setting({
           </div>
         </div>
         <div className="p-6">
-          <SettingContent />
+          <SettingContent
+            isSettingOpen={isSettingOpen}
+            setIsSettingOpen={setIsSettingOpen}
+          />
         </div>
       </div>
     </div>

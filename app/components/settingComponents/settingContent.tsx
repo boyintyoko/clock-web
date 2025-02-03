@@ -2,7 +2,16 @@
 import React, { useEffect } from "react";
 import { useLanguage } from "@/app/context/languageContext";
 import { useTime } from "@/app/context/timeContext";
-export default function SettingContent() {
+
+interface SettingType {
+  isSettingOpen: boolean;
+  setIsSettingOpen: (isOpen: boolean) => void;
+}
+
+export default function SettingContent({
+  isSettingOpen,
+  setIsSettingOpen,
+}: SettingType) {
   const { setIsNowLanguage, isNowLanguage } = useLanguage();
   const { setIsNowTime, isNowTime } = useTime();
 
@@ -28,6 +37,8 @@ export default function SettingContent() {
 
   const clearMemories = () => {
     localStorage.clear();
+    setIsSettingOpen(!isSettingOpen);
+    window.location.reload();
   };
 
   return (
