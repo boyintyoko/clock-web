@@ -15,6 +15,7 @@ import styled from "styled-components";
 import colors from "@/data/colorData";
 import colorsRGB from "@/data/colorRGBData";
 import Search from "./components/searchComponents/search";
+import axios from "axios";
 
 interface MainSelectionProps {
   $background: string;
@@ -42,6 +43,18 @@ export default function Home() {
   useEffect(() => {
     setUser(background);
   }, [background]);
+
+  useEffect(() => {
+    const getData = async () => {
+      try {
+        const ip = await axios.get("api/ip");
+        console.log(ip.data);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    getData();
+  }, []);
 
   useEffect(() => {
     const isDarkMode = localStorage.getItem("isDarkMode");
