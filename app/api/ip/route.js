@@ -1,11 +1,8 @@
-import connectToDatabase from "@/lib/mongoose";
-import Ip from "@/model/ip";
+import connectToDatabase from "../../../lib/mongoose";
+import Ip from "../../../models/Ip";
 
-export default async function handler(req, res) {
-  if (req.method !== "POST") {
-    return res.status(405).json({ error: "Method Not Allowed" });
-  }
-
+// POST メソッドで IP を保存
+export async function POST(req) {
   await connectToDatabase();
 
   try {
@@ -17,9 +14,15 @@ export default async function handler(req, res) {
     const newIp = new Ip({ ip });
     await newIp.save();
 
-    return res.status(201).json({ message: "IP saved", ip });
+    return new Response(JSON.stringify({ message: "IP saved", ip }), {
+      status: 201,
+      headers: { "Content-Type": "application/json" },
+    });
   } catch (error) {
     console.error(error);
-    return res.status(500).json({ error: "Internal Server Error" });
+    return new Response(JSON.stringify({ error: "Internal Server Error" }), {
+      status: 500,
+      headers: { "Content-Type": "application/json" },
+    });
   }
 }
