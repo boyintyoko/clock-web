@@ -9,13 +9,11 @@ export default async function handler(req, res) {
   await connectToDatabase();
 
   try {
-    // IPアドレス取得
     const forwarded = req.headers["x-forwarded-for"];
     const ip = forwarded
       ? forwarded.split(",")[0]
       : req.socket.remoteAddress || "IP取得不可";
 
-    // IPを保存
     const newIp = new Ip({ ip });
     await newIp.save();
 
