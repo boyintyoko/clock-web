@@ -1,5 +1,5 @@
-import connectToDatabase from "../../lib/mongoose";
-import Ip from "../../models/Ip";
+import connectToDatabase from "@/lib/mongoose";
+import Ip from "@/model/ip";
 
 export default async function handler(req, res) {
   if (req.method !== "POST") {
