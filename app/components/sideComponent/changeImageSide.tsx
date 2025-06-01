@@ -25,7 +25,7 @@ export default function ChangeImageSide({
   const getInitialGoods =
     typeof window !== "undefined" &&
     JSON.parse(localStorage.getItem("goods") || "[]");
-  const [goods, setGoods] = useState<string[]>(getInitialGoods);
+  const [hearts, setHearts] = useState<string[]>(getInitialGoods);
   const [loading, setLoading] = useState(false);
   const [count, setCount] = useState(10);
   const [scrollGoTopButton, setScrollGoTopButton] = useState<boolean>(false)
@@ -37,7 +37,7 @@ export default function ChangeImageSide({
   const sideBarScrollWidth = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    setGoods(isNowGoods);
+    setHearts(isNowGoods);
   }, [isNowGoods]);
 
 
@@ -47,9 +47,9 @@ export default function ChangeImageSide({
 
     const handleScroll = () => {
       if (el.scrollTop >= 100) {
-        setScrollGoTopButton(true)
+        setScrollGoTopButton(true);
       } else {
-        setScrollGoTopButton(false)
+        setScrollGoTopButton(false);
       }
     };
 
@@ -57,6 +57,17 @@ export default function ChangeImageSide({
 
     return () => el.removeEventListener("scroll", handleScroll);
   }, []);
+
+  useEffect(() => {
+    console.log(isChange);
+    
+    if (!isChange) {
+      setScrollGoTopButton(false);
+    } else {
+      setScrollGoTopButton(true)
+    }
+  }, [isChange]);
+
 
 
   useEffect(() => {
@@ -117,11 +128,11 @@ export default function ChangeImageSide({
   };
 
   useEffect(() => {
-    localStorage.setItem("goods", JSON.stringify(goods));
-  }, [goods]);
+    localStorage.setItem("goods", JSON.stringify(hearts));
+  }, [hearts]);
 
   const goodClickHandler = (url: string) => {
-    setGoods((prevGoods) => {
+    setHearts((prevGoods) => {
       if (prevGoods.includes(url)) {
         return prevGoods.filter((item) => item !== url);
       }
@@ -188,20 +199,36 @@ export default function ChangeImageSide({
                     </p>
                   </div>
                 </Link>
-                <button
-                  onClick={() => goodClickHandler(image.urls.regular)}
-                  className="transition-all hover:-translate-y-1 text-xl"
-                >
-                  {goods.includes(image.urls.regular) ? (
-                    <>
-                      <i className="fa-solid fa-heart text-red-500"></i>
-                    </>
-                  ) : (
-                    <>
-                      <i className="fa-regular fa-heart"></i>
-                    </>
-                  )}
-                </button>
+                <div className="flex gap-3">
+                  <button
+                    onClick={() => goodClickHandler(image.urls.regular)}
+                    className="transition-all hover:-translate-y-1 text-xl"
+                  >
+                    {hearts.includes(image.urls.regular) ? (
+                      <>
+                        <i className="fa-solid fa-heart text-red-500"></i>
+                      </>
+                    ) : (
+                      <>
+                        <i className="fa-regular fa-heart"></i>
+                      </>
+                    )}
+                  </button>
+                  <button
+                    onClick={() => goodClickHandler(image.urls.regular)}
+                    className="transition-all hover:-translate-y-1 text-xl"
+                  >
+                    {hearts.includes(image.urls.regular) ? (
+                      <>
+                        <i className="fa-solid fa-thumbs-up"></i>
+                      </>
+                    ) : (
+                      <>
+                        <i className="fa-regular fa-thumbs-up"></i>
+                      </>
+                    )}
+                  </button>
+                </div>
               </div>
               <div
                 onClick={() => imageChangeHandler(image.urls.regular)}
@@ -230,7 +257,7 @@ export default function ChangeImageSide({
   sideBarScrollWidth.current?.scrollTo({ top: 0, behavior: "smooth" });
 }}
 
-        className={`fixed ${scrollGoTopButton ? "right-10" : "-right-20"} transition-all  bottom-10  bg-white p-5 rounded-full shadow-2xl`}
+        className={`fixed ${scrollGoTopButton && isChange ? "right-10" : "-right-20"}  transition-all  bottom-10  bg-white p-5 rounded-full shadow-2xl hover:bottom-8`}
       >
         <i className="fa-solid fa-jet-fighter-up text-4xl"></i>
       </button>

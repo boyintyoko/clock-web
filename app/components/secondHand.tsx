@@ -13,7 +13,6 @@ export default function SecondHand({ isDarkMode }: isDarkModeType) {
       const seconds = new Date().getSeconds();
 
       setAngle(seconds * 6 - 90);
-      console.log(angle);
     };
 
     updateAngle();
