@@ -28,15 +28,36 @@ export default function ChangeImageSide({
   const [goods, setGoods] = useState<string[]>(getInitialGoods);
   const [loading, setLoading] = useState(false);
   const [count, setCount] = useState(10);
+  const [scrollGoTopButton, setScrollGoTopButton] = useState<boolean>(false)
   const loaderRef = useRef<HTMLDivElement | null>(null);
 
   const { setBackground, background } = useBackground();
   const { isNowGoods } = useGoods();
   const { isNowLanguage } = useLanguage();
+  const sideBarScrollWidth = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     setGoods(isNowGoods);
   }, [isNowGoods]);
+
+
+  useEffect(() => {
+    const el = sideBarScrollWidth.current;
+    if (!el) return;
+
+    const handleScroll = () => {
+      if (el.scrollTop >= 100) {
+        setScrollGoTopButton(true)
+      } else {
+        setScrollGoTopButton(false)
+      }
+    };
+
+    el.addEventListener("scroll", handleScroll);
+
+    return () => el.removeEventListener("scroll", handleScroll);
+  }, []);
+
 
   useEffect(() => {
     const fetchData = async () => {
@@ -113,9 +134,10 @@ export default function ChangeImageSide({
       className={`side-bar absolute top-0 ${
         isChange ? "right-0" : "-right-96"
       } z-20 h-screen w-96 bg-gradient-to-b from-gray-100 to-white shadow-lg border-l border-gray-200 transition-all overflow-auto`}
+      ref={sideBarScrollWidth}
     >
-      <div className="p-4">
-        <div className="flex justify-between items-center mb-4">
+      <div className="p-4 fixid">
+        <div className=" flex justify-between items-center mb-4">
           <button
             onClick={() => setIsChange(!isChange)}
             className="flex justify-center items-center"
@@ -203,6 +225,15 @@ export default function ChangeImageSide({
           {loading && <p>Loading...</p>}
         </div>
       </div>
+      <button
+        onClick={() => {
+  sideBarScrollWidth.current?.scrollTo({ top: 0, behavior: "smooth" });
+}}
+
+        className={`fixed ${scrollGoTopButton ? "right-10" : "-right-20"} transition-all  bottom-10  bg-white p-5 rounded-full shadow-2xl`}
+      >
+        <i className="fa-solid fa-jet-fighter-up text-4xl"></i>
+      </button>
     </div>
   );
 }

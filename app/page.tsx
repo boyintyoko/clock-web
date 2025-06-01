@@ -4,9 +4,6 @@ import { useEffect, useState } from "react";
 import { useBackground } from "./context/backgroundContext";
 import ChangeImageButton from "./components/changeImageButton";
 import ElectronicClock from "./components/electronicClock";
-import SecondHand from "./components/secondHand";
-import MinuteHand from "./components/minuteHand";
-import HourHand from "./components/hourHand";
 import Image from "next/image";
 import Setting from "./components/settingComponents/setting";
 import Loading from "./components/loading/loading";
@@ -15,6 +12,7 @@ import styled from "styled-components";
 import colors from "@/data/colorData";
 import colorsRGB from "@/data/colorRGBData";
 import Search from "./components/searchComponents/search";
+import Clock from "./components/clock"
 
 interface MainSelectionProps {
   $background: string;
@@ -111,40 +109,7 @@ export default function Home() {
 
         <ChangeImageButton isDarkMode={isDarkMode} />
         <ElectronicClock isDarkMode={isDarkMode} />
-        <div
-          className={`relative flex justify-center items-center h-96 w-96 rounded-full border-8 ${
-            isDarkMode ? "border-black" : "border-white"
-          } shadow-2xl transition-all top-0 hover:top-1 bg-white bg-opacity-25 backdrop-blur-md hover:backdrop-blur-0`}
-        >
-          {[...Array(12)].map((_, index) => {
-            const number = (index + 12) % 12 || 12;
-            const rotation = index * 30;
-            return (
-              <div
-                key={index}
-                className={`absolute transition-all flex justify-center items-center w-10 ${
-                  isDarkMode ? "text-black" : "text-white"
-                }  h-10 font-black text-xl`}
-                style={{
-                  transform: `rotate(${rotation}deg) translate(0, -140px) rotate(-${rotation}deg)`,
-                }}
-              >
-                {number}
-              </div>
-            );
-          })}
-          <div
-            className={`dot h-5 w-5 rounded-full transition-all ${
-              isDarkMode ? "bg-black" : "bg-white"
-            }  z-10`}
-            style={{
-              boxShadow: `0px 0px 4px ${isDarkMode ? "#000" : "#fff"}`,
-            }}
-          ></div>
-          <SecondHand isDarkMode={isDarkMode} />
-          <MinuteHand isDarkMode={isDarkMode} />
-          <HourHand isDarkMode={isDarkMode} />
-        </div>
+        <Clock isDarkMode={isDarkMode}/>
         <div className="flex gap-2 absolute right-2 bottom-2">
           <button
             className={`transition-all shadow-xl ${

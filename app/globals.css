@@ -7,6 +7,7 @@
 body {
   font-family: "Noto Sans JP", serif;
   overflow: hidden;
+  background: #f9f9f9;
 }
 
 *::-webkit-scrollbar {

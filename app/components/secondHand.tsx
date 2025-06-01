@@ -11,7 +11,9 @@ export default function SecondHand({ isDarkMode }: isDarkModeType) {
   useEffect(() => {
     const updateAngle = () => {
       const seconds = new Date().getSeconds();
+
       setAngle(seconds * 6 - 90);
+      console.log(angle);
     };
 
     updateAngle();
