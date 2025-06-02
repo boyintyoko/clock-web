@@ -215,20 +215,20 @@ export default function ChangeImageSide({
                       </>
                     )}
                   </button>
-                  <button
-                    onClick={() => goodClickHandler(image.urls.regular)}
-                    className="transition-all hover:-translate-y-1 text-xl"
-                  >
-                    {hearts.includes(image.urls.regular) ? (
-                      <>
-                        <i className="fa-solid fa-thumbs-up"></i>
-                      </>
-                    ) : (
-                      <>
-                        <i className="fa-regular fa-thumbs-up"></i>
-                      </>
-                    )}
-                  </button>
+                  {/* <button */}
+                  {/*   onClick={() => goodClickHandler(image.urls.regular)} */}
+                  {/*   className="transition-all hover:-translate-y-1 text-xl" */}
+                  {/* > */}
+                  {/*   {hearts.includes(image.urls.regular) ? ( */}
+                  {/*     <> */}
+                  {/*       <i className="fa-solid fa-thumbs-up"></i> */}
+                  {/*     </> */}
+                  {/*   ) : ( */}
+                  {/*     <> */}
+                  {/*       <i className="fa-regular fa-thumbs-up"></i> */}
+                  {/*     </> */}
+                  {/*   )} */}
+                  {/* </button> */}
                 </div>
               </div>
               <div
