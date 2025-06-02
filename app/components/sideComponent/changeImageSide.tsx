@@ -59,11 +59,12 @@ export default function ChangeImageSide({
   }, []);
 
   useEffect(() => {
-    console.log(isChange);
+    const el = sideBarScrollWidth.current;
+    if (!el) return;
     
     if (!isChange) {
       setScrollGoTopButton(false);
-    } else {
+    } else if (isChange && el.scrollTop >= 100) {
       setScrollGoTopButton(true)
     }
   }, [isChange]);
