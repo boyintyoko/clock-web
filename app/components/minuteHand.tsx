@@ -10,7 +10,7 @@ export default function MinuteHand({ isDarkMode }: isDarkModeType) {
   useEffect(() => {
     const getMinutes = () => {
       const minutes = new Date().getMinutes();
-      setMinutes(minutes * 6 - 90);
+      setMinutes((360 + minutes * 6 - 90) % 360);
     };
     getMinutes();
     setInterval(getMinutes, 100);

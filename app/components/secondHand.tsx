@@ -11,21 +11,21 @@ export default function SecondHand({ isDarkMode }: isDarkModeType) {
   useEffect(() => {
     const updateAngle = () => {
       const seconds = new Date().getSeconds();
-
-      setAngle(seconds * 6 - 90);
+      setAngle((360 + seconds * 6 - 90)%360);
     };
 
     updateAngle();
-    const interval = setInterval(updateAngle, 1000);
+    const interval = setInterval(updateAngle, 250);
 
     return () => clearInterval(interval);
-  }, [angle]);
+  }, []);
+
+
 
   return (
     <div
-      className={`absolute left-1/2 transition-all ${
-        isDarkMode ? "bg-black" : "bg-white"
-      } w-44  `}
+      className={`absolute left-1/2 transition-all ${isDarkMode ? "bg-black" : "bg-white"
+        } w-44 `}
       style={{
         height: "2px",
         borderRadius: "9999px",
@@ -36,3 +36,5 @@ export default function SecondHand({ isDarkMode }: isDarkModeType) {
     ></div>
   );
 }
+
+

@@ -13,7 +13,7 @@ export default function HourHand({ isDarkMode }: isDarkModeType) {
       const now = new Date();
       const hours = now.getHours();
       const minutes = now.getMinutes();
-      const angle = (hours % 12) * 30 + minutes * 0.5 - 90;
+      const angle = ((360 + (hours % 12) * 30 + minutes * 0.5 - 90) % 360);
       setHourAngle(angle);
     };
 
