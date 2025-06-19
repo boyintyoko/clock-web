@@ -12,12 +12,12 @@ import styled from "styled-components";
 import colors from "@/data/colorData";
 import colorsRGB from "@/data/colorRGBData";
 import Search from "./components/searchComponents/search";
-import Clock from "./components/clock"
+import Clock from "./components/clock";
+import TimeZone from "./components/timeZoneComponents/timeZone";
 
 interface MainSelectionProps {
   $background: string;
 }
-
 const MainSelection = styled.div<MainSelectionProps>`
   ::selection {
     background: ${(props) =>
@@ -34,6 +34,7 @@ export default function Home() {
   const [isDarkMode, setIsDarkMode] = useState<boolean>(false);
   const [isSettingOpen, setIsSettingOpen] = useState<boolean>(false);
   const [isGoodsOpen, setIsGoodsOpen] = useState<boolean>(false);
+  const [isTimeZone, setIsTimeZone] = useState<boolean>(false);
   const [isHistoriesOpen, setIsHistoriesOpen] = useState<boolean>(false);
   const { background } = useBackground();
 
@@ -109,7 +110,7 @@ export default function Home() {
 
         <ChangeImageButton isDarkMode={isDarkMode} />
         <ElectronicClock isDarkMode={isDarkMode} />
-        <Clock isDarkMode={isDarkMode}/>
+        <Clock isDarkMode={isDarkMode} />
         <div className="flex gap-2 absolute right-2 bottom-2">
           <button
             className={`transition-all shadow-xl ${
@@ -143,12 +144,30 @@ export default function Home() {
               width={30}
             />
           </button>
+          <button
+            className={`transition-all shadow-xl ${
+              isDarkMode ? "bg-black" : "bg-white"
+            } rounded-full p-3 hover:translate-y-1`}
+            onClick={() => setIsTimeZone(!isTimeZone)}
+          >
+            <Image
+              src={`${
+                isDarkMode
+                  ? "/icons/timeZoneWhite.svg"
+                  : "/icons/timeZoneBlack.svg"
+              }`}
+              alt="setting"
+              height={30}
+              width={30}
+            />
+          </button>
         </div>
         <Goods isGoodsOpen={isGoodsOpen} setIsGoodsOpen={setIsGoodsOpen} />
         <Setting
           isSettingOpen={isSettingOpen}
           setIsSettingOpen={setIsSettingOpen}
         />
+        <TimeZone isTimeZone={isTimeZone} setIsTimeZone={setIsTimeZone} />
         <Search
           isDarkMode={isDarkMode}
           isHistoriesOpen={isHistoriesOpen}

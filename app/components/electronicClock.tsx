@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import { useLanguage } from "../context/languageContext";
 import { useTime } from "../context/timeContext";
+import { useTimeZone } from "../context/timeZoneContext";
 
 interface isDarkModeType {
   isDarkMode: boolean;
@@ -19,25 +20,54 @@ export default function ElectronicClock({ isDarkMode }: isDarkModeType) {
   const [days, setDays] = useState<string[]>([]);
   const { isNowLanguage } = useLanguage();
   const { isNowTime } = useTime();
+  const { isNowTimeZone } = useTimeZone();
 
   useEffect(() => {
-    const formatHour = (hour: number): number => {
-      if (isNowTime === 12) {
-        return hour % 12 === 0 ? 12 : hour % 12;
-      }
-      return hour;
-    };
-
     const updateTime = () => {
       const now = new Date();
-      const currentHour = now.getHours();
-      setHour(formatHour(currentHour));
-      setMinute(now.getMinutes());
-      setSecond(now.getSeconds());
-      setDay(now.getDay());
-      setDate(now.getDate());
-      setMonth(now.getMonth() + 1);
-      setPeriod(currentHour >= 12 ? "PM" : "AM");
+      const timeZone = isNowTimeZone || "Asia/Tokyo";
+
+      const formatter = new Intl.DateTimeFormat("en-US", {
+        hour12: isNowTime === 12,
+        timeZone,
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+        weekday: "short",
+        day: "numeric",
+        month: "numeric",
+      });
+
+      const parts = formatter.formatToParts(now);
+      const getPart = (type: string) =>
+        parts.find((p) => p.type === type)?.value;
+
+      const currentHour = getPart("hour");
+      const currentMinute = getPart("minute");
+      const currentSecond = getPart("second");
+      const currentDay = getPart("weekday");
+      const currentDate = getPart("day");
+      const currentMonth = getPart("month");
+      const dayPeriod = parts.find((p) => p.type === "dayPeriod")?.value ?? "";
+
+      setHour(currentHour ? Number(currentHour) : 0);
+      setMinute(currentMinute ? Number(currentMinute) : 0);
+      setSecond(currentSecond ? Number(currentSecond) : 0);
+
+      const weekMap: Record<string, number> = {
+        Sun: 0,
+        Mon: 1,
+        Tue: 2,
+        Wed: 3,
+        Thu: 4,
+        Fri: 5,
+        Sat: 6,
+      };
+      setDay(currentDay ? (weekMap[currentDay] ?? 0) : 0);
+
+      setDate(currentDate ? Number(currentDate) : 0);
+      setMonth(currentMonth ? Number(currentMonth) : 0);
+      setPeriod(dayPeriod.toUpperCase());
     };
 
     (() => {
@@ -60,9 +90,8 @@ export default function ElectronicClock({ isDarkMode }: isDarkModeType) {
 
     updateTime();
     const interval = setInterval(updateTime, 1000);
-
     return () => clearInterval(interval);
-  }, [isNowLanguage, isNowTime]);
+  }, [isNowLanguage, isNowTime, isNowTimeZone]);
 
   return (
     <div>

@@ -5,6 +5,7 @@ import { BackgroundProvider } from "./context/backgroundContext";
 import { GoodsProvider } from "./context/goodContext";
 import { LanguageProvider } from "./context/languageContext";
 import { TimeProvider } from "./context/timeContext";
+import { TimeZoneProvider } from "./context/timeZoneContext";
 import { Analytics } from "@vercel/analytics/react";
 
 const geistSans = Geist({
@@ -64,21 +65,24 @@ export default function RootLayout({
           href="https://use.fontawesome.com/releases/v6.2.0/css/all.css"
         />
         <meta name="apple-mobile-web-app-title" content="MyWebSite" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <link rel="manifest" href="/site.webmanifest" />
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <TimeProvider>
-          <LanguageProvider>
-            <BackgroundProvider>
-              <GoodsProvider>
-                {children}
-                <Analytics />
-              </GoodsProvider>
-            </BackgroundProvider>
-          </LanguageProvider>
-        </TimeProvider>
+        <TimeZoneProvider>
+          <TimeProvider>
+            <LanguageProvider>
+              <BackgroundProvider>
+                <GoodsProvider>
+                  {children}
+                  <Analytics />
+                </GoodsProvider>
+              </BackgroundProvider>
+            </LanguageProvider>
+          </TimeProvider>
+        </TimeZoneProvider>
       </body>
     </html>
   );

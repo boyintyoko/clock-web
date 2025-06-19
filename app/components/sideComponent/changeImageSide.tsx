@@ -28,7 +28,7 @@ export default function ChangeImageSide({
   const [hearts, setHearts] = useState<string[]>(getInitialGoods);
   const [loading, setLoading] = useState(false);
   const [count, setCount] = useState(10);
-  const [scrollGoTopButton, setScrollGoTopButton] = useState<boolean>(false)
+  const [scrollGoTopButton, setScrollGoTopButton] = useState<boolean>(false);
   const loaderRef = useRef<HTMLDivElement | null>(null);
 
   const { setBackground, background } = useBackground();
@@ -39,7 +39,6 @@ export default function ChangeImageSide({
   useEffect(() => {
     setHearts(isNowGoods);
   }, [isNowGoods]);
-
 
   useEffect(() => {
     const el = sideBarScrollWidth.current;
@@ -61,15 +60,13 @@ export default function ChangeImageSide({
   useEffect(() => {
     const el = sideBarScrollWidth.current;
     if (!el) return;
-    
+
     if (!isChange) {
       setScrollGoTopButton(false);
     } else if (isChange && el.scrollTop >= 100) {
-      setScrollGoTopButton(true)
+      setScrollGoTopButton(true);
     }
   }, [isChange]);
-
-
 
   useEffect(() => {
     const fetchData = async () => {
@@ -94,7 +91,7 @@ export default function ChangeImageSide({
           setCount((prev) => prev + 10);
         }
       },
-      { threshold: 0.5 }
+      { threshold: 0.5 },
     );
 
     if (currentLoader) observer.observe(currentLoader);
@@ -114,7 +111,7 @@ export default function ChangeImageSide({
     setImages([]);
     try {
       const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_UNSPLASH_BASE_URL}?query=${searchText}&client_id=${process.env.NEXT_PUBLIC_UNSPLASH_API_END_KEY}`
+        `${process.env.NEXT_PUBLIC_UNSPLASH_BASE_URL}?query=${searchText}&client_id=${process.env.NEXT_PUBLIC_UNSPLASH_API_END_KEY}`,
       );
       if (response.data.results.length === 0) {
         setSearchError("No results found.");
@@ -215,20 +212,20 @@ export default function ChangeImageSide({
                       </>
                     )}
                   </button>
-                  {/* <button */}
-                  {/*   onClick={() => goodClickHandler(image.urls.regular)} */}
-                  {/*   className="transition-all hover:-translate-y-1 text-xl" */}
-                  {/* > */}
-                  {/*   {hearts.includes(image.urls.regular) ? ( */}
-                  {/*     <> */}
-                  {/*       <i className="fa-solid fa-thumbs-up"></i> */}
-                  {/*     </> */}
-                  {/*   ) : ( */}
-                  {/*     <> */}
-                  {/*       <i className="fa-regular fa-thumbs-up"></i> */}
-                  {/*     </> */}
-                  {/*   )} */}
-                  {/* </button> */}
+                  <button
+                    onClick={() => goodClickHandler(image.urls.regular)}
+                    className="transition-all hover:-translate-y-1 text-xl"
+                  >
+                    {hearts.includes(image.urls.regular) ? (
+                      <>
+                        <i className="fa-solid fa-thumbs-up"></i>
+                      </>
+                    ) : (
+                      <>
+                        <i className="fa-regular fa-thumbs-up"></i>
+                      </>
+                    )}
+                  </button>
                 </div>
               </div>
               <div
@@ -255,9 +252,8 @@ export default function ChangeImageSide({
       </div>
       <button
         onClick={() => {
-  sideBarScrollWidth.current?.scrollTo({ top: 0, behavior: "smooth" });
-}}
-
+          sideBarScrollWidth.current?.scrollTo({ top: 0, behavior: "smooth" });
+        }}
         className={`fixed ${scrollGoTopButton && isChange ? "right-10" : "-right-20"}  transition-all  bottom-10  bg-white p-5 rounded-full shadow-2xl hover:bottom-8`}
       >
         <i className="fa-solid fa-jet-fighter-up text-4xl"></i>
