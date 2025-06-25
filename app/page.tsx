@@ -14,6 +14,7 @@ import colorsRGB from "@/data/colorRGBData";
 import Search from "./components/searchComponents/search";
 import Clock from "./components/clock";
 import TimeZone from "./components/timeZoneComponents/timeZone";
+import { useTimeZone } from "./context/timeZoneContext";
 
 interface MainSelectionProps {
   $background: string;
@@ -37,6 +38,7 @@ export default function Home() {
   const [isTimeZone, setIsTimeZone] = useState<boolean>(false);
   const [isHistoriesOpen, setIsHistoriesOpen] = useState<boolean>(false);
   const { background } = useBackground();
+  const { isNowTimeZone } = useTimeZone();
 
   useEffect(() => {
     setUser(background);
@@ -82,32 +84,34 @@ export default function Home() {
           backgroundImage: checkImage(user),
         }}
       >
-        <Loading />
-        <label
-          className="absolute top-1 right-1 flex items-center cursor-pointer mb-4 transition-all hover:top-2"
-          htmlFor="switch"
-          aria-label="Toggle dark mode"
-        >
-          <input
-            className="sr-only"
-            type="checkbox"
-            id="switch"
-            checked={isDarkMode}
-            onChange={handleSwitchChange}
-          />
-          <div
-            className={`w-14 h-8 rounded-2xl p-1 transition-all ${
-              isDarkMode ? "bg-gray-700" : "bg-gray-300"
-            }`}
+        <div className="flex flex-row-reverse gap-5 absolute top-1 right-1">
+          <label
+            className="flex items-center cursor-pointer mb-4 transition-all hover:top-2"
+            htmlFor="switch"
+            aria-label="Toggle dark mode"
           >
+            <input
+              className="sr-only"
+              type="checkbox"
+              id="switch"
+              checked={isDarkMode}
+              onChange={handleSwitchChange}
+            />
             <div
-              className={`h-6 w-6 bg-blue-500 rounded-full shadow-md transform transition-transform ${
-                isDarkMode && "translate-x-6"
+              className={`w-14 h-8 rounded-2xl p-1 transition-all ${
+                isDarkMode ? "bg-gray-700" : "bg-gray-300"
               }`}
-            ></div>
-          </div>
-        </label>
-
+            >
+              <div
+                className={`h-6 w-6 bg-blue-500 rounded-full shadow-md transform transition-transform ${
+                  isDarkMode && "translate-x-6"
+                }`}
+              ></div>
+            </div>
+          </label>
+          <p className="text-white font-bold">{isNowTimeZone}</p>
+        </div>
+        <Loading />
         <ChangeImageButton isDarkMode={isDarkMode} />
         <ElectronicClock isDarkMode={isDarkMode} />
         <Clock isDarkMode={isDarkMode} />
