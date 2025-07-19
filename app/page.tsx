@@ -15,8 +15,6 @@ import Search from "./components/searchComponents/search";
 import Clock from "./components/clock";
 import TimeZone from "./components/timeZoneComponents/timeZone";
 import { useTimeZone } from "./context/timeZoneContext";
-import { driver } from "driver.js";
-import "driver.js/dist/driver.css";
 
 interface MainSelectionProps {
   $background: string;
