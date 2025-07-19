@@ -1,13 +1,75 @@
 "use client";
 import { useEffect, useState } from "react";
 import LoadingSecondHand from "./loadingSecondHand";
+import { driver } from "driver.js";
+import "driver.js/dist/driver.css";
 
 export default function Loading() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   useEffect(() => {
+    const isFirstVisit = localStorage.getItem("hasVisited") !== "true";
+
     setTimeout(() => {
       setIsLoading(true);
+
+      if (isFirstVisit) {
+        const driverObj = driver({
+          showProgress: true,
+          steps: [
+            {
+              element: "#toggleMode",
+              popover: {
+                title: "Theme Switching",
+                description:
+                  "You can change the theme of your website with a toggle.",
+                side: "left",
+                align: "start",
+              },
+            },
+            {
+              element: "#changeImageButton",
+              popover: {
+                title: "Image Change Button",
+                description:
+                  "This button lets you change the background image.",
+                side: "left",
+                align: "start",
+              },
+            },
+            {
+              element: "#electronicClock",
+              popover: {
+                title: "Digital Clock",
+                description: "Displays the current date and time.",
+                side: "left",
+                align: "start",
+              },
+            },
+            {
+              element: "#clock",
+              popover: {
+                title: "Analog Clock",
+                description: "Check the current time in analog format.",
+                side: "left",
+                align: "start",
+              },
+            },
+            {
+              element: "#inputSearch",
+              popover: {
+                title: "Search",
+                description: "You can search using this input.",
+                side: "left",
+                align: "start",
+              },
+            },
+          ],
+        });
+
+        driverObj.drive();
+        localStorage.setItem("hasVisited", "true");
+      }
     }, 3000);
   }, []);
 

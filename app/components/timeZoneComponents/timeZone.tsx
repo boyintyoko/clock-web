@@ -37,6 +37,7 @@ export default function TimeZone({ isTimeZone, setIsTimeZone }: SettingType) {
       className={`absolute inset-0 flex justify-center items-center transition-all ${
         isTimeZone ? "visible opacity-100" : "invisible opacity-0"
       }`}
+      id="timeZone"
     >
       <TimeZoneMask isTimeZone={isTimeZone} setIsTimeZone={setIsTimeZone} />
       <div

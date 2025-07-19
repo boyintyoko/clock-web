@@ -15,6 +15,8 @@ import Search from "./components/searchComponents/search";
 import Clock from "./components/clock";
 import TimeZone from "./components/timeZoneComponents/timeZone";
 import { useTimeZone } from "./context/timeZoneContext";
+import { driver } from "driver.js";
+import "driver.js/dist/driver.css";
 
 interface MainSelectionProps {
   $background: string;
@@ -76,6 +78,14 @@ export default function Home() {
     }
   };
 
+  useEffect(() => {
+    const hasVisited = localStorage.getItem("hasVisited");
+
+    if (!hasVisited) {
+      localStorage.setItem("hasVisited", JSON.stringify(true));
+    }
+  }, []);
+
   return (
     <MainSelection $background={background}>
       <div
@@ -89,6 +99,7 @@ export default function Home() {
             className="flex items-center cursor-pointer mb-4 transition-all hover:top-2"
             htmlFor="switch"
             aria-label="Toggle dark mode"
+            id="toggleMode"
           >
             <input
               className="sr-only"

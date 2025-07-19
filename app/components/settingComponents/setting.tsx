@@ -20,6 +20,7 @@ export default function Setting({
       className={`absolute inset-0 flex justify-center items-center transition-all ${
         isSettingOpen ? "visible opacity-100" : "invisible opacity-0"
       }`}
+      id="setting"
     >
       <SettingMask
         isSettingOpen={isSettingOpen}
@@ -47,8 +48,8 @@ export default function Setting({
               {isNowLanguage === "en"
                 ? "Settings"
                 : isNowLanguage === "it"
-                ? "Impostazione"
-                : "設定"}
+                  ? "Impostazione"
+                  : "設定"}
             </h2>
           </div>
         </div>

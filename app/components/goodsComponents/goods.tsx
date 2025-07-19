@@ -13,6 +13,7 @@ export default function Goods({ isGoodsOpen, setIsGoodsOpen }: GoodsType) {
       className={`absolute inset-0 flex justify-center items-center ${
         !isGoodsOpen && "pointer-events-none"
       }`}
+      id="good"
     >
       <GoodsMask isGoodsOpen={isGoodsOpen} setIsGoodsOpen={setIsGoodsOpen} />
       <div

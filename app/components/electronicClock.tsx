@@ -94,7 +94,7 @@ export default function ElectronicClock({ isDarkMode }: isDarkModeType) {
   }, [isNowLanguage, isNowTime, isNowTimeZone]);
 
   return (
-    <div>
+    <div id="electronicClock">
       <div className="relative flex justify-center bg-opacity-25 bg-white items-center w-64 rounded-xl mb-2 shadow-md transition-all top-0 hover:top-1">
         <div
           className={`flex items-center justify-center transition-all gap-5 w-full text-sm ${

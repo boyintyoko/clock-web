@@ -18,6 +18,7 @@ export default function ChangeImageButton({ isDarkMode }: isDarkModeType) {
   return (
     <div>
       <button
+        id="changeImageButton"
         onClick={openClickHandle}
         className={`flex flex-col items-center justify-center ${
           !isChange ? "gap-2" : "gap-0 z-50"

@@ -11,6 +11,7 @@ export default function TimeZoneContent() {
   }, []);
 
   const changeTimeZone = (supportTimeZone: string) => {
+    if (supportTimeZone === isNowTimeZone) return;
     localStorage.setItem("timeZone", supportTimeZone);
     setIsNowTimeZone(supportTimeZone);
     setIsNowTimeZone(isNowTimeZone);
@@ -27,8 +28,8 @@ export default function TimeZoneContent() {
             className={`${
               supportTimeZone === isNowTimeZone
                 ? "border-red-500"
-                : "border-gray-200"
-            } w-full text-left p-4 rounded-xl bg-white border shadow-sm hover:shadow-md hover:bg-gray-50 transition-all font-medium text-gray-700`}
+                : "border-gray-200 hover:shadow-md hover:bg-gray-50"
+            } w-full text-left p-4 rounded-xl bg-white border shadow-sm transition-all font-medium text-gray-700`}
           >
             {supportTimeZone}
           </button>

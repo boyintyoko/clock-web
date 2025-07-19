@@ -20,7 +20,12 @@ export const TimeZoneProvider = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     const timeZone = localStorage.getItem("timeZone");
-    if (!timeZone) return;
+    if (!timeZone) {
+      const detectedTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+      localStorage.setItem("timeZone", detectedTimeZone);
+      setIsNowTimeZone(detectedTimeZone);
+      return;
+    }
     setIsNowTimeZone(timeZone);
   }, []);
 
