@@ -12,7 +12,7 @@ export default function TimeZoneMask({
   return (
     <div
       onClick={() => setIsTimeZone(false)}
-      className={`absolute inset-0 bg-black transition-opacity ${
+      className={`absolute inset-0 z-20 bg-black transition-opacity ${
         isTimeZone ? "opacity-50" : "opacity-0 pointer-events-none"
       }`}
       role="presentation"

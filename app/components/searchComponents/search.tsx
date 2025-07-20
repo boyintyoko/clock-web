@@ -40,7 +40,7 @@ export default function Search({
 
   return (
     <div>
-      <div className="absolute bottom-2 left-2">
+      <div className="absolute bottom-2 left-2 z-10">
         <SearchContent
           isSearch={isSearch}
           setHistories={setHistories}
@@ -52,7 +52,7 @@ export default function Search({
           setIsHistoriesOpen={setIsHistoriesOpen}
         />
       </div>
-      <button className="flex justify-center items-center absolute bottom-4 left-96 ml-10 h-16 w-16 bg-white rounded-full bg-opacity-25">
+      <button className="flex justify-center items-center absolute bottom-4 left-96 ml-10 h-16 w-16 bg-white rounded-full transition-all bg-opacity-25 hover:translate-y-2">
         <Image
           src={`${isDarkMode ? "/DownBlack.png" : "/DownWhine.png"}`}
           alt="down icon"

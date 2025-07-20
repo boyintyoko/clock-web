@@ -42,7 +42,7 @@ export default function TimeZone({ isTimeZone, setIsTimeZone }: SettingType) {
       <TimeZoneMask isTimeZone={isTimeZone} setIsTimeZone={setIsTimeZone} />
       <div
         ref={scrollRef}
-        className={`h-96 w-96 bg-white rounded-2xl shadow-xl transform transition-transform overflow-auto ${
+        className={`h-96 w-96 bg-white rounded-2xl shadow-xl transform transition-transform overflow-auto z-30 ${
           isTimeZone ? "scale-100" : "scale-95"
         }`}
         style={{

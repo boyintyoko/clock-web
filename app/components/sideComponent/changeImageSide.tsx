@@ -9,11 +9,33 @@ import { useBackground } from "@/app/context/backgroundContext";
 import Link from "next/link";
 import { useGoods } from "@/app/context/goodContext";
 import { useLanguage } from "@/app/context/languageContext";
+import styled from "styled-components";
+import { useBackgroundDesc } from "@/app/context/backgroundDesc";
 
 type ChangeImageSideProps = {
   isChange: boolean;
   setIsChange: (isChange: boolean) => void;
 };
+
+const StyledP = styled.p`
+  &::before {
+    content: "";
+    transform: scale(0, 1);
+    transform-origin: left;
+    position: absolute;
+    bottom: 12px;
+    width: 100%;
+    height: 1px;
+    background: #333;
+    transition: all 0.5s;
+  }
+`;
+
+const CreatedImageDiv = styled.div`
+  &:hover p::before {
+    transform: scale(1);
+  }
+`;
 
 export default function ChangeImageSide({
   isChange,
@@ -34,6 +56,7 @@ export default function ChangeImageSide({
   const { setBackground, background } = useBackground();
   const { isNowGoods } = useGoods();
   const { isNowLanguage } = useLanguage();
+  const { setBackgroundDesc } = useBackgroundDesc();
   const sideBarScrollWidth = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -101,8 +124,25 @@ export default function ChangeImageSide({
     };
   }, [loading]);
 
-  const imageChangeHandler = (imageUrl: string): void => {
+  const imageChangeHandler = (
+    imageUrl: string,
+    name: string,
+    userImage: string,
+    userUrl: string,
+    userName: string,
+  ): void => {
     localStorage.setItem("background", imageUrl);
+    localStorage.setItem(
+      "backgroundDescription",
+      JSON.stringify({
+        imageUrl,
+        name,
+        userImage,
+        userUrl,
+        userName,
+      }),
+    );
+    setBackgroundDesc({ imageUrl, name, userImage, userUrl, userName });
     setBackground(imageUrl);
   };
 
@@ -172,6 +212,8 @@ export default function ChangeImageSide({
           <p className="text-red-500 font-bold mt-2">{searchError}</p>
         )}
 
+        <div></div>
+
         <div className="grid grid-cols-1 gap-4 pt-4">
           {images.map((image, index) => (
             <div
@@ -182,9 +224,9 @@ export default function ChangeImageSide({
                 <Link
                   target="_blank"
                   href={image.user.links.html}
-                  className="flex items-center hover:underline"
+                  className="flex items-center"
                 >
-                  <div className="flex items-center">
+                  <CreatedImageDiv className="flex relative items-center">
                     <Image
                       src={image.user.profile_image.large}
                       alt={`${image.user.name}'s profile`}
@@ -192,10 +234,11 @@ export default function ChangeImageSide({
                       width={40}
                       className="rounded-full border border-gray-300"
                     />
-                    <p className="ml-3 font-medium text-gray-700 truncate">
+
+                    <StyledP className="ml-3 font-medium text-gray-700 truncate">
                       {image.user.name}
-                    </p>
-                  </div>
+                    </StyledP>
+                  </CreatedImageDiv>
                 </Link>
                 <div className="flex gap-3">
                   <button
@@ -212,24 +255,18 @@ export default function ChangeImageSide({
                       </>
                     )}
                   </button>
-                  <button
-                    onClick={() => goodClickHandler(image.urls.regular)}
-                    className="transition-all hover:-translate-y-1 text-xl"
-                  >
-                    {hearts.includes(image.urls.regular) ? (
-                      <>
-                        <i className="fa-solid fa-thumbs-up"></i>
-                      </>
-                    ) : (
-                      <>
-                        <i className="fa-regular fa-thumbs-up"></i>
-                      </>
-                    )}
-                  </button>
                 </div>
               </div>
               <div
-                onClick={() => imageChangeHandler(image.urls.regular)}
+                onClick={() =>
+                  imageChangeHandler(
+                    image.urls.regular,
+                    image.user.name,
+                    image.user.profile_image.medium,
+                    image.user.links.html,
+                    image.user.username,
+                  )
+                }
                 className={`${
                   image.urls.regular === background &&
                   "border-2 border-blue-500"

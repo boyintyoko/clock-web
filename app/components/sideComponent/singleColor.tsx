@@ -51,7 +51,7 @@ export default function SingleColor() {
         <button
           key={i}
           onClick={() => colorChangeHandler(color)}
-          className={`flex border-2 transition-all rounded-full items-center ${
+          className={`flex border-2 transition-all rounded-full items-center hover:translate-y-1  ${
             isNowBackground === color && "border-blue-500"
           } justify-center p-1 bg-transparent`}
         >

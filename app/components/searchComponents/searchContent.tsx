@@ -57,7 +57,7 @@ export default function SearchContent({
     <div
       className={`flex items-center absolute ${
         isSearch ? "-bottom-20" : "bottom-2"
-      } left-2 h-16 w-96 bg-white bg-opacity-50 rounded-full shadow-lg hover:ring-blue-500 ring-4 transition-all hover:shadow-2xl`}
+      } left-2 h-16 w-96 bg-white bg-opacity-50 rounded-full shadow-lg hover:ring-blue-500 ring-4 transition-all hover:shadow-2xl hover:translate-y-2`}
       id="inputSearch"
     >
       <form onSubmit={searchHandler}>

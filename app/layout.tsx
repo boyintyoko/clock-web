@@ -7,6 +7,7 @@ import { LanguageProvider } from "./context/languageContext";
 import { TimeProvider } from "./context/timeContext";
 import { TimeZoneProvider } from "./context/timeZoneContext";
 import { Analytics } from "@vercel/analytics/react";
+import { BackgroundDescProvider } from "./context/backgroundDesc";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -76,18 +77,20 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <TimeZoneProvider>
-          <TimeProvider>
-            <LanguageProvider>
-              <BackgroundProvider>
-                <GoodsProvider>
-                  {children}
-                  <Analytics />
-                </GoodsProvider>
-              </BackgroundProvider>
-            </LanguageProvider>
-          </TimeProvider>
-        </TimeZoneProvider>
+        <BackgroundDescProvider>
+          <TimeZoneProvider>
+            <TimeProvider>
+              <LanguageProvider>
+                <BackgroundProvider>
+                  <GoodsProvider>
+                    {children}
+                    <Analytics />
+                  </GoodsProvider>
+                </BackgroundProvider>
+              </LanguageProvider>
+            </TimeProvider>
+          </TimeZoneProvider>
+        </BackgroundDescProvider>
       </body>
     </html>
   );

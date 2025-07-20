@@ -17,7 +17,7 @@ export default function LinkContent({
     <div
       className={`flex items-center justify-evenly absolute ${
         isSearch ? "bottom-2" : "-bottom-20"
-      } left-2 h-16 w-96 bg-white bg-opacity-50 rounded-full shadow-lg ring-blue-500 ring-4 transition-all hover:shadow-2xl`}
+      } left-2 h-16 w-96 bg-white bg-opacity-50 rounded-full shadow-lg ring-blue-500 ring-4 transition-all hover:shadow-2xl hover:translate-y-2`}
     >
       <Link
         href="https://chatgpt.com"

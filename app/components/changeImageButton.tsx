@@ -25,23 +25,21 @@ export default function ChangeImageButton({ isDarkMode }: isDarkModeType) {
         } absolute top-1 left-1 h-12 w-12 bg-white hover:top-2 bg-opacity-45 shadow-lg transition-all`}
       >
         <span
-          style={{ height: "3px" }}
+          style={{ height: "2px" }}
           className={`w-8 transition-all ${
             isChange ? "absolute rotate-45" : ""
           } ${isDarkMode ? "bg-black" : "bg-white"}`}
         ></span>
-        <span
-          style={{ height: "3px" }}
-          className={`w-8 transition-all ${
-            isChange ? "opacity-0 hidden" : "opacity-100"
-          } ${isDarkMode ? "bg-black" : "bg-white"}`}
-        ></span>
-        <span
-          style={{ height: "3px" }}
-          className={`w-8 transition-all ${
-            isChange ? "absolute -rotate-45" : ""
-          } ${isDarkMode ? "bg-black" : "bg-white"}`}
-        ></span>
+        <div className={`flex ${isChange && "-rotate-45"}`}>
+          <div
+            style={{ height: "2px" }}
+            className={`w-5 transition-all ${isDarkMode ? "bg-black" : "bg-white"}`}
+          ></div>
+          <div
+            style={{ height: "2px" }}
+            className={`w-3 transition-all ${isChange ? "bg-white" : "bg-opacity-0"}`}
+          ></div>
+        </div>
       </button>
       <Mask isChange={isChange} setIsChange={setIsChange} />
       <ChangeImageSide isChange={isChange} setIsChange={setIsChange} />
