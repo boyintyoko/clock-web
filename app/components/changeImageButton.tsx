@@ -37,7 +37,7 @@ export default function ChangeImageButton({ isDarkMode }: isDarkModeType) {
           ></div>
           <div
             style={{ height: "2px" }}
-            className={`w-3 transition-all ${isChange ? "bg-white" : "bg-opacity-0"}`}
+            className={`w-3 transition-all ${isChange ? (isDarkMode ? "bg-black" : "bg-white") : "bg-opacity-0"}`}
           ></div>
         </div>
       </button>

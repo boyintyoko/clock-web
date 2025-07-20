@@ -161,14 +161,13 @@ export default function Home() {
         <Clock isDarkMode={isDarkMode} />
         <div className="flex gap-2 absolute right-2 bottom-2">
           <button
-            className={`transition-all shadow-xl ${
-              isDarkMode ? "bg-black" : "bg-white"
+            className={`transition-all shadow-xl bg-opacity-50 bg-white
             } rounded-full p-3 hover:translate-y-1`}
             onClick={() => setIsGoodsOpen(!isGoodsOpen)}
           >
             <Image
               src={`${
-                isDarkMode ? "/icons/heartWhite.svg" : "/icons/heartBlack.svg"
+                isDarkMode ? "/icons/heartBlack.svg" : "/icons/heartWhite.svg"
               }`}
               alt="heart"
               height={30}
@@ -176,16 +175,15 @@ export default function Home() {
             />
           </button>
           <button
-            className={`transition-all shadow-xl ${
-              isDarkMode ? "bg-black" : "bg-white"
+            className={`transition-all shadow-xl bg-opacity-50 bg-white
             } rounded-full p-3 hover:translate-y-1`}
             onClick={() => setIsSettingOpen(!isSettingOpen)}
           >
             <Image
               src={`${
                 isDarkMode
-                  ? "/icons/settingWhite.svg"
-                  : "/icons/settingBlack.svg"
+                  ? "/icons/settingBlack.svg"
+                  : "/icons/settingWhite.svg"
               }`}
               alt="setting"
               height={30}
@@ -193,16 +191,15 @@ export default function Home() {
             />
           </button>
           <button
-            className={`transition-all shadow-xl ${
-              isDarkMode ? "bg-black" : "bg-white"
-            } rounded-full p-3 hover:translate-y-1`}
+            className={`transition-all shadow-xl bg-opacity-50 
+            bg-white rounded-full p-3 hover:translate-y-1`}
             onClick={() => setIsTimeZone(!isTimeZone)}
           >
             <Image
               src={`${
                 isDarkMode
-                  ? "/icons/timeZoneWhite.svg"
-                  : "/icons/timeZoneBlack.svg"
+                  ? "/icons/timeZoneBlack.svg"
+                  : "/icons/timeZoneWhite.svg"
               }`}
               alt="setting"
               height={30}
