@@ -283,8 +283,24 @@ export default function ChangeImageSide({
             </div>
           ))}
         </div>
-        <div ref={loaderRef} className="h-10 flex justify-center items-center">
-          {loading && <p>Loading...</p>}
+        <div
+          ref={loaderRef}
+          className="h-10 flex justify-center items-center font-bold"
+        >
+          <div
+            ref={loaderRef}
+            className="h-10 flex justify-center items-center font-bold"
+            aria-live="polite"
+          >
+            {loading && (
+              <div className="flex items-center gap-1">
+                <p className="mr-1">Loading</p>
+                <span className="animate-bounce [animation-delay:0s]">.</span>
+                <span className="animate-bounce [animation-delay:0.2s]">.</span>
+                <span className="animate-bounce [animation-delay:0.4s]">.</span>
+              </div>
+            )}
+          </div>
         </div>
       </div>
       <button
