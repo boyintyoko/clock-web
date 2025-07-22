@@ -9,7 +9,6 @@ import GoodsType from "@/app/types/goodsType";
 import Link from "next/link";
 import styled from "styled-components";
 import { useBackgroundDesc } from "@/app/context/backgroundDesc";
-import { imageConfigDefault } from "next/dist/shared/lib/image-config";
 
 interface GoodsItemType {
   isGoodsOpen: boolean;
