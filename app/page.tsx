@@ -33,7 +33,6 @@ const MainSelection = styled.div<MainSelectionProps>`
 `;
 
 export default function Home() {
-  const [user, setUser] = useState<string>("");
   const [isDarkMode, setIsDarkMode] = useState<boolean>(false);
   const [isSettingOpen, setIsSettingOpen] = useState<boolean>(false);
   const [isGoodsOpen, setIsGoodsOpen] = useState<boolean>(false);
@@ -42,10 +41,6 @@ export default function Home() {
   const { backgroundDesc } = useBackgroundDesc();
   const { background } = useBackground();
   const { isNowTimeZone } = useTimeZone();
-
-  useEffect(() => {
-    setUser(background);
-  }, [background]);
 
   useEffect(() => {
     const isDarkMode = localStorage.getItem("isDarkMode");
@@ -63,17 +58,17 @@ export default function Home() {
     localStorage.setItem("isDarkMode", !isDarkMode ? "true" : "false");
   };
 
-  const checkImage = (user: string) => {
-    if (!user) {
+  const checkImage = (userBackgroundImage: string) => {
+    if (!userBackgroundImage) {
       return "url(/initialValuePhoto.avif)";
     }
 
-    if (user.startsWith("https")) {
-      return `url(${user})`;
+    if (userBackgroundImage.startsWith("https")) {
+      return `url(${userBackgroundImage})`;
     }
 
-    if (colors.includes(user) + ".png") {
-      return `url(/colors/${user})`;
+    if (colors.includes(userBackgroundImage) + ".png") {
+      return `url(/colors/${userBackgroundImage})`;
     } else {
       return "url(/initialValuePhoto.avif)";
     }
@@ -92,11 +87,10 @@ export default function Home() {
       <div
         className="flex flex-col justify-center items-center h-screen w-full bg-center bg-no-repeat bg-cover"
         style={{
-          backgroundImage: checkImage(user),
+          backgroundImage: checkImage(background),
         }}
       >
         <div className="flex flex-row-reverse gap-6 items-center absolute top-2 right-2 z-10">
-          {/* ダークモードスイッチ */}
           <label
             htmlFor="switch"
             aria-label="Toggle dark mode"

@@ -1,4 +1,5 @@
 "use client";
+import GoodsType from "../types/goodsType";
 
 import {
   createContext,
@@ -8,15 +9,15 @@ import {
   useEffect,
 } from "react";
 
-interface GoodsType {
-  isNowGoods: string[];
-  setIsNowGoods: (isNowGoods: string[]) => void;
+interface GoodsContextType {
+  isNowGoods: GoodsType[];
+  setIsNowGoods: (isNowGoods: GoodsType[]) => void;
 }
 
-const GoodsContext = createContext<GoodsType | undefined>(undefined);
+const GoodsContext = createContext<GoodsContextType | undefined>(undefined);
 
 export const GoodsProvider = ({ children }: { children: ReactNode }) => {
-  const [isNowGoods, setIsNowGoods] = useState<string[]>([]);
+  const [isNowGoods, setIsNowGoods] = useState<GoodsType[]>([]);
 
   useEffect(() => {
     const goods = localStorage.getItem("goods");

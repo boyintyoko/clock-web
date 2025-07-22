@@ -11,6 +11,7 @@ import { useGoods } from "@/app/context/goodContext";
 import { useLanguage } from "@/app/context/languageContext";
 import styled from "styled-components";
 import { useBackgroundDesc } from "@/app/context/backgroundDesc";
+import GoodsType from "@/app/types/goodsType";
 
 type ChangeImageSideProps = {
   isChange: boolean;
@@ -44,10 +45,13 @@ export default function ChangeImageSide({
   const [images, setImages] = useState<ImageType[]>([]);
   const [searchText, setSearchText] = useState<string>("");
   const [searchError, setSearchError] = useState<string>("");
-  const getInitialGoods =
-    typeof window !== "undefined" &&
-    JSON.parse(localStorage.getItem("goods") || "[]");
-  const [hearts, setHearts] = useState<string[]>(getInitialGoods);
+
+  const getInitialGoods: GoodsType[] =
+    typeof window !== "undefined"
+      ? (JSON.parse(localStorage.getItem("goods") || "[]") as GoodsType[])
+      : [];
+
+  const [hearts, setHearts] = useState<GoodsType[]>(getInitialGoods);
   const [loading, setLoading] = useState(false);
   const [count, setCount] = useState(10);
   const [scrollGoTopButton, setScrollGoTopButton] = useState<boolean>(false);
@@ -68,15 +72,10 @@ export default function ChangeImageSide({
     if (!el) return;
 
     const handleScroll = () => {
-      if (el.scrollTop >= 100) {
-        setScrollGoTopButton(true);
-      } else {
-        setScrollGoTopButton(false);
-      }
+      setScrollGoTopButton(el.scrollTop >= 100);
     };
 
     el.addEventListener("scroll", handleScroll);
-
     return () => el.removeEventListener("scroll", handleScroll);
   }, []);
 
@@ -134,13 +133,7 @@ export default function ChangeImageSide({
     localStorage.setItem("background", imageUrl);
     localStorage.setItem(
       "backgroundDescription",
-      JSON.stringify({
-        imageUrl,
-        name,
-        userImage,
-        userUrl,
-        userName,
-      }),
+      JSON.stringify({ imageUrl, name, userImage, userUrl, userName }),
     );
     setBackgroundDesc({ imageUrl, name, userImage, userUrl, userName });
     setBackground(imageUrl);
@@ -169,12 +162,22 @@ export default function ChangeImageSide({
     localStorage.setItem("goods", JSON.stringify(hearts));
   }, [hearts]);
 
-  const goodClickHandler = (url: string) => {
+  const goodClickHandler = (
+    imageUrl: string,
+    userUrl: string,
+    name: string,
+    userName: string,
+    userImageUrl: string,
+  ) => {
     setHearts((prevGoods) => {
-      if (prevGoods.includes(url)) {
-        return prevGoods.filter((item) => item !== url);
+      const exists = prevGoods.some((item) => item.imageUrl === imageUrl);
+      if (exists) {
+        return prevGoods.filter((item) => item.imageUrl !== imageUrl);
       }
-      return [...prevGoods, url];
+      return [
+        ...prevGoods,
+        { imageUrl, userUrl, name, userName, userImageUrl },
+      ];
     });
   };
 
@@ -186,7 +189,7 @@ export default function ChangeImageSide({
       ref={sideBarScrollWidth}
     >
       <div className="p-4 fixid">
-        <div className=" flex justify-between items-center mb-4">
+        <div className="flex justify-between items-center mb-4">
           <button
             onClick={() => setIsChange(!isChange)}
             className="flex justify-center items-center"
@@ -206,108 +209,114 @@ export default function ChangeImageSide({
             />
           </form>
         </div>
+
         <SingleColor />
 
         {searchError && (
           <p className="text-red-500 font-bold mt-2">{searchError}</p>
         )}
 
-        <div></div>
-
         <div className="grid grid-cols-1 gap-4 pt-4">
-          {images.map((image, index) => (
-            <div
-              key={index}
-              className="bg-white rounded-lg shadow-md p-4 hover:shadow-lg transition-shadow duration-200"
-            >
-              <div className="flex items-center justify-between mb-3">
-                <Link
-                  target="_blank"
-                  href={image.user.links.html}
-                  className="flex items-center"
-                >
-                  <CreatedImageDiv className="flex relative items-center">
-                    <Image
-                      src={image.user.profile_image.large}
-                      alt={`${image.user.name}'s profile`}
-                      height={40}
-                      width={40}
-                      className="rounded-full border border-gray-300"
-                    />
-
-                    <StyledP className="ml-3 font-medium text-gray-700 truncate">
-                      {image.user.name}
-                    </StyledP>
-                  </CreatedImageDiv>
-                </Link>
-                <div className="flex gap-3">
-                  <button
-                    onClick={() => goodClickHandler(image.urls.regular)}
-                    className="transition-all hover:-translate-y-1 text-xl"
+          {images.map((image, index) => {
+            const isLiked = hearts.some(
+              (item) => item.imageUrl === image.urls.regular,
+            );
+            return (
+              <div
+                key={index}
+                className="bg-white rounded-lg shadow-md p-4 hover:shadow-lg transition-shadow duration-200"
+              >
+                <div className="flex items-center justify-between mb-3">
+                  <Link
+                    target="_blank"
+                    href={image.user.links.html}
+                    className="flex items-center"
                   >
-                    {hearts.includes(image.urls.regular) ? (
-                      <>
+                    <CreatedImageDiv className="flex relative items-center">
+                      <Image
+                        src={image.user.profile_image.large}
+                        alt={`${image.user.name}'s profile`}
+                        height={40}
+                        width={40}
+                        className="rounded-full border border-gray-300"
+                      />
+                      <StyledP className="ml-3 font-medium text-gray-700 truncate">
+                        {image.user.name}
+                      </StyledP>
+                    </CreatedImageDiv>
+                  </Link>
+                  <div className="flex gap-3">
+                    <button
+                      onClick={() =>
+                        goodClickHandler(
+                          image.urls.regular,
+                          image.user.links.html,
+                          image.user.name,
+                          image.user.username,
+                          image.user.profile_image.large,
+                        )
+                      }
+                      className="transition-all hover:-translate-y-1 text-xl"
+                    >
+                      {isLiked ? (
                         <i className="fa-solid fa-heart text-red-500"></i>
-                      </>
-                    ) : (
-                      <>
+                      ) : (
                         <i className="fa-regular fa-heart"></i>
-                      </>
-                    )}
-                  </button>
+                      )}
+                    </button>
+                  </div>
+                </div>
+
+                <div
+                  onClick={() =>
+                    imageChangeHandler(
+                      image.urls.regular,
+                      image.user.name,
+                      image.user.profile_image.medium,
+                      image.user.links.html,
+                      image.user.username,
+                    )
+                  }
+                  className={`${
+                    image.urls.regular === background &&
+                    "border-2 border-blue-500"
+                  } rounded-lg overflow-hidden border-2 transition-all hover:shadow-lg hover:scale-105 duration-200 cursor-pointer`}
+                >
+                  <Image
+                    src={image.urls.regular}
+                    alt={`Image ${index + 1}`}
+                    width={300}
+                    height={200}
+                    className="w-full h-auto object-cover"
+                  />
                 </div>
               </div>
-              <div
-                onClick={() =>
-                  imageChangeHandler(
-                    image.urls.regular,
-                    image.user.name,
-                    image.user.profile_image.medium,
-                    image.user.links.html,
-                    image.user.username,
-                  )
-                }
-                className={`${
-                  image.urls.regular === background &&
-                  "border-2 border-blue-500"
-                } rounded-lg overflow-hidden border-2 transition-all hover:shadow-lg hover:scale-105 duration-200 cursor-pointer`}
-              >
-                <Image
-                  src={image.urls.regular}
-                  alt={`Image ${index + 1}`}
-                  width={300}
-                  height={200}
-                  className="w-full h-auto object-cover"
-                />
-              </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
+
         <div
           ref={loaderRef}
           className="h-10 flex justify-center items-center font-bold"
         >
-          <div
-            ref={loaderRef}
-            className="h-10 flex justify-center items-center font-bold"
-            aria-live="polite"
-          >
-            {loading && (
-              <div className="flex items-center gap-1">
-                <p className="mr-1">Loading</p>
-                <span className="animate-bounce [animation-delay:0s]">.</span>
-                <span className="animate-bounce [animation-delay:0.2s]">.</span>
-                <span className="animate-bounce [animation-delay:0.4s]">.</span>
-              </div>
-            )}
-          </div>
+          {loading && (
+            <div className="flex items-center gap-1">
+              <p className="mr-1">Loading</p>
+              <span className="animate-bounce [animation-delay:0s]">.</span>
+              <span className="animate-bounce [animation-delay:0.2s]">.</span>
+              <span className="animate-bounce [animation-delay:0.4s]">.</span>
+            </div>
+          )}
         </div>
       </div>
+
       <button
-        onClick={() => {
-          sideBarScrollWidth.current?.scrollTo({ top: 0, behavior: "smooth" });
-        }}
-        className={`fixed ${scrollGoTopButton && isChange ? "right-10" : "-right-20"}  transition-all  bottom-10  bg-white p-5 rounded-full shadow-2xl hover:bottom-8`}
+        onClick={() =>
+          sideBarScrollWidth.current?.scrollTo({ top: 0, behavior: "smooth" })
+        }
+        className={`fixed ${
+          scrollGoTopButton && isChange ? "right-10" : "-right-20"
+        } transition-all bottom-10 bg-white p-5 rounded-full shadow-2xl hover:bottom-8 bg-opacity-50`}
       >
         <i className="fa-solid fa-jet-fighter-up text-4xl"></i>
       </button>

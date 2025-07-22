@@ -60,15 +60,23 @@ export default function SearchContent({
       } left-2 h-16 w-96 bg-white bg-opacity-50 rounded-full shadow-lg hover:ring-blue-500 ring-4 transition-all hover:shadow-2xl hover:translate-y-2`}
       id="inputSearch"
     >
-      <form onSubmit={searchHandler}>
+      <div className="relative w-80 h-16">
         <input
-          onChange={(e) => setSearchText(e.target.value)}
           type="text"
-          value={searchText}
-          placeholder="Search..."
-          className="rounded-l-full placeholder:text-gray-700 h-16 w-80 pl-4 pr-8 text-gray-700 bg-transparent focus:outline-none focus:ring-blue-500 transition-all"
+          placeholder=" "
+          className="peer h-16 w-80 pl-4 pr-8 rounded-l-full text-gray-700 bg-transparent
+               placeholder-transparent focus:outline-none"
         />
-      </form>
+        <p
+          className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 transition-all
+               duration-200
+               peer-focus:-top-5 peer-focus:text-blue-500
+               peer-placeholder-shown:top-1/2 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500"
+        >
+          Search...
+        </p>
+      </div>
+
       <button
         className="flex justify-center items-center bg-blue-500 h-16 w-16 rounded-r-full hover:bg-blue-600"
         onClick={searchHandler}
