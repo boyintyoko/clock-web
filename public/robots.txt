@@ -1,3 +1,9 @@
+# *
 User-agent: *
-Disallow:
-Sitemap: https://web-clock-dawoyiteng.vercel.app/sitemap.xml
+Allow: /
+
+# Host
+Host: https://clock-web-six.vercel.app
+
+# Sitemaps
+Sitemap: https://clock-web-six.vercel.app/sitemap.xml

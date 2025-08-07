@@ -39,6 +39,13 @@ export const metadata: Metadata = {
       },
     ],
   },
+  twitter: {
+    card: "summary_large_image",
+    site: "@boyintyoko",
+    title: "Image clock",
+    description: "綺麗な画像とともに時間を確認できます",
+    images: ["/ogp-image-16x9.png"],
+  },
 };
 
 export default function RootLayout({
@@ -55,6 +62,8 @@ export default function RootLayout({
           href="/favicon-96x96.png"
           sizes="96x96"
         />
+        <link rel="canonical" href="https://clock-web-six.vercel.app/" />
+
         <link
           rel="stylesheet"
           href="https://unpkg.com/driver.js/dist/driver.min.css"
