@@ -33,8 +33,8 @@ export const metadata: Metadata = {
     images: [
       {
         url: "/ogp-image.png",
-        width: 2560,
-        height: 1609,
+        width: 1230,
+        height: 720,
         alt: "Image Clock",
       },
     ],
