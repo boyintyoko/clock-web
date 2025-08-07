@@ -1,5 +1,6 @@
 "use client";
 
+import { useBackgroundDesc } from "./context/backgroundDesc";
 import { useEffect, useState } from "react";
 import { useBackground } from "./context/backgroundContext";
 import ChangeImageButton from "./components/changeImageButton";
@@ -16,7 +17,6 @@ import Search from "./components/searchComponents/search";
 import Clock from "./components/clock";
 import TimeZone from "./components/timeZoneComponents/timeZone";
 import { useTimeZone } from "./context/timeZoneContext";
-import { useBackgroundDesc } from "./context/backgroundDesc";
 
 interface MainSelectionProps {
   $background: string;

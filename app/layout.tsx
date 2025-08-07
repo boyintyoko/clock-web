@@ -32,7 +32,7 @@ export const metadata: Metadata = {
     description: "綺麗な画像とともに時間を確認できます",
     images: [
       {
-        url: "https://web-clock-dawoyiteng.vercel.app/og-image.jpg",
+        url: "/Screenshot 2025-08-07 at 15.01.07.png",
         width: 1200,
         height: 630,
         alt: "Image Clock",
