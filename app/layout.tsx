@@ -32,7 +32,7 @@ export const metadata: Metadata = {
     description: "綺麗な画像とともに時間を確認できます",
     images: [
       {
-        url: "/Screenshot 2025-08-07 at 15.01.07.png",
+        url: "/ogp-image.png",
         width: 1200,
         height: 630,
         alt: "Image Clock",
