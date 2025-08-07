@@ -27,7 +27,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "ja_JP",
-    url: "https://web-clock-dawoyiteng.vercel.app",
+    url: "https://clock-web-six.vercel.app",
     title: "Image clock",
     description: "綺麗な画像とともに時間を確認できます",
     images: [
