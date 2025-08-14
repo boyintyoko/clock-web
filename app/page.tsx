@@ -123,7 +123,7 @@ export default function Home() {
             {isNowTimeZone}
           </p>
 
-          {backgroundDesc && (
+          {backgroundDesc && background.startsWith("https") && (
             <Link
               href={backgroundDesc.userUrl}
               target="_blank"

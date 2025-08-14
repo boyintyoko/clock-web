@@ -19,13 +19,17 @@ export const LanguageProvider = ({ children }: { children: ReactNode }) => {
   const [isNowLanguage, setIsNowLanguage] = useState<string>("ja");
 
   useEffect(() => {
-    const language = localStorage.getItem("language");
+    const savedLanguage = localStorage.getItem("language");
+    const browserLanguage = navigator.language.split("-")[0];
+    const supportedLanguages = ["ja", "en", "it"];
 
-    if (!(language === "en" || language === "it" || language === "ja")) {
-      localStorage.setItem("language", "ja");
-      return;
+    let language = savedLanguage || browserLanguage;
+
+    if (!supportedLanguages.includes(language)) {
+      language = "en";
     }
 
+    localStorage.setItem("language", language);
     setIsNowLanguage(language);
   }, []);
 
