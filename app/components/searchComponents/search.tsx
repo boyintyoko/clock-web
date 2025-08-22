@@ -1,4 +1,5 @@
 "use client";
+
 import SearchContent from "./searchContent";
 import LinkContent from "./linkContent";
 import Image from "next/image";
@@ -26,6 +27,12 @@ export default function Search({
     setDataHistories();
   }, []);
 
+  useEffect(() => {
+    const toggle = localStorage.getItem("isSearch");
+    if (!toggle) return;
+    setIsSearch(JSON.parse(toggle));
+  }, []);
+
   const setDataHistories = () => {
     const histories = localStorage.getItem("history");
     if (!histories) return;
@@ -36,6 +43,11 @@ export default function Search({
     const upDateHistories = histories.filter((history) => history.id !== id);
     localStorage.setItem("history", JSON.stringify(upDateHistories));
     setHistories(upDateHistories);
+  };
+
+  const changeIsSearch = (toggle: boolean) => {
+    setIsSearch(toggle);
+    localStorage.setItem("isSearch", JSON.stringify(toggle));
   };
 
   return (
@@ -58,7 +70,7 @@ export default function Search({
           alt="down icon"
           height={50}
           width={50}
-          onClick={() => setIsSearch(!isSearch)}
+          onClick={() => changeIsSearch(!isSearch)}
         />
       </button>
       <div

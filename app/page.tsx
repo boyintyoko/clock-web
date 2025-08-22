@@ -153,6 +153,31 @@ export default function Home() {
             </div>
           </label>
 
+          {backgroundDesc && background.startsWith("https") && (
+            <Link
+              href={backgroundDesc.userUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 hover:-translate-y-1 transition-transform"
+            >
+              {backgroundDesc.userImage && (
+                <Image
+                  src={backgroundDesc.userImage}
+                  alt="user image"
+                  width={40}
+                  height={40}
+                  className={`rounded-full border-2 ${isDarkMode ? "border-gray-700" : "border-white"}`}
+                />
+              )}
+              <div
+                className={`${isDarkMode ? "text-gray-700" : "text-white"} text-sm leading-tight`}
+              >
+                <p className="font-bold">{backgroundDesc.name}</p>
+                <p className="opacity-75">@{backgroundDesc.userName}</p>
+              </div>
+            </Link>
+          )}
+
           {temperature !== null && humidity !== null ? (
             <div
               className={`flex gap-1 ${isDarkMode ? "text-gray-700" : "text-white"} font-semibold`}
@@ -179,31 +204,6 @@ export default function Home() {
           >
             {isNowTimeZone}
           </p>
-
-          {backgroundDesc && background.startsWith("https") && (
-            <Link
-              href={backgroundDesc.userUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-2 hover:-translate-y-1 transition-transform"
-            >
-              {backgroundDesc.userImage && (
-                <Image
-                  src={backgroundDesc.userImage}
-                  alt="user image"
-                  width={40}
-                  height={40}
-                  className={`rounded-full border-2 ${isDarkMode ? "border-gray-700" : "border-white"}`}
-                />
-              )}
-              <div
-                className={`${isDarkMode ? "text-gray-700" : "text-white"} text-sm leading-tight`}
-              >
-                <p className="font-bold">{backgroundDesc.name}</p>
-                <p className="opacity-75">@{backgroundDesc.userName}</p>
-              </div>
-            </Link>
-          )}
         </div>
 
         <Loading />

@@ -4,7 +4,7 @@ interface isDarkModeType {
   isDarkMode: boolean;
 }
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ChangeImageSide from "./sideComponent/changeImageSide";
 import Mask from "./sideComponent/mask";
 
@@ -13,7 +13,14 @@ export default function ChangeImageButton({ isDarkMode }: isDarkModeType) {
 
   const openClickHandle = () => {
     setIsChange(!isChange);
+    localStorage.setItem("isSideBarChang", JSON.stringify(!isChange));
   };
+
+  useEffect(() => {
+    const isSideBarChange = localStorage.getItem("isSideBarChang");
+    if (!isSideBarChange) return;
+    setIsChange(JSON.parse(isSideBarChange));
+  }, []);
 
   return (
     <div>
