@@ -16,6 +16,7 @@ import colorsRGB from "@/data/colorRGBData";
 import Search from "./components/searchComponents/search";
 import Clock from "./components/clock";
 import TimeZone from "./components/timeZoneComponents/timeZone";
+import axios from "axios";
 import { useTimeZone } from "./context/timeZoneContext";
 
 interface MainSelectionProps {
@@ -41,6 +42,41 @@ export default function Home() {
   const { backgroundDesc } = useBackgroundDesc();
   const { background } = useBackground();
   const { isNowTimeZone } = useTimeZone();
+
+  const [temperature, setTemperature] = useState<number | null>(null);
+  const [humidity, setHumidity] = useState<number | null>(null);
+  const [wheatherIcon, setWheatherIcon] = useState<string>("");
+
+  useEffect(() => {
+    const getIsNowWeather = async () => {
+      try {
+        navigator.geolocation.getCurrentPosition(
+          async (position) => {
+            const lat = position.coords.latitude;
+            const lon = position.coords.longitude;
+            const res = await axios.get(
+              `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${process.env.NEXT_PUBLIC_OPEN_WEATHER_API_KEY}&units=metric&lang=ja`,
+            );
+
+            const temp = res.data.main.temp;
+            const hum = res.data.main.humidity;
+            const wheatherIcon = res.data.weather[0].icon;
+
+            setTemperature(temp);
+            setHumidity(hum);
+            setWheatherIcon(wheatherIcon);
+          },
+          (error) => console.error("エラー:", error.message),
+        );
+      } catch (error) {
+        console.error("天気取得エラー:", error);
+      }
+    };
+
+    getIsNowWeather();
+    const interval = setInterval(getIsNowWeather, 1000 * 60 * 15);
+    return () => clearInterval(interval);
+  }, []);
 
   useEffect(() => {
     const isDarkMode = localStorage.getItem("isDarkMode");
@@ -116,6 +152,27 @@ export default function Home() {
               />
             </div>
           </label>
+
+          {temperature !== null && humidity !== null ? (
+            <div
+              className={`flex gap-1 ${isDarkMode ? "text-black" : "text-white"} font-semibold`}
+            >
+              <div className="flex items-center gap-2 text-sm transition-transform hover:-translate-y-1">
+                <div>
+                  {temperature.toFixed(0)}℃ / {humidity}%
+                </div>
+              </div>
+              <Image
+                className="transition-transform hover:-translate-y-1"
+                src={`https://openweathermap.org/img/wn/${wheatherIcon}@2x.png`}
+                alt="weather icon"
+                height={30}
+                width={30}
+              />
+            </div>
+          ) : (
+            <div className="text-sm">Loading weather...</div>
+          )}
 
           <p
             className={`text-sm font-semibold ${isDarkMode ? "text-gray-700" : "text-white"} whitespace-nowrap transition-transform hover:-translate-y-1`}
