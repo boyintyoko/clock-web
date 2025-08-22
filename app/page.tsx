@@ -155,7 +155,7 @@ export default function Home() {
 
           {temperature !== null && humidity !== null ? (
             <div
-              className={`flex gap-1 ${isDarkMode ? "text-black" : "text-white"} font-semibold`}
+              className={`flex gap-1 ${isDarkMode ? "text-gray-700" : "text-white"} font-semibold`}
             >
               <div className="flex items-center gap-2 text-sm transition-transform hover:-translate-y-1">
                 <div>
