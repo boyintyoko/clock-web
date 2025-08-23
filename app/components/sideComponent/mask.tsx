@@ -8,7 +8,7 @@ interface IsChangeType {
 export default function Mask({ isChange, setIsChange }: IsChangeType) {
   const changeSideBar = () => {
     setIsChange(!isChange);
-    localStorage.setItem("isSideBarChaneg", JSON.stringify(!isChange));
+    localStorage.setItem("isSideBarChang", JSON.stringify(!isChange));
   };
   return (
     <div
