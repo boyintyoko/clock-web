@@ -62,13 +62,14 @@ export default function Home() {
             setNavigatorPermission(true);
             const lat = position.coords.latitude;
             const lon = position.coords.longitude;
-            const res = await axios.get(
-              `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${process.env.NEXT_PUBLIC_OPEN_WEATHER_API_KEY}&units=metric&lang=ja`,
-            );
 
-            const temp = res.data.main.temp;
-            const hum = res.data.main.humidity;
-            const wheatherIcon = res.data.weather[0].icon;
+            const res = await axios.get(`/api/weather?lat=${lat}&lon=${lon}`);
+
+            console.log(res);
+
+            const temp = res.data.temp;
+            const hum = res.data.hum;
+            const wheatherIcon = res.data.weatherIcon;
 
             setTemperature(temp);
             setHumidity(hum);
