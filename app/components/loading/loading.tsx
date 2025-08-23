@@ -70,7 +70,7 @@ export default function Loading() {
         driverObj.drive();
         localStorage.setItem("hasVisited", "true");
       }
-    }, 3000);
+    }, 1500);
   }, []);
 
   return (

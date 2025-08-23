@@ -18,7 +18,7 @@ export default function LoadingSecondHand() {
         borderRadius: "9999px",
         transformOrigin: "0% 50%",
         boxShadow: "0px 0px 4px rgba(0, 0, 0, 0.4)",
-        transition: "transform 3s ease-in-out",
+        transition: "transform 1s ease-in-out",
         transform: `rotate(${angle}deg)`,
       }}
     ></div>
