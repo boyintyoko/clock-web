@@ -15,10 +15,11 @@ export async function GET(
     const data = response.data;
 
     return NextResponse.json(data);
-  } catch (err: unknown) {
-    console.error("Error fetching API:", err);
+  } catch (_err: unknown) {
+    console.error("Error fetching API:", _err);
 
-    const message = err instanceof Error ? err.message : "Failed to fetch data";
+    const message =
+      _err instanceof Error ? _err.message : "Failed to fetch data";
 
     return NextResponse.json({ error: message }, { status: 500 });
   }
