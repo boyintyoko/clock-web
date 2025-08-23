@@ -140,7 +140,7 @@ export default function Home() {
             htmlFor="switch"
             aria-label="Toggle dark mode"
             id="toggleMode"
-            className="flex items-center cursor-pointer transition-transform hover:-translate-y-1"
+            className="flex items-center cursor-pointer transition-transform hover:translate-y-1"
           >
             <input
               id="switch"
@@ -167,7 +167,7 @@ export default function Home() {
               href={backgroundDesc.userUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-2 hover:-translate-y-1 transition-transform"
+              className="flex items-center gap-2 hover:translate-y-1 transition-transform"
             >
               {backgroundDesc.userImage && (
                 <Image
@@ -193,13 +193,13 @@ export default function Home() {
                 <div
                   className={`flex gap-1 ${isDarkMode ? "text-gray-700" : "text-white"} font-semibold`}
                 >
-                  <div className="flex items-center gap-2 text-sm transition-transform hover:-translate-y-1">
+                  <div className="flex items-center gap-2 text-sm transition-transform hover:translate-y-1">
                     <div>
                       {temperature.toFixed(0)}℃ / {humidity}%
                     </div>
                   </div>
                   <Image
-                    className="transition-transform hover:-translate-y-1"
+                    className="transition-transform hover:translate-y-1"
                     src={`https://openweathermap.org/img/wn/${wheatherIcon}@2x.png`}
                     alt="weather icon"
                     height={30}
@@ -217,7 +217,7 @@ export default function Home() {
           )}
 
           <p
-            className={`text-sm font-semibold ${isDarkMode ? "text-gray-700" : "text-white"} whitespace-nowrap transition-transform hover:-translate-y-1`}
+            className={`text-sm font-semibold ${isDarkMode ? "text-gray-700" : "text-white"} whitespace-nowrap transition-transform hover:translate-y-1`}
           >
             {isNowTimeZone}
           </p>
