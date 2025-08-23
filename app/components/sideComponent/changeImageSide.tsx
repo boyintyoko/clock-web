@@ -181,6 +181,11 @@ export default function ChangeImageSide({
     });
   };
 
+  const changeSideBar = () => {
+    setIsChange(!isChange);
+    localStorage.setItem("isSideBarChang", JSON.stringify(!isChange));
+  };
+
   return (
     <div
       className={`side-bar absolute top-0 ${
@@ -191,7 +196,7 @@ export default function ChangeImageSide({
       <div className="p-4 fixid">
         <div className="flex justify-between items-center mb-4">
           <button
-            onClick={() => setIsChange(!isChange)}
+            onClick={changeSideBar}
             className="flex justify-center items-center"
           >
             <Image src="/back.png" alt="back image" height={25} width={25} />

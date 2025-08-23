@@ -6,9 +6,13 @@ interface IsChangeType {
 }
 
 export default function Mask({ isChange, setIsChange }: IsChangeType) {
+  const changeSideBar = () => {
+    setIsChange(!isChange);
+    localStorage.setItem("isSideBarChaneg", JSON.stringify(!isChange));
+  };
   return (
     <div
-      onClick={() => setIsChange(!isChange)}
+      onClick={() => changeSideBar()}
       className={`absolute transition-all z-30 top-0 left-0 bg-black ${
         isChange
           ? "bg-opacity-50 pointer-events-auto"

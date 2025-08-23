@@ -46,12 +46,20 @@ export default function Home() {
   const [temperature, setTemperature] = useState<number | null>(null);
   const [humidity, setHumidity] = useState<number | null>(null);
   const [wheatherIcon, setWheatherIcon] = useState<string>("");
+  const [navigatorPermission, setNavigatorPermission] =
+    useState<boolean>(false);
 
   useEffect(() => {
     const getIsNowWeather = async () => {
+      if (!navigator.permissions) {
+        setNavigatorPermission(false);
+        return;
+      }
+
       try {
         navigator.geolocation.getCurrentPosition(
           async (position) => {
+            setNavigatorPermission(true);
             const lat = position.coords.latitude;
             const lon = position.coords.longitude;
             const res = await axios.get(
@@ -66,7 +74,7 @@ export default function Home() {
             setHumidity(hum);
             setWheatherIcon(wheatherIcon);
           },
-          (error) => console.error("エラー:", error.message),
+          (error) => console.error(error.message),
         );
       } catch (error) {
         console.error("天気取得エラー:", error);
@@ -178,25 +186,33 @@ export default function Home() {
             </Link>
           )}
 
-          {temperature !== null && humidity !== null ? (
-            <div
-              className={`flex gap-1 ${isDarkMode ? "text-gray-700" : "text-white"} font-semibold`}
-            >
-              <div className="flex items-center gap-2 text-sm transition-transform hover:-translate-y-1">
-                <div>
-                  {temperature.toFixed(0)}℃ / {humidity}%
+          {navigatorPermission && (
+            <>
+              {temperature !== null && humidity !== null ? (
+                <div
+                  className={`flex gap-1 ${isDarkMode ? "text-gray-700" : "text-white"} font-semibold`}
+                >
+                  <div className="flex items-center gap-2 text-sm transition-transform hover:-translate-y-1">
+                    <div>
+                      {temperature.toFixed(0)}℃ / {humidity}%
+                    </div>
+                  </div>
+                  <Image
+                    className="transition-transform hover:-translate-y-1"
+                    src={`https://openweathermap.org/img/wn/${wheatherIcon}@2x.png`}
+                    alt="weather icon"
+                    height={30}
+                    width={30}
+                  />
                 </div>
-              </div>
-              <Image
-                className="transition-transform hover:-translate-y-1"
-                src={`https://openweathermap.org/img/wn/${wheatherIcon}@2x.png`}
-                alt="weather icon"
-                height={30}
-                width={30}
-              />
-            </div>
-          ) : (
-            <div className="text-sm">Loading weather...</div>
+              ) : (
+                <div
+                  className={`${isDarkMode ? "text-gray-700" : "text-white"} text-sm`}
+                >
+                  Loading weather...
+                </div>
+              )}
+            </>
           )}
 
           <p
