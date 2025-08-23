@@ -15,12 +15,8 @@ export async function GET(
     const data = response.data;
 
     return NextResponse.json(data);
-  } catch (_err: unknown) {
-    console.error("Error fetching API:", _err);
-
-    const message =
-      _err instanceof Error ? _err.message : "Failed to fetch data";
-
-    return NextResponse.json({ error: message }, { status: 500 });
+  } catch (err) {
+    console.error("Error fetching API:", err);
+    return NextResponse.json({ error: err }, { status: 500 });
   }
 }
