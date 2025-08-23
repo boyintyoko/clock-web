@@ -138,6 +138,7 @@ export default function GoodsContent({ isGoodsOpen }: GoodsItemType) {
                   width={300}
                   height={200}
                   className="w-full h-auto object-cover"
+                  loading="lazy"
                 />
               </div>
             </div>

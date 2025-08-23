@@ -36,6 +36,7 @@ export default function Goods({ isGoodsOpen, setIsGoodsOpen }: GoodsType) {
                   alt="back image"
                   height={25}
                   width={25}
+                  loading="lazy"
                 />
               </button>
               <h2 className="text-2xl font-extrabold text-gray-800">Goods</h2>

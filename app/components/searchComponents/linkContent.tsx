@@ -30,6 +30,7 @@ export default function LinkContent({
           alt="ChatGPT icon"
           height={20}
           width={20}
+          loading="lazy"
         />
       </Link>
       <Link
@@ -43,6 +44,7 @@ export default function LinkContent({
           alt="Google icon"
           height={20}
           width={20}
+          loading="lazy"
         />
       </Link>
       <Link
@@ -56,6 +58,7 @@ export default function LinkContent({
           alt="Mail icon"
           height={20}
           width={20}
+          loading="lazy"
         />
       </Link>
       <Link
@@ -69,6 +72,7 @@ export default function LinkContent({
           alt="Youtube icon"
           height={20}
           width={20}
+          loading="lazy"
         />
       </Link>
       <History

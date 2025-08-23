@@ -15,7 +15,13 @@ export default function History({
         onClick={() => setIsHistoriesOpen(!isHistoriesOpen)}
         className="flex items-center justify-center w-12 h-12 rounded-full bg-blue-500 hover:bg-blue-600 transition-all"
       >
-        <Image src="/History.png" alt="Youtube icon" height={20} width={20} />
+        <Image
+          src="/History.png"
+          alt="Youtube icon"
+          height={20}
+          width={20}
+          loading="lazy"
+        />
       </button>
     </div>
   );

@@ -81,7 +81,13 @@ export default function SearchContent({
         className="flex justify-center items-center bg-blue-500 h-16 w-16 rounded-r-full hover:bg-blue-600"
         onClick={searchHandler}
       >
-        <Image src="/search.png" alt="search icon" height={30} width={30} />
+        <Image
+          src="/search.png"
+          alt="search icon"
+          height={30}
+          width={30}
+          loading="lazy"
+        />
       </button>
     </div>
   );

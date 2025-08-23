@@ -61,6 +61,7 @@ export default function SingleColor() {
               height={50}
               width={50}
               alt={color}
+              loading="lazy"
             />
           </div>
         </button>

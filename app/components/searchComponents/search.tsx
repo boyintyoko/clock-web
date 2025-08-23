@@ -70,6 +70,7 @@ export default function Search({
           alt="down icon"
           height={50}
           width={50}
+          loading="lazy"
           onClick={() => changeIsSearch(!isSearch)}
         />
       </button>

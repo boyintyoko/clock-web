@@ -199,7 +199,13 @@ export default function ChangeImageSide({
             onClick={changeSideBar}
             className="flex justify-center items-center"
           >
-            <Image src="/back.png" alt="back image" height={25} width={25} />
+            <Image
+              src="/back.png"
+              alt="back image"
+              height={25}
+              width={25}
+              loading="lazy"
+            />
           </button>
           <p className="text-xl font-bold text-gray-800">
             {isNowLanguage === "it" ? "Immagine." : "Image."}
@@ -244,6 +250,7 @@ export default function ChangeImageSide({
                         height={40}
                         width={40}
                         className="rounded-full border border-gray-300"
+                        loading="lazy"
                       />
                       <StyledP className="ml-3 font-medium text-gray-700 truncate">
                         {image.user.name}
@@ -293,6 +300,7 @@ export default function ChangeImageSide({
                     width={300}
                     height={200}
                     className="w-full h-auto object-cover"
+                    loading="lazy"
                   />
                 </div>
               </div>
