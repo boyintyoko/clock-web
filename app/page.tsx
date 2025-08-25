@@ -52,7 +52,10 @@ export default function Home() {
 
   useEffect(() => {
     const localUnits = localStorage.getItem("temperatureUnits");
-    if (!localUnits) return;
+    if (!localUnits) {
+      localStorage.setItem("temperatureUnits", "kelvin");
+      return;
+    }
     setTempratureUnits(localUnits);
   }, []);
 
