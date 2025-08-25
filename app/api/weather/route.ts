@@ -6,14 +6,15 @@ export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
   const lat = searchParams.get("lat");
   const lon = searchParams.get("lon");
+  const units = searchParams.get("units");
 
-  if (!lat || !lon) {
+  if (!lat || !lon || !units) {
     return NextResponse.json({ error: "Missing lat/lon" }, { status: 400 });
   }
 
   try {
     const res = await axios.get(
-      `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${process.env.NEXT_PUBLIC_OPEN_WEATHER_API_KEY}&units=metric&lang=ja`,
+      `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${process.env.NEXT_PUBLIC_OPEN_WEATHER_API_KEY}&units=${units}&lang=ja`,
     );
 
     const temp = res.data.main.temp;

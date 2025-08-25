@@ -48,6 +48,13 @@ export default function Home() {
   const [wheatherIcon, setWheatherIcon] = useState<string>("");
   const [navigatorPermission, setNavigatorPermission] =
     useState<boolean>(false);
+  const [temperatureUnits, setTempratureUnits] = useState<string>("F");
+
+  useEffect(() => {
+    const localUnits = localStorage.getItem("temperatureUnits");
+    if (!localUnits) return;
+    setTempratureUnits(localUnits);
+  }, []);
 
   useEffect(() => {
     const getIsNowWeather = async () => {
@@ -63,7 +70,9 @@ export default function Home() {
             const lat = position.coords.latitude;
             const lon = position.coords.longitude;
 
-            const res = await axios.get(`/api/weather?lat=${lat}&lon=${lon}`);
+            const res = await axios.get(
+              `/api/weather?lat=${lat}&lon=${lon}&units=${temperatureUnits}`,
+            );
 
             console.log(res);
 
@@ -85,7 +94,7 @@ export default function Home() {
     getIsNowWeather();
     const interval = setInterval(getIsNowWeather, 1000 * 60 * 15);
     return () => clearInterval(interval);
-  }, []);
+  }, [temperatureUnits]);
 
   useEffect(() => {
     const isDarkMode = localStorage.getItem("isDarkMode");
@@ -195,7 +204,13 @@ export default function Home() {
                 >
                   <div className="flex items-center gap-2 text-sm transition-transform hover:translate-y-1">
                     <div>
-                      {temperature.toFixed(0)}℃ / {humidity}%
+                      {temperature.toFixed(0)}
+                      {temperatureUnits === "imperial"
+                        ? "°F"
+                        : temperatureUnits === "metric"
+                          ? "°C"
+                          : " K"}{" "}
+                      / {humidity}%
                     </div>
                   </div>
                   <Image
@@ -279,7 +294,10 @@ export default function Home() {
         <Setting
           isSettingOpen={isSettingOpen}
           setIsSettingOpen={setIsSettingOpen}
+          temperatureUnits={temperatureUnits}
+          setTemperatureUnits={setTempratureUnits}
         />
+
         <TimeZone isTimeZone={isTimeZone} setIsTimeZone={setIsTimeZone} />
         <Search
           isDarkMode={isDarkMode}

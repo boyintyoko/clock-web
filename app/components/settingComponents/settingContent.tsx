@@ -1,4 +1,5 @@
 "use client";
+
 import React, { useEffect } from "react";
 import { useLanguage } from "@/app/context/languageContext";
 import { useTime } from "@/app/context/timeContext";
@@ -6,11 +7,15 @@ import { useTime } from "@/app/context/timeContext";
 interface SettingType {
   isSettingOpen: boolean;
   setIsSettingOpen: (isOpen: boolean) => void;
+  temperatureUnits: string;
+  setTemperatureUnits: (temperatureUnits: string) => void;
 }
 
 export default function SettingContent({
   isSettingOpen,
   setIsSettingOpen,
+  temperatureUnits,
+  setTemperatureUnits,
 }: SettingType) {
   const { setIsNowLanguage, isNowLanguage } = useLanguage();
   const { setIsNowTime, isNowTime } = useTime();
@@ -27,13 +32,21 @@ export default function SettingContent({
     localStorage.setItem("time", selectedFormat);
   };
 
+  const handleTemperatureChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setTemperatureUnits(e.target.value);
+    localStorage.setItem("temperatureUnits", e.target.value);
+  };
+
   useEffect(() => {
     const time = localStorage.getItem("time");
     const language = localStorage.getItem("language");
+    const tempUnit = localStorage.getItem("temperatureUnits");
+
     if (time) setIsNowTime(Number(time));
     if (language) setIsNowLanguage(language);
     if (!language) setIsNowLanguage("en");
-  }, [setIsNowLanguage, setIsNowTime]);
+    if (tempUnit) setTemperatureUnits(tempUnit);
+  }, [setIsNowLanguage, setIsNowTime, setTemperatureUnits]);
 
   const clearMemories = () => {
     localStorage.clear();
@@ -42,14 +55,14 @@ export default function SettingContent({
   };
 
   return (
-    <div className="space-y-6 overflow-auto">
+    <div className="space-y-6">
       <div>
         <label className="block font-bold text-lg mb-2">
           {isNowLanguage === "en"
             ? "Time format"
             : isNowLanguage === "it"
-            ? "Formato dell'orologio"
-            : "時間形式"}
+              ? "Formato dell'orologio"
+              : "時間形式"}
         </label>
         <select
           onChange={handleFormatChange}
@@ -60,15 +73,15 @@ export default function SettingContent({
             {isNowLanguage === "en"
               ? "24-hour format"
               : isNowLanguage === "it"
-              ? "Formato 24 ore"
-              : "24時間形式"}
+                ? "Formato 24 ore"
+                : "24時間形式"}
           </option>
           <option value="12">
             {isNowLanguage === "en"
               ? "12-hour format (AM/PM)"
               : isNowLanguage === "it"
-              ? "Formato 12 ore (AM/PM)"
-              : "12時間形式 (AM/PM)"}
+                ? "Formato 12 ore (AM/PM)"
+                : "12時間形式 (AM/PM)"}
           </option>
         </select>
       </div>
@@ -78,8 +91,8 @@ export default function SettingContent({
           {isNowLanguage === "en"
             ? "Language"
             : isNowLanguage === "it"
-            ? "Lingua"
-            : "言語"}
+              ? "Lingua"
+              : "言語"}
         </label>
         <select
           value={isNowLanguage}
@@ -89,6 +102,25 @@ export default function SettingContent({
           <option value="en">English</option>
           <option value="it">Italian</option>
           <option value="ja">日本語</option>
+        </select>
+      </div>
+
+      <div>
+        <label className="block font-bold text-lg mb-2">
+          {isNowLanguage === "en"
+            ? "Temperature units"
+            : isNowLanguage === "it"
+              ? "Unità di temperatura"
+              : "温度の単位"}
+        </label>
+        <select
+          value={temperatureUnits}
+          onChange={handleTemperatureChange}
+          className="block w-full border rounded-lg p-2"
+        >
+          <option value="imperial">°F</option>
+          <option value="metric">°C</option>
+          <option value="kelvin">K</option>
         </select>
       </div>
 

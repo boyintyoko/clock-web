@@ -7,11 +7,15 @@ import { useLanguage } from "@/app/context/languageContext";
 interface SettingType {
   isSettingOpen: boolean;
   setIsSettingOpen: (isOpen: boolean) => void;
+  temperatureUnits: string;
+  setTemperatureUnits: (temperatureUnits: string) => void;
 }
 
 export default function Setting({
   isSettingOpen,
   setIsSettingOpen,
+  temperatureUnits,
+  setTemperatureUnits,
 }: SettingType) {
   const { isNowLanguage } = useLanguage();
 
@@ -28,7 +32,7 @@ export default function Setting({
       />
 
       <div
-        className={`h-96 w-96 bg-white rounded-2xl shadow-xl transform transition-transform z-30 ${
+        className={`h-96 w-96 bg-white rounded-2xl shadow-xl transform transition-transform z-30 overflow-auto ${
           isSettingOpen ? "scale-100" : "scale-95"
         }`}
         style={{
@@ -57,6 +61,8 @@ export default function Setting({
           <SettingContent
             isSettingOpen={isSettingOpen}
             setIsSettingOpen={setIsSettingOpen}
+            temperatureUnits={temperatureUnits}
+            setTemperatureUnits={setTemperatureUnits}
           />
         </div>
       </div>
