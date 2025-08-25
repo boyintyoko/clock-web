@@ -43,12 +43,12 @@ export default function Setting({
           <div className="flex items-center gap-4">
             <button
               onClick={() => setIsSettingOpen(!isSettingOpen)}
-              className="p-2 rounded-full hover:bg-gray-200 transition"
+              className="p-2 rounded-full hover:bg-gray-200 transition-all hover:translate-y-1"
               aria-label="Go back"
             >
               <Image src="/back.png" alt="Back" height={25} width={25} />
             </button>
-            <h2 className="text-2xl font-bold text-gray-800">
+            <h2 className="text-2xl font-bold text-gray-800 transition-all hover:translate-y-1">
               {isNowLanguage === "en"
                 ? "Settings"
                 : isNowLanguage === "it"

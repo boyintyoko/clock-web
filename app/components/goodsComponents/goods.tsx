@@ -29,7 +29,7 @@ export default function Goods({ isGoodsOpen, setIsGoodsOpen }: GoodsType) {
             <div className="flex items-center gap-5">
               <button
                 onClick={() => setIsGoodsOpen(!isGoodsOpen)}
-                className="flex justify-center items-center"
+                className="flex justify-center items-center transition-all hover:translate-y-1 p-2 rounded-full hover:bg-gray-200"
               >
                 <Image
                   src="/back.png"
@@ -39,7 +39,9 @@ export default function Goods({ isGoodsOpen, setIsGoodsOpen }: GoodsType) {
                   loading="lazy"
                 />
               </button>
-              <h2 className="text-2xl font-extrabold text-gray-800">Goods</h2>
+              <h2 className="text-2xl font-extrabold text-gray-800  transition-all hover:translate-y-1">
+                Goods
+              </h2>
             </div>
           </div>
         </div>

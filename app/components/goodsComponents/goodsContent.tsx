@@ -145,7 +145,7 @@ export default function GoodsContent({ isGoodsOpen }: GoodsItemType) {
           ))}
         </div>
       ) : (
-        <p className="font-bold">
+        <p className="font-bold transition-all hover:translate-y-1">
           {(() => {
             if (isNowLanguage === "en") {
               return "Nothing.";

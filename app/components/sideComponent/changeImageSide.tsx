@@ -271,7 +271,7 @@ export default function ChangeImageSide({
                           image.user.profile_image.large,
                         )
                       }
-                      className="transition-all hover:-translate-y-1 text-xl"
+                      className="transition-all hover:translate-y-1 text-xl"
                     >
                       {isLiked ? (
                         <i className="fa-solid fa-heart text-red-500"></i>

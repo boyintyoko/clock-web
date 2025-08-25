@@ -57,7 +57,7 @@ export default function SettingContent({
   return (
     <div className="space-y-6">
       <div>
-        <label className="block font-bold text-lg mb-2">
+        <label className="block font-bold text-lg mb-2 transition-all hover:translate-y-1">
           {isNowLanguage === "en"
             ? "Time format"
             : isNowLanguage === "it"
@@ -67,7 +67,7 @@ export default function SettingContent({
         <select
           onChange={handleFormatChange}
           value={isNowTime}
-          className="block w-full border rounded-lg p-2"
+          className="block w-full border rounded-lg p-2 transition-all hover:translate-y-1"
         >
           <option value="24">
             {isNowLanguage === "en"
@@ -87,7 +87,7 @@ export default function SettingContent({
       </div>
 
       <div>
-        <label className="block font-bold text-lg mb-2">
+        <label className="block font-bold text-lg mb-2 transition-all hover:translate-y-1">
           {isNowLanguage === "en"
             ? "Language"
             : isNowLanguage === "it"
@@ -97,7 +97,7 @@ export default function SettingContent({
         <select
           value={isNowLanguage}
           onChange={handleLanguageChange}
-          className="block w-full border rounded-lg p-2"
+          className="block w-full border rounded-lg p-2 transition-all hover:translate-y-1"
         >
           <option value="en">English</option>
           <option value="it">Italian</option>
@@ -106,7 +106,7 @@ export default function SettingContent({
       </div>
 
       <div>
-        <label className="block font-bold text-lg mb-2">
+        <label className="block font-bold text-lg mb-2 transition-all hover:translate-y-1">
           {isNowLanguage === "en"
             ? "Temperature units"
             : isNowLanguage === "it"
@@ -116,7 +116,7 @@ export default function SettingContent({
         <select
           value={temperatureUnits}
           onChange={handleTemperatureChange}
-          className="block w-full border rounded-lg p-2"
+          className="block w-full border rounded-lg p-2 transition-all hover:translate-y-1"
         >
           <option value="imperial">°F</option>
           <option value="metric">°C</option>
@@ -127,7 +127,7 @@ export default function SettingContent({
       <div>
         <button
           onClick={clearMemories}
-          className="border-red-500 border p-3 rounded-full text-red-500"
+          className="border-red-500 border p-3 rounded-full text-red-500 transition-all hover:translate-y-1"
         >
           Clear memories
         </button>
