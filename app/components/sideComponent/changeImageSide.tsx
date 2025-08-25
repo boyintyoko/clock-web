@@ -197,7 +197,7 @@ export default function ChangeImageSide({
         <div className="flex justify-between items-center mb-4">
           <button
             onClick={changeSideBar}
-            className="flex justify-center items-center"
+            className="flex justify-center items-center transition-all hover:translate-y-1"
           >
             <Image
               src="/back.png"
@@ -207,10 +207,13 @@ export default function ChangeImageSide({
               loading="lazy"
             />
           </button>
-          <p className="text-xl font-bold text-gray-800">
+          <p className="text-xl font-bold text-gray-800 transition-all hover:translate-y-1">
             {isNowLanguage === "it" ? "Immagine." : "Image."}
           </p>
-          <form onSubmit={searchSubmitHandler} className="relative">
+          <form
+            onSubmit={searchSubmitHandler}
+            className="relative transition-all hover:translate-y-1"
+          >
             <input
               onChange={(e) => setSearchText(e.target.value)}
               type="text"

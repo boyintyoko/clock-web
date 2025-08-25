@@ -127,20 +127,22 @@ export default function ElectronicClock({ isDarkMode }: isDarkModeType) {
           isDarkMode ? "text-black" : "text-white"
         }`}
       >
-        <div className="flex items-center text-3xl">
-          {hour.toString().padStart(2, "0")}
+        <div className="flex items-end">
+          <div className="flex text-3xl">
+            {hour.toString().padStart(2, "0")}
+          </div>
+          <div className="text-3xl mx-1">:</div>
+          <div className="flex text-3xl">
+            {minute.toString().padStart(2, "0")}
+          </div>
+          <div className="text-3xl mx-1">.</div>
+          <div className="flex text-2xl">
+            {second.toString().padStart(2, "0")}
+          </div>
+          {isNowTime === 12 && (
+            <div className="flex h-full items-end text-sm ml-2">{period}</div>
+          )}
         </div>
-        <div className="text-3xl mx-1">:</div>
-        <div className="flex items-center text-3xl">
-          {minute.toString().padStart(2, "0")}
-        </div>
-        <div className="text-3xl mx-1">:</div>
-        <div className="flex items-center text-3xl">
-          {second.toString().padStart(2, "0")}
-        </div>
-        {isNowTime === 12 && (
-          <div className="flex h-full items-end text-sm ml-2">{period}</div>
-        )}
       </div>
     </div>
   );
