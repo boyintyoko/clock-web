@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useLanguage } from "@/app/context/languageContext";
 import { useTime } from "@/app/context/timeContext";
 
@@ -19,6 +19,23 @@ export default function SettingContent({
 }: SettingType) {
   const { setIsNowLanguage, isNowLanguage } = useLanguage();
   const { setIsNowTime, isNowTime } = useTime();
+  const [isLocation, setIsLocation] = useState<boolean>(false)
+
+  useEffect(() => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        () => {
+          setIsLocation(true);
+        },
+        () => {
+          setIsLocation(false);
+        }
+      );
+    } else {
+      setIsLocation(false);
+    }
+  }, []);
+
 
   const handleLanguageChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedLanguage = e.target.value;
@@ -105,7 +122,7 @@ export default function SettingContent({
         </select>
       </div>
 
-      <div>
+      {isLocation && <div>
         <label className="block font-bold text-lg mb-2 transition-all hover:translate-y-1">
           {isNowLanguage === "en"
             ? "Temperature units"
@@ -123,6 +140,7 @@ export default function SettingContent({
           <option value="kelvin">K</option>
         </select>
       </div>
+      }
 
       <div>
         <button

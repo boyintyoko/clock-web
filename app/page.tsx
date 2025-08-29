@@ -25,11 +25,11 @@ interface MainSelectionProps {
 const MainSelection = styled.div<MainSelectionProps>`
   ::selection {
     background: ${(props) =>
-      colors.includes(props.$background)
-        ? "#fff"
-        : colorsRGB[props.$background.replace(".png", "")]};
+    colors.includes(props.$background)
+      ? "#fff"
+      : colorsRGB[props.$background.replace(".png", "")]};
     color: ${(props) =>
-      colors.includes(props.$background.replace(".png", "")) ? "#fff" : "#000"};
+    colors.includes(props.$background.replace(".png", "")) ? "#fff" : "#000"};
   }
 `;
 
@@ -162,14 +162,12 @@ export default function Home() {
               className="sr-only"
             />
             <div
-              className={`w-14 h-8 rounded-full p-1 transition-colors duration-300 ${
-                isDarkMode ? "bg-gray-700" : "bg-gray-300"
-              }`}
+              className={`w-14 h-8 rounded-full p-1 transition-colors duration-300 ${isDarkMode ? "bg-gray-700" : "bg-gray-300"
+                }`}
             >
               <div
-                className={`w-6 h-6 bg-blue-500 rounded-full shadow-md transition-transform duration-300 ${
-                  isDarkMode ? "translate-x-6" : "translate-x-0"
-                }`}
+                className={`w-6 h-6 bg-blue-500 rounded-full shadow-md transition-transform duration-300 ${isDarkMode ? "translate-x-6" : "translate-x-0"
+                  }`}
               />
             </div>
           </label>
@@ -252,9 +250,8 @@ export default function Home() {
             onClick={() => setIsGoodsOpen(!isGoodsOpen)}
           >
             <Image
-              src={`${
-                isDarkMode ? "/icons/heartBlack.svg" : "/icons/heartWhite.svg"
-              }`}
+              src={`${isDarkMode ? "/icons/heartBlack.svg" : "/icons/heartWhite.svg"
+                }`}
               alt="heart"
               height={30}
               width={30}
@@ -266,11 +263,10 @@ export default function Home() {
             onClick={() => setIsSettingOpen(!isSettingOpen)}
           >
             <Image
-              src={`${
-                isDarkMode
-                  ? "/icons/settingBlack.svg"
-                  : "/icons/settingWhite.svg"
-              }`}
+              src={`${isDarkMode
+                ? "/icons/settingBlack.svg"
+                : "/icons/settingWhite.svg"
+                }`}
               alt="setting"
               height={30}
               width={30}
@@ -282,11 +278,10 @@ export default function Home() {
             onClick={() => setIsTimeZone(!isTimeZone)}
           >
             <Image
-              src={`${
-                isDarkMode
-                  ? "/icons/timeZoneBlack.svg"
-                  : "/icons/timeZoneWhite.svg"
-              }`}
+              src={`${isDarkMode
+                ? "/icons/timeZoneBlack.svg"
+                : "/icons/timeZoneWhite.svg"
+                }`}
               alt="setting"
               height={30}
               width={30}

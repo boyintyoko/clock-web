@@ -22,7 +22,7 @@ export default function SecondHand({ isDarkMode }: isDarkModeType) {
       const parts = formatter.formatToParts(new Date());
       const secondStr = parts.find((p) => p.type === "second")?.value ?? "0";
       const seconds = parseInt(secondStr, 10);
-      setAngle((360 + seconds * 6 - 90) % 360);
+      setAngle(360 + (seconds * 6 - 90) % 360);
     };
 
     updateAngle();
@@ -33,9 +33,8 @@ export default function SecondHand({ isDarkMode }: isDarkModeType) {
 
   return (
     <div
-      className={`absolute left-1/2 transition-all ease ${
-        isDarkMode ? "bg-black" : "bg-white"
-      } w-44 `}
+      className={`absolute left-1/2 transition-all ease ${isDarkMode ? "bg-black" : "bg-white"
+        } w-44 `}
       style={{
         height: "2px",
         borderRadius: "9999px",
