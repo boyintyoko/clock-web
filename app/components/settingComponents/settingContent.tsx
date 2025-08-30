@@ -135,9 +135,9 @@ export default function SettingContent({
           onChange={handleTemperatureChange}
           className="block w-full border rounded-lg p-2 transition-all hover:translate-y-1"
         >
+          <option value="kelvin">K</option>
           <option value="imperial">°F</option>
           <option value="metric">°C</option>
-          <option value="kelvin">K</option>
         </select>
       </div>
       }
