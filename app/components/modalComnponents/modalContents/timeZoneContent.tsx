@@ -25,11 +25,10 @@ export default function TimeZoneContent() {
           <button
             onClick={() => changeTimeZone(supportTimeZone)}
             key={supportTimeZone}
-            className={`${
-              supportTimeZone === isNowTimeZone
-                ? "border-red-500"
-                : "border-gray-200 hover:shadow-md hover:bg-gray-50"
-            } w-full text-left p-4 rounded-xl bg-white border shadow-sm transition-all font-medium text-gray-700`}
+            className={`${supportTimeZone === isNowTimeZone
+              ? "border-red-500"
+              : "border-gray-200 hover:shadow-md hover:bg-gray-50"
+              } w-full text-left p-4 rounded-xl bg-white border shadow-sm transition-all font-medium text-gray-700`}
           >
             {supportTimeZone}
           </button>

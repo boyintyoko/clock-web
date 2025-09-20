@@ -1,0 +1,4 @@
+.input input:not(:placeholder-shown) + p {
+  top: -1.25rem;
+  color: #3b82f6
+}
