@@ -1,7 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import History from "./historyComponents/history";
-import { useEffect } from "react";
+import {useEffect} from "react";
 
 interface UrlItem {
   link: string;
@@ -63,8 +63,9 @@ export default function LinkContent({
         />
       </button>
 
-      {urls.map((url) => (
+      {urls.map((url, id) => (
         <Link
+          key={id}
           href={url.url}
           rel="noopener noreferrer"
           target="_blank"

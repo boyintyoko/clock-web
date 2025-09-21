@@ -1,5 +1,5 @@
 import Image from "next/image"
-import { useEffect, useState } from "react"
+import {useEffect} from "react"
 import urlData from "@/data/urlData";
 
 interface UrlItem {
@@ -14,7 +14,7 @@ interface Props {
   setUrls: (urls: UrlItem[]) => void
 }
 
-export default function LinkSettingContent({ urls, setUrls }: Props) {
+export default function LinkSettingContent({urls, setUrls}: Props) {
 
   useEffect(() => {
     const stored = localStorage.getItem("urlData");
@@ -28,7 +28,7 @@ export default function LinkSettingContent({ urls, setUrls }: Props) {
 
   const changeLinkSetting = (id: number, newUrl: string) => {
     const updated = urls.map(item =>
-      item.id === id ? { ...item, url: newUrl } : item
+      item.id === id ? {...item, url: newUrl} : item
     );
     setUrls(updated);
     localStorage.setItem("urlData", JSON.stringify(updated));

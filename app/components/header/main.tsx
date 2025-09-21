@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useEffect, useState } from "react";
+import {useEffect, useState} from "react";
 import ToggleSwitch from "./toggleSwitch";
 import BackgroundDesc from "./backgroundDesc";
 import NavigatorPermisson from "./navigatorPermisson";
@@ -14,7 +14,7 @@ interface Props {
   setTempratureUnits: (temperatureUnits: string) => void;
 }
 
-export default function HeaderMain({ isDarkMode, isNowTimeZone, temperatureUnits, setIsDarkMode, setTempratureUnits }: Props) {
+export default function HeaderMain({isDarkMode, isNowTimeZone, temperatureUnits, setIsDarkMode, setTempratureUnits}: Props) {
 
   const [temperature, setTemperature] = useState<number | null>(null);
   const [humidity, setHumidity] = useState<number | null>(null);
@@ -34,7 +34,7 @@ export default function HeaderMain({ isDarkMode, isNowTimeZone, temperatureUnits
       return;
     }
     setTempratureUnits(localUnits);
-  }, []);
+  }, [setTempratureUnits]);
 
   useEffect(() => {
     const getIsNowWeather = async () => {
