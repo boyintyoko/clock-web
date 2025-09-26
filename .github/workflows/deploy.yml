@@ -26,11 +26,11 @@ jobs:
         run: npx biome check --max-diagnostics 500
 
       - name: Vercel Deploy
-        uses: amondnet/vercel-action@v21
+        uses: nexterias/actions-vercel@v1
         with:
-          vercel-token: ${{ secrets.VERCEL_TOKEN }}
-          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
-          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
+          token: ${{ secrets.VERCEL_TOKEN }}
+          org-id: ${{ secrets.VERCEL_ORG_ID }}
+          project-id: ${{ secrets.VERCEL_PROJECT_ID }}
           working-directory: .
           prod: true
 
