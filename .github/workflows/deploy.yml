@@ -23,7 +23,7 @@ jobs:
         run: npm ci
 
       - name: Run Biome check
-        run: npx biome check --max-diagnostics 500
+        run: npx biome check
 
       - name: Vercel Deploy
         uses: nexterias/actions-vercel@v1
