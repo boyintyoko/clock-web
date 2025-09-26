@@ -31,6 +31,6 @@ jobs:
           token: ${{ secrets.VERCEL_TOKEN }}
           org-id: ${{ secrets.VERCEL_ORG_ID }}
           project-id: ${{ secrets.VERCEL_PROJECT_ID }}
-          cwd: .               # working-directory の代わり
-          production: true     # prod の代わり
+          cwd: .
+          production: true
           github-token: ${{ secrets.GITHUB_TOKEN }} # 推奨
