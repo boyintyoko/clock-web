@@ -1,51 +1,51 @@
 "use client";
 import {
-  createContext,
-  ReactNode,
-  useEffect,
-  useState,
-  useContext,
+	createContext,
+	ReactNode,
+	useEffect,
+	useState,
+	useContext,
 } from "react";
 import BackGroundDescType from "../types/backgroundDesc";
 
 type BackgroundDescContextType = {
-  backgroundDesc?: BackGroundDescType;
-  setBackgroundDesc: (desc: BackGroundDescType) => void;
+	backgroundDesc?: BackGroundDescType;
+	setBackgroundDesc: (desc: BackGroundDescType) => void;
 };
 
 const BackgroundDescContext = createContext<
-  BackgroundDescContextType | undefined
+	BackgroundDescContextType | undefined
 >(undefined);
 
 export const BackgroundDescProvider = ({
-  children,
+	children,
 }: {
-  children: ReactNode;
+	children: ReactNode;
 }) => {
-  const [backgroundDesc, setBackgroundDesc] = useState<BackGroundDescType>();
+	const [backgroundDesc, setBackgroundDesc] = useState<BackGroundDescType>();
 
-  useEffect(() => {
-    const desc = localStorage.getItem("backgroundDescription");
-    if (desc) {
-      setBackgroundDesc(JSON.parse(desc));
-    }
-  }, []);
+	useEffect(() => {
+		const desc = localStorage.getItem("backgroundDescription");
+		if (desc) {
+			setBackgroundDesc(JSON.parse(desc));
+		}
+	}, []);
 
-  return (
-    <BackgroundDescContext.Provider
-      value={{ backgroundDesc, setBackgroundDesc }}
-    >
-      {children}
-    </BackgroundDescContext.Provider>
-  );
+	return (
+		<BackgroundDescContext.Provider
+			value={{ backgroundDesc, setBackgroundDesc }}
+		>
+			{children}
+		</BackgroundDescContext.Provider>
+	);
 };
 
 export const useBackgroundDesc = () => {
-  const context = useContext(BackgroundDescContext);
-  if (!context) {
-    throw new Error(
-      "useBackgroundDesc must be used within a BackgroundDescProvider",
-    );
-  }
-  return context;
+	const context = useContext(BackgroundDescContext);
+	if (!context) {
+		throw new Error(
+			"useBackgroundDesc must be used within a BackgroundDescProvider",
+		);
+	}
+	return context;
 };

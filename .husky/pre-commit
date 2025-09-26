@@ -1,0 +1,9 @@
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+# 修正前
+# biome format --write && git add .
+
+# 修正後
+npm run format && git add .
+

@@ -3,16 +3,16 @@
 @tailwind utilities;
 
 * {
-  cursor:
-    url("/cursor.png") 8 8,
-    auto;
+	cursor:
+		url("/cursor.png") 8 8,
+		auto;
 }
 
 body {
-  overflow: hidden;
-  background: #f9f9f9;
+	overflow: hidden;
+	background: #f9f9f9;
 }
 
 *::-webkit-scrollbar {
-  display: none;
+	display: none;
 }

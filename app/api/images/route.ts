@@ -3,17 +3,17 @@ import fs from "fs";
 import { NextResponse } from "next/server";
 
 export async function GET() {
-  try {
-    const colorsDirectory = path.join(process.cwd(), "public", "colors");
+	try {
+		const colorsDirectory = path.join(process.cwd(), "public", "colors");
 
-    const files = fs.readdirSync(colorsDirectory);
+		const files = fs.readdirSync(colorsDirectory);
 
-    return NextResponse.json({ images: files });
-  } catch (err) {
-    console.error(err);
-    return NextResponse.json(
-      { error: "Failed to load images" },
-      { status: 500 }
-    );
-  }
+		return NextResponse.json({ images: files });
+	} catch (err) {
+		console.error(err);
+		return NextResponse.json(
+			{ error: "Failed to load images" },
+			{ status: 500 },
+		);
+	}
 }
