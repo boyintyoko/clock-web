@@ -23,7 +23,7 @@ jobs:
         run: npm ci
 
       - name: Run Biome check
-        run: npx biome check || true
+        run: npx biome check app || true
 
       - name: Vercel Deploy
         uses: nexterias/actions-vercel@v1
