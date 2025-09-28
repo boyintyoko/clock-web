@@ -64,6 +64,7 @@ export default function Search({
 					isSearch={isSearch}
 					setHistories={setHistories}
 					histories={histories}
+					isDarkMode={isDarkMode}
 				/>
 				<LinkContent
 					isSearch={isSearch}

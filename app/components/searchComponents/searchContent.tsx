@@ -7,12 +7,14 @@ interface Search {
 	isSearch: boolean;
 	setHistories: React.Dispatch<React.SetStateAction<HistoryType[]>>;
 	histories: HistoryType[];
+	isDarkMode: boolean;
 }
 
 export default function SearchContent({
 	isSearch,
 	setHistories,
 	histories,
+	isDarkMode,
 }: Search) {
 	const [searchText, setSearchText] = useState<string>("");
 
@@ -85,7 +87,7 @@ export default function SearchContent({
 				onClick={searchHandler}
 			>
 				<Image
-					src="/search.png"
+					src={isDarkMode ? "/BlackSearch.png" : "/WhiteSearch.png"}
 					alt="search icon"
 					height={30}
 					width={30}
