@@ -31,7 +31,7 @@ export default function Modal({ title, isOpen, setIsOpen, children }: Props) {
 							aria-label="Go back"
 						>
 							<Image
-								src="https://boyintyoko.github.io/images/icons/back.png"
+								src="https://boyintyoko.github.io/clock-web/icons/back.png"
 								alt="Back"
 								height={25}
 								width={25}

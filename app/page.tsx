@@ -65,7 +65,7 @@ export default function Home() {
 
 	const checkImage = (userBackgroundImage: string) => {
 		if (!userBackgroundImage) {
-			return "url(https://boyintyoko.github.io/images/initialValuePhoto.avif)";
+			return "url(https://boyintyoko.github.io/clock-web/assets/initialValuePhoto.avif)";
 		}
 
 		if (userBackgroundImage.startsWith("https")) {
@@ -75,7 +75,7 @@ export default function Home() {
 		if (colors.includes(userBackgroundImage) + ".png") {
 			return `url(/colors/${userBackgroundImage})`;
 		} else {
-			return "url(https://boyintyoko.github.io/images/initialValuePhoto.avif)";
+			return "url(https://boyintyoko.github.io/clock-web/assets/initialValuePhoto.avif)";
 		}
 	};
 
@@ -113,10 +113,10 @@ export default function Home() {
 							setIsOpen={setIsGoodsOpen}
 							isDarkMode={isDarkMode}
 							blackImageUrl={
-								"https://boyintyoko.github.io/images/icons/heartIcons/heartBlack.svg"
+								"https://boyintyoko.github.io/clock-web/icons/heartIcons/heartBlack.svg"
 							}
 							whiteImageUrl={
-								"https://boyintyoko.github.io/images/icons/heartIcons/heartWhite.svg"
+								"https://boyintyoko.github.io/clock-web/icons/heartIcons/heartWhite.svg"
 							}
 						/>
 						<ModalButton
@@ -124,10 +124,10 @@ export default function Home() {
 							setIsOpen={setIsSettingOpen}
 							isDarkMode={isDarkMode}
 							blackImageUrl={
-								"https://boyintyoko.github.io/images/icons/settingIcons/settingBlack.svg"
+								"https://boyintyoko.github.io/clock-web/icons/settingIcons/settingBlack.svg"
 							}
 							whiteImageUrl={
-								"https://boyintyoko.github.io/images/icons/settingIcons/settingWhite.svg"
+								"https://boyintyoko.github.io/clock-web/icons/settingIcons/settingWhite.svg"
 							}
 						/>
 						<ModalButton
@@ -135,10 +135,10 @@ export default function Home() {
 							setIsOpen={setIsTimeZoneOpen}
 							isDarkMode={isDarkMode}
 							blackImageUrl={
-								"https://boyintyoko.github.io/images/icons/timeZoneIcons/timeZoneBlack.svg"
+								"https://boyintyoko.github.io/clock-web/icons/timeZoneIcons/timeZoneBlack.svg"
 							}
 							whiteImageUrl={
-								"https://boyintyoko.github.io/images/icons/timeZoneIcons/timeZoneWhite.svg"
+								"https://boyintyoko.github.io/clock-web/icons/timeZoneIcons/timeZoneWhite.svg"
 							}
 						/>
 					</div>

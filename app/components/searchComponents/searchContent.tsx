@@ -91,8 +91,8 @@ export default function SearchContent({
 				<Image
 					src={
 						isDarkMode
-							? "https://boyintyoko.github.io/images/icons/searchIcons/blackSearch.png"
-							: "https://boyintyoko.github.io/images/icons/searchIcons/blackSearch.png"
+							? "https://boyintyoko.github.io/clock-web/icons/searchIcons/blackSearch.png"
+							: "https://boyintyoko.github.io/clock-web/icons/searchIcons/whiteSearch.png"
 					}
 					alt="search icon"
 					height={30}
