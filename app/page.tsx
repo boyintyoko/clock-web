@@ -65,7 +65,7 @@ export default function Home() {
 
 	const checkImage = (userBackgroundImage: string) => {
 		if (!userBackgroundImage) {
-			return "url(/initialValuePhoto.avif)";
+			return "url(https://boyintyoko.github.io/images/initialValuePhoto.avif)";
 		}
 
 		if (userBackgroundImage.startsWith("https")) {
@@ -75,7 +75,7 @@ export default function Home() {
 		if (colors.includes(userBackgroundImage) + ".png") {
 			return `url(/colors/${userBackgroundImage})`;
 		} else {
-			return "url(/initialValuePhoto.avif)";
+			return "url(https://boyintyoko.github.io/images/initialValuePhoto.avif)";
 		}
 	};
 
@@ -112,22 +112,34 @@ export default function Home() {
 							isOpen={isGoodsOpen}
 							setIsOpen={setIsGoodsOpen}
 							isDarkMode={isDarkMode}
-							blackImageUrl={"/icons/heartBlack.svg"}
-							whiteImageUrl={"/icons/heartWhite.svg"}
+							blackImageUrl={
+								"https://boyintyoko.github.io/images/icons/heartIcons/heartBlack.svg"
+							}
+							whiteImageUrl={
+								"https://boyintyoko.github.io/images/icons/heartIcons/heartWhite.svg"
+							}
 						/>
 						<ModalButton
 							isOpen={isSettingOpen}
 							setIsOpen={setIsSettingOpen}
 							isDarkMode={isDarkMode}
-							blackImageUrl={"/icons/settingBlack.svg"}
-							whiteImageUrl={"/icons/settingWhite.svg"}
+							blackImageUrl={
+								"https://boyintyoko.github.io/images/icons/settingIcons/settingBlack.svg"
+							}
+							whiteImageUrl={
+								"https://boyintyoko.github.io/images/icons/settingIcons/settingWhite.svg"
+							}
 						/>
 						<ModalButton
 							isOpen={isTimeZoneOpen}
 							setIsOpen={setIsTimeZoneOpen}
 							isDarkMode={isDarkMode}
-							blackImageUrl={"/icons/timeZoneBlack.svg"}
-							whiteImageUrl={"/icons/timeZoneWhite.svg"}
+							blackImageUrl={
+								"https://boyintyoko.github.io/images/icons/timeZoneIcons/timeZoneBlack.svg"
+							}
+							whiteImageUrl={
+								"https://boyintyoko.github.io/images/icons/timeZoneIcons/timeZoneWhite.svg"
+							}
 						/>
 					</div>
 

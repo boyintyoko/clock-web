@@ -200,7 +200,7 @@ export default function ChangeImageSide({
 						className="flex justify-center items-center transition-all hover:translate-y-1"
 					>
 						<Image
-							src="/back.png"
+							src="https://boyintyoko.github.io/images/icons/back.png"
 							alt="back image"
 							height={25}
 							width={25}

@@ -16,8 +16,8 @@ export default function History({
 				className="flex items-center justify-center w-12 h-12 rounded-full bg-blue-500 hover:bg-blue-600 transition-all"
 			>
 				<Image
-					src="/History.png"
-					alt="Youtube icon"
+					src="https://boyintyoko.github.io/images/icons/History.png"
+					alt="History icons"
 					height={20}
 					width={20}
 					loading="lazy"

@@ -30,7 +30,12 @@ export default function Modal({ title, isOpen, setIsOpen, children }: Props) {
 							className="p-2 rounded-full transition-all hover:translate-y-1"
 							aria-label="Go back"
 						>
-							<Image src="/back.png" alt="Back" height={25} width={25} />
+							<Image
+								src="https://boyintyoko.github.io/images/icons/back.png"
+								alt="Back"
+								height={25}
+								width={25}
+							/>
 						</button>
 						<h3 className="font-bold">{title}</h3>
 					</div>
