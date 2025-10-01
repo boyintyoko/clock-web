@@ -89,7 +89,11 @@ export default function SearchContent({
 				onClick={searchHandler}
 			>
 				<Image
-					src={isDarkMode ? "/BlackSearch.png" : "/WhiteSearch.png"}
+					src={
+						isDarkMode
+							? "https://boyintyoko.github.io/clock-web/icons/searchIcons/blackSeacrh.png"
+							: "https://boyintyoko.github.io/clock-web/icons/searchIcons/whiteSearch.png"
+					}
 					alt="search icon"
 					height={30}
 					width={30}

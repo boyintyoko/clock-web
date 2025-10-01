@@ -17,6 +17,7 @@ import GoodsContent from "./components/modalComnponents/modalContents/goodsConte
 import ModalButton from "./components/modalComnponents/modalButton";
 import HeaderMain from "./components/header/main";
 import LinkSettingContent from "./components/modalComnponents/modalContents/linkSettingContent";
+import checkVersion from "@/lib/checkVer";
 
 interface MainSelectionProps {
 	$background: string;
@@ -52,6 +53,8 @@ export default function Home() {
 	const [isLinkSettingOpen, setIsLinkSettingOpen] = useState<boolean>(false);
 	const [urls, setUrls] = useState<UrlItem[]>([]);
 
+	checkVersion();
+
 	useEffect(() => {
 		const isDarkMode = localStorage.getItem("isDarkMode");
 		if (!(isDarkMode === "true" || isDarkMode === "false")) {
@@ -65,7 +68,7 @@ export default function Home() {
 
 	const checkImage = (userBackgroundImage: string) => {
 		if (!userBackgroundImage) {
-			return "url(/initialValuePhoto.avif)";
+			return "url(https://boyintyoko.github.io/clock-web/assets/initialValuePhoto.avif)";
 		}
 
 		if (userBackgroundImage.startsWith("https")) {
@@ -75,7 +78,7 @@ export default function Home() {
 		if (colors.includes(userBackgroundImage) + ".png") {
 			return `url(/colors/${userBackgroundImage})`;
 		} else {
-			return "url(/initialValuePhoto.avif)";
+			return "url(https://boyintyoko.github.io/clock-web/assets/initialValuePhoto.avif)";
 		}
 	};
 
@@ -112,22 +115,34 @@ export default function Home() {
 							isOpen={isGoodsOpen}
 							setIsOpen={setIsGoodsOpen}
 							isDarkMode={isDarkMode}
-							blackImageUrl={"/icons/heartBlack.svg"}
-							whiteImageUrl={"/icons/heartWhite.svg"}
+							blackImageUrl={
+								"https://boyintyoko.github.io/clock-web/icons/heartIcons/heartBlack.svg"
+							}
+							whiteImageUrl={
+								"https://boyintyoko.github.io/clock-web/icons/heartIcons/heartWhite.svg"
+							}
 						/>
 						<ModalButton
 							isOpen={isSettingOpen}
 							setIsOpen={setIsSettingOpen}
 							isDarkMode={isDarkMode}
-							blackImageUrl={"/icons/settingBlack.svg"}
-							whiteImageUrl={"/icons/settingWhite.svg"}
+							blackImageUrl={
+								"https://boyintyoko.github.io/clock-web/icons/settingIcons/settingBlack.svg"
+							}
+							whiteImageUrl={
+								"https://boyintyoko.github.io/clock-web/icons/settingIcons/settingWhite.svg"
+							}
 						/>
 						<ModalButton
 							isOpen={isTimeZoneOpen}
 							setIsOpen={setIsTimeZoneOpen}
 							isDarkMode={isDarkMode}
-							blackImageUrl={"/icons/timeZoneBlack.svg"}
-							whiteImageUrl={"/icons/timeZoneWhite.svg"}
+							blackImageUrl={
+								"https://boyintyoko.github.io/clock-web/icons/timeZoneIcons/timeZoneBlack.svg"
+							}
+							whiteImageUrl={
+								"https://boyintyoko.github.io/clock-web/icons/timeZoneIcons/timeZoneWhite.svg"
+							}
 						/>
 					</div>
 

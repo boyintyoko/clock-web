@@ -20,6 +20,13 @@ export default function SettingContent({
 	const { setIsNowLanguage, isNowLanguage } = useLanguage();
 	const { setIsNowTime, isNowTime } = useTime();
 	const [isLocation, setIsLocation] = useState<boolean>(false);
+	const [version, setVersion] = useState<string>("");
+
+	useEffect(() => {
+		const version = localStorage.getItem("APP_VERSION");
+		if (!version) return;
+		setVersion(version);
+	}, []);
 
 	useEffect(() => {
 		if (navigator.geolocation) {
@@ -149,6 +156,10 @@ export default function SettingContent({
 				>
 					Clear memories
 				</button>
+			</div>
+
+			<div className="fixed bottom-3 right-2 -translate-x-1/2">
+				<p className="font-bold">Version: {version}</p>
 			</div>
 		</div>
 	);

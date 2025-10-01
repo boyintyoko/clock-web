@@ -78,7 +78,7 @@ export default function Search({
 			</div>
 			<button className="flex justify-center items-center absolute bottom-4 left-96 ml-10 h-16 w-16 bg-white rounded-full transition-all bg-opacity-25 hover:translate-y-2">
 				<Image
-					src={`${isDarkMode ? "/DownBlack.png" : "/DownWhine.png"}`}
+					src={`${isDarkMode ? "https://boyintyoko.github.io/clock-web/icons/downIcons/downBlack.png" : "https://boyintyoko.github.io/clock-web/icons/downIcons/downWhite.png"}`}
 					alt="down icon"
 					height={50}
 					width={50}

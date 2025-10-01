@@ -91,6 +91,8 @@ export default function HeaderMain({
 					isDarkMode={isDarkMode}
 				/>
 				<BackgroundDesc isDarkMode={isDarkMode} />
+				<NowTimeZone isDarkMode={isDarkMode} isNowTimeZone={isNowTimeZone} />
+
 				<NavigatorPermisson
 					isDarkMode={isDarkMode}
 					navigatorPermission={navigatorPermission}
@@ -99,7 +101,6 @@ export default function HeaderMain({
 					wheatherIcon={wheatherIcon}
 					humidity={humidity}
 				/>
-				<NowTimeZone isDarkMode={isDarkMode} isNowTimeZone={isNowTimeZone} />
 			</div>
 		</div>
 	);
