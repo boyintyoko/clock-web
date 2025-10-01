@@ -22,7 +22,7 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
 	title: "Image clock",
 	description: "綺麗な画像とともに時間を確認できます",
-	icons: ["https://boyintyoko.github.io/images/apple-touch-icon.png"],
+	icons: ["https://boyintyoko.github.io/clock-web/assets/apple-touch-icon.png"],
 	keywords: ["時計", "画像時計", "時間確認", "Image Clock"],
 	openGraph: {
 		type: "website",
@@ -32,7 +32,7 @@ export const metadata: Metadata = {
 		description: "綺麗な画像とともに時間を確認できます",
 		images: [
 			{
-				url: "https://boyintyoko.github.io/images/ogp-image-16x9.png",
+				url: "https://boyintyoko.github.io/clock-web/assets/ogp-image-16x9.png",
 				width: 1230,
 				height: 720,
 				alt: "Image Clock",
@@ -44,7 +44,9 @@ export const metadata: Metadata = {
 		site: "@boyintyoko",
 		title: "Image clock",
 		description: "綺麗な画像とともに時間を確認できます",
-		images: ["https://boyintyoko.github.io/images/ogp-image-16x9.png"],
+		images: [
+			"https://boyintyoko.github.io/clock-web/assets/ogp-image-16x9.png",
+		],
 	},
 };
 
@@ -59,7 +61,7 @@ export default function RootLayout({
 				<link
 					rel="icon"
 					type="image/png"
-					href="https://boyintyoko.github.io/images/favicon-96x96.png"
+					href="https://boyintyoko.github.io/clock-web/assets/favicon-96x96.png"
 					sizes="96x96"
 				/>
 				<link rel="canonical" href="https://clock-web-six.vercel.app/" />
@@ -69,11 +71,15 @@ export default function RootLayout({
 					href="https://unpkg.com/driver.js/dist/driver.min.css"
 				/>
 
-				<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+				<link
+					rel="icon"
+					type="image/svg+xml"
+					href="https://boyintyoko.github.io/images/assets/favicon.svg"
+				/>
 				<link
 					rel="apple-touch-icon"
 					sizes="180x180"
-					href="https://boyintyoko.github.io/images/apple-touch-icon.png"
+					href="https://boyintyoko.github.io/clock-web/assets/apple-touch-icon.png"
 				/>
 				<link
 					rel="stylesheet"

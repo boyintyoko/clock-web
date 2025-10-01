@@ -55,7 +55,7 @@ export default function LinkContent({
 				className="absolute top-1 right-1"
 			>
 				<Image
-					src="https://boyintyoko.github.io/images/icons/settingIcons/settingWhite.svg"
+					src="https://boyintyoko.github.io/clock-web/icons/settingIcons/settingWhite.svg"
 					alt="ChatGPT icon"
 					height={20}
 					width={20}
