@@ -69,7 +69,7 @@ export default function HeaderMain({
 						setHumidity(hum);
 						setWheatherIcon(wheatherIcon);
 					},
-					(error) => console.error(error.message),
+					(err) => console.log(err),
 				);
 			} catch (error) {
 				console.error("天気取得エラー:", error);

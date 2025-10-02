@@ -17,6 +17,7 @@ import GoodsContent from "./components/modalComnponents/modalContents/goodsConte
 import ModalButton from "./components/modalComnponents/modalButton";
 import HeaderMain from "./components/header/main";
 import LinkSettingContent from "./components/modalComnponents/modalContents/linkSettingContent";
+import VersionFunc from "@/lib/versionFunc";
 
 interface MainSelectionProps {
 	$background: string;
@@ -51,6 +52,10 @@ export default function Home() {
 	const [temperatureUnits, setTempratureUnits] = useState<string>("F");
 	const [isLinkSettingOpen, setIsLinkSettingOpen] = useState<boolean>(false);
 	const [urls, setUrls] = useState<UrlItem[]>([]);
+
+	useEffect(() => {
+		VersionFunc();
+	}, []);
 
 	useEffect(() => {
 		const isDarkMode = localStorage.getItem("isDarkMode");
