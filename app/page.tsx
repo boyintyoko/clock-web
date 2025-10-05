@@ -10,24 +10,15 @@ import colorsRGB from "@/data/colorRGBData";
 import Search from "./components/searchComponents/search";
 import Clock from "./components/clock";
 import { useTimeZone } from "./context/timeZoneContext";
-import Modal from "./components/modalComnponents/main";
-import SettingContent from "./components/modalComnponents/modalContents/settingContent";
-import TimeZoneContent from "./components/modalComnponents/modalContents/timeZoneContent";
-import GoodsContent from "./components/modalComnponents/modalContents/goodsContent";
-import ModalButton from "./components/modalComnponents/modalButton";
 import HeaderMain from "./components/header/main";
-import LinkSettingContent from "./components/modalComnponents/modalContents/linkSettingContent";
 import VersionFunc from "@/lib/versionFunc";
+import axios from "axios";
+import UrlItem from "./types/UrlItems";
+import Modals from "./components/modalComnponents/modals";
+import ModalButtons from "./components/modalComnponents/modalButtons";
 
 interface MainSelectionProps {
 	$background: string;
-}
-
-interface UrlItem {
-	link: string;
-	url: string;
-	alt: string;
-	id: number;
 }
 
 const MainSelection = styled.div<MainSelectionProps>`
@@ -74,6 +65,19 @@ export default function Home() {
 		}
 
 		if (userBackgroundImage.startsWith("https")) {
+			const checkUrl = async () => {
+				try {
+					const res = await axios.get(userBackgroundImage);
+					console.log(res);
+					if (res.status === 200) return `url(${userBackgroundImage})`;
+					if (res.status === 500)
+						return "url(https://boyintyoko.github.io/clock-web/assets/initialValuePhoto.avif)";
+				} catch (error) {
+					console.error("Error fetching URL:", error);
+				}
+			};
+
+			checkUrl();
 			return `url(${userBackgroundImage})`;
 		}
 
@@ -112,42 +116,15 @@ export default function Home() {
 				<ElectronicClock isDarkMode={isDarkMode} />
 				<Clock isDarkMode={isDarkMode} />
 				<div>
-					<div className="flex gap-2 absolute right-2 bottom-2">
-						<ModalButton
-							isOpen={isGoodsOpen}
-							setIsOpen={setIsGoodsOpen}
-							isDarkMode={isDarkMode}
-							blackImageUrl={
-								"https://boyintyoko.github.io/clock-web/icons/heartIcons/heartBlack.svg"
-							}
-							whiteImageUrl={
-								"https://boyintyoko.github.io/clock-web/icons/heartIcons/heartWhite.svg"
-							}
-						/>
-						<ModalButton
-							isOpen={isSettingOpen}
-							setIsOpen={setIsSettingOpen}
-							isDarkMode={isDarkMode}
-							blackImageUrl={
-								"https://boyintyoko.github.io/clock-web/icons/settingIcons/settingBlack.svg"
-							}
-							whiteImageUrl={
-								"https://boyintyoko.github.io/clock-web/icons/settingIcons/settingWhite.svg"
-							}
-						/>
-						<ModalButton
-							isOpen={isTimeZoneOpen}
-							setIsOpen={setIsTimeZoneOpen}
-							isDarkMode={isDarkMode}
-							blackImageUrl={
-								"https://boyintyoko.github.io/clock-web/icons/timeZoneIcons/timeZoneBlack.svg"
-							}
-							whiteImageUrl={
-								"https://boyintyoko.github.io/clock-web/icons/timeZoneIcons/timeZoneWhite.svg"
-							}
-						/>
-					</div>
-
+					<ModalButtons
+						isDarkMode={isDarkMode}
+						isSettingOpen={isSettingOpen}
+						setIsSettingOpen={setIsSettingOpen}
+						isTimeZoneOpen={isTimeZoneOpen}
+						setIsTimeZoneOpen={setIsTimeZoneOpen}
+						isGoodsOpen={isGoodsOpen}
+						setIsGoodsOpen={setIsGoodsOpen}
+					/>
 					<Search
 						isDarkMode={isDarkMode}
 						isHistoriesOpen={isHistoriesOpen}
@@ -158,42 +135,21 @@ export default function Home() {
 						setUrls={setUrls}
 					/>
 				</div>
-				<Modal
-					isOpen={isSettingOpen}
-					setIsOpen={setIsSettingOpen}
-					title="Setting"
-				>
-					<SettingContent
-						isSettingOpen={isSettingOpen}
-						setIsSettingOpen={setIsSettingOpen}
-						temperatureUnits={temperatureUnits}
-						setTemperatureUnits={setTempratureUnits}
-					/>
-				</Modal>
-
-				<Modal
-					isOpen={isTimeZoneOpen}
-					setIsOpen={setIsTimeZoneOpen}
-					title="Time zone"
-				>
-					<TimeZoneContent />
-				</Modal>
-
-				<Modal
-					isOpen={isGoodsOpen}
-					setIsOpen={setIsGoodsOpen}
-					title="Time zone"
-				>
-					<GoodsContent isGoodsOpen={isGoodsOpen} />
-				</Modal>
-				<Modal
-					isOpen={isLinkSettingOpen}
-					setIsOpen={setIsLinkSettingOpen}
-					title="Link setting"
-				>
-					<LinkSettingContent urls={urls} setUrls={setUrls} />
-				</Modal>
 			</div>
+			<Modals
+				isSettingOpen={isSettingOpen}
+				setIsSettingOpen={setIsSettingOpen}
+				temperatureUnits={temperatureUnits}
+				setTemperatureUnits={setTempratureUnits}
+				isTimeZoneOpen={isTimeZoneOpen}
+				setIsTimeZoneOpen={setIsTimeZoneOpen}
+				isGoodsOpen={isGoodsOpen}
+				setIsGoodsOpen={setIsGoodsOpen}
+				isLinkSettingOpen={isLinkSettingOpen}
+				setIsLinkSettingOpen={setIsLinkSettingOpen}
+				urls={urls}
+				setUrls={setUrls}
+			/>
 		</MainSelection>
 	);
 }
