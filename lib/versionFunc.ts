@@ -2,7 +2,7 @@ import urlData from "@/data/urlData";
 
 export default function VersionFunc() {
 
-  const isNowVersion = "1.0.0"
+  const isNowVersion = "1.0.1"
 
   const version = localStorage.getItem("version");
   if (!version || version !== isNowVersion) {
