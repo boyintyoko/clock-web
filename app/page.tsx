@@ -82,7 +82,7 @@ export default function Home() {
 		}
 
 		if (colors.includes(userBackgroundImage) + ".png") {
-			return `url(/colors/${userBackgroundImage})`;
+			return `url(https://boyintyoko.github.io/clock-web/icons/colors/${userBackgroundImage}.png)`;
 		} else {
 			return "url(https://boyintyoko.github.io/clock-web/assets/initialValuePhoto.avif)";
 		}
