@@ -3,7 +3,11 @@
 import Image from "next/image";
 import { useBackground } from "@/app/context/backgroundContext";
 import { useEffect, useState } from "react";
-import colorData from "@/data/colorData";
+import axios from "axios";
+
+interface ImagesResponse {
+	images: string[];
+}
 
 export default function SingleColor() {
 	const { setBackground, background } = useBackground();
@@ -30,7 +34,15 @@ export default function SingleColor() {
 	}, []);
 
 	useEffect(() => {
-		setColors(colorData);
+		const getImages = async () => {
+			try {
+				const res = await axios.get<ImagesResponse>("/api/images");
+				setColors(res.data.images);
+			} catch (err) {
+				console.log(err);
+			}
+		};
+		getImages();
 	}, []);
 
 	return (
@@ -45,7 +57,7 @@ export default function SingleColor() {
 				>
 					<div className="h-12 w-12 overflow-hidden rounded-full">
 						<Image
-							src={`https://boyintyoko.github.io/clock-web/icons/colors/${color}.png`}
+							src={`/colors/${color}`}
 							height={50}
 							width={50}
 							alt={color}
