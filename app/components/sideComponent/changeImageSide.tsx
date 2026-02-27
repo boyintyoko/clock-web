@@ -19,12 +19,13 @@ type ChangeImageSideProps = {
 };
 
 const StyledP = styled.p`
+  position: relative;
   &::before {
     content: "";
     transform: scale(0, 1);
     transform-origin: left;
     position: absolute;
-    bottom: 12px;
+    bottom: 0;
     width: 100%;
     height: 1px;
     background: #333;
