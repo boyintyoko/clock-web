@@ -7,7 +7,7 @@ export default function Mask({ isOpen, setIsOpen }: Props) {
 	return (
 		<div
 			onClick={() => setIsOpen(!isOpen)}
-			className={`absolute bg-black h-screen w-screen z-30 ${isOpen ? "opacity-50" : "opacity-0"}`}
+			className={`absolute bg-black h-screen w-screen z-20 ${isOpen ? "opacity-50" : "opacity-0"}`}
 		></div>
 	);
 }

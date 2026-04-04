@@ -67,6 +67,7 @@ export default function Search({
 					isDarkMode={isDarkMode}
 				/>
 				<LinkContent
+					isDarkMode={isDarkMode}
 					isSearch={isSearch}
 					isHistoriesOpen={isHistoriesOpen}
 					setIsHistoriesOpen={setIsHistoriesOpen}

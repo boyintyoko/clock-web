@@ -18,9 +18,11 @@ interface Props {
 	isLinkSettingOpen: boolean;
 	urls: UrlItem[];
 	setUrls: (urls: UrlItem[]) => void;
+	isDarkMode: boolean;
 }
 
 export default function LinkContent({
+	isDarkMode,
 	isSearch,
 	isHistoriesOpen,
 	setIsHistoriesOpen,
@@ -56,10 +58,11 @@ export default function LinkContent({
 			>
 				<Image
 					src="https://boyintyoko.github.io/clock-web/icons/settingIcons/settingWhite.svg"
-					alt="ChatGPT icon"
+					alt="Setting Icon"
 					height={20}
 					width={20}
 					loading="lazy"
+					className={isDarkMode ? "invert" : ""}
 				/>
 			</button>
 
@@ -77,10 +80,12 @@ export default function LinkContent({
 						height={20}
 						width={20}
 						loading="lazy"
+						className={isDarkMode ? "invert" : ""}
 					/>
 				</Link>
 			))}
 			<History
+				isDarkMode={isDarkMode}
 				isHistoriesOpen={isHistoriesOpen}
 				setIsHistoriesOpen={setIsHistoriesOpen}
 			/>

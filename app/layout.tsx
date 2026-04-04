@@ -22,7 +22,9 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
 	title: "Image clock",
 	description: "綺麗な画像とともに時間を確認できます",
-	icons: ["https://boyintyoko.github.io/clock-web/assets/apple-touch-icon.png"],
+	icons: {
+		icon: "/favicon.ico",
+	},
 	keywords: ["時計", "画像時計", "時間確認", "Image Clock"],
 	openGraph: {
 		type: "website",

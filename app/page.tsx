@@ -179,13 +179,10 @@ export default function Home() {
 					<TimeZoneContent />
 				</Modal>
 
-				<Modal
-					isOpen={isGoodsOpen}
-					setIsOpen={setIsGoodsOpen}
-					title="Time zone"
-				>
+				<Modal isOpen={isGoodsOpen} setIsOpen={setIsGoodsOpen} title="Goods">
 					<GoodsContent isGoodsOpen={isGoodsOpen} />
 				</Modal>
+
 				<Modal
 					isOpen={isLinkSettingOpen}
 					setIsOpen={setIsLinkSettingOpen}
