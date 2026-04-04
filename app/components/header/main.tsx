@@ -85,21 +85,32 @@ export default function HeaderMain({
 		<div>
 			<ChangeImageButton isDarkMode={isDarkMode} />
 
-			<div className="flex flex-row-reverse gap-6 items-center absolute top-2 right-2 z-10">
+			<div className="flex flex-row-reverse gap-5 items-center absolute top-2 right-2 z-10">
 				<ToggleSwitch
 					handleSwitchChange={handleSwitchChange}
 					isDarkMode={isDarkMode}
 				/>
-				<BackgroundDesc isDarkMode={isDarkMode} />
-				<NavigatorPermisson
-					isDarkMode={isDarkMode}
-					navigatorPermission={navigatorPermission}
-					temperature={temperature}
-					temperatureUnits={temperatureUnits}
-					wheatherIcon={wheatherIcon}
-					humidity={humidity}
-				/>
+				<div>
+					<BackgroundDesc isDarkMode={isDarkMode} />
+					<NavigatorPermisson
+						isDarkMode={isDarkMode}
+						navigatorPermission={navigatorPermission}
+						temperature={temperature}
+						temperatureUnits={temperatureUnits}
+						wheatherIcon={wheatherIcon}
+						humidity={humidity}
+					/>
+				</div>
+
 				<NowTimeZone isDarkMode={isDarkMode} isNowTimeZone={isNowTimeZone} />
+				<p
+					className={`
+    text-center text-xs font-bold py-2
+    ${isDarkMode ? "text-gray-700" : "text-white"}
+  `}
+				>
+					© {new Date().getFullYear()} Taiga Ito. All rights reserved.
+				</p>
 			</div>
 		</div>
 	);
