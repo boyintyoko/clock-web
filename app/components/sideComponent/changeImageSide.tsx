@@ -195,32 +195,53 @@ export default function ChangeImageSide({
 			ref={sideBarScrollWidth}
 		>
 			<div className="p-4 fixid">
-				<div className="flex justify-between items-center mb-4">
+				<div
+					className="flex items-center justify-between mb-4
+                  bg-white/80 backdrop-blur-md
+                  rounded-2xl px-4 py-3
+                  shadow-sm border border-gray-200"
+				>
 					<button
 						onClick={changeSideBar}
-						className="flex justify-center items-center transition-all hover:translate-y-1"
+						className="flex justify-center items-center
+                 w-9 h-9 rounded-xl
+                 hover:bg-gray-100
+                 active:scale-95
+                 transition"
 					>
 						<Image
 							src="https://boyintyoko.github.io/clock-web/icons/back.png"
 							alt="back image"
-							height={25}
-							width={25}
+							height={20}
+							width={20}
 							loading="lazy"
 						/>
 					</button>
-					<p className="text-xl font-bold text-gray-800 transition-all hover:translate-y-1">
+
+					<p
+						className="text-lg font-semibold
+                  text-gray-800
+                  tracking-wide select-none"
+					>
 						{isNowLanguage === "it" ? "Immagine." : "Image."}
 					</p>
-					<form
-						onSubmit={searchSubmitHandler}
-						className="relative transition-all hover:translate-y-1"
-					>
+
+					<form onSubmit={searchSubmitHandler} className="relative">
 						<input
 							onChange={(e) => setSearchText(e.target.value)}
 							type="text"
 							value={searchText}
 							placeholder="Search..."
-							className="border border-gray-300 rounded-md px-3 py-2 w-40 focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
+							className="w-44
+                   bg-gray-50
+                   border border-gray-200
+                   rounded-xl
+                   px-3 py-2
+                   text-sm
+                   focus:outline-none
+                   focus:ring-2 focus:ring-blue-400
+                   focus:bg-white
+                   transition"
 						/>
 					</form>
 				</div>

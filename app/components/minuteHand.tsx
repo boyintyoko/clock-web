@@ -22,7 +22,7 @@ export default function MinuteHand({ isDarkMode }: isDarkModeType) {
 			const parts = formatter.formatToParts(new Date());
 			const minuteStr = parts.find((p) => p.type === "minute")?.value ?? "0";
 			const minutes = parseInt(minuteStr, 10);
-			setMinuteAngle((360 + minutes * 6 - 90) % 360); // 1分 = 6度
+			setMinuteAngle((360 + minutes * 6 - 90) % 360);
 		};
 
 		getMinutes();
