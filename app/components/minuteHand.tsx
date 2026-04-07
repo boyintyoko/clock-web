@@ -20,12 +20,16 @@ export default function MinuteHand({ isDarkMode }: isDarkModeType) {
 
 		const getMinutes = () => {
 			const parts = formatter.formatToParts(new Date());
+
 			const minuteStr = parts.find((p) => p.type === "minute")?.value ?? "0";
+
 			const minutes = parseInt(minuteStr, 10);
+
 			setMinuteAngle((360 + minutes * 6 - 90) % 360);
 		};
 
 		getMinutes();
+
 		const intervalId = setInterval(getMinutes, 1000);
 
 		return () => clearInterval(intervalId);
@@ -33,17 +37,25 @@ export default function MinuteHand({ isDarkMode }: isDarkModeType) {
 
 	return (
 		<div
-			className={`absolute left-1/2 ${
-				isDarkMode ? "bg-black" : "bg-white"
-			} w-36 transition-all`}
+			className={`
+        absolute
+        top-1/2
+        left-1/2
+        h-[3px]
+        w-[35%]
+        transition-all
+        ${isDarkMode ? "bg-black" : "bg-white"}
+      `}
 			style={{
-				height: "3px",
 				borderRadius: "9999px",
 				transformOrigin: "0% 50%",
-				transform: `rotate(${minuteAngle}deg)`,
-				boxShadow: "0px 0px 4px rgba(0, 0, 0, 0.4)",
+				transform: `
+          translate(0%, -50%)
+          rotate(${minuteAngle}deg)
+        `,
+				boxShadow: "0px 0px 4px rgba(0,0,0,0.4)",
 				transition: "transform 0.2s linear",
 			}}
-		></div>
+		/>
 	);
 }

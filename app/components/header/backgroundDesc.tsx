@@ -26,11 +26,11 @@ export default function BackgroundDesc({ isDarkMode }: Props) {
 							alt="user image"
 							width={40}
 							height={40}
-							className={`rounded-full border-2 ${isDarkMode ? "border-gray-700" : "border-white"}`}
+							className={`rounded-full border-2 ${!isDarkMode ? "border-gray-700" : "border-white"}`}
 						/>
 					)}
 					<div
-						className={`${isDarkMode ? "text-gray-700" : "text-white"} text-sm leading-tight`}
+						className={`${!isDarkMode ? "text-gray-700" : "text-white"} text-sm leading-tight`}
 					>
 						<p className="font-bold">{backgroundDesc.name}</p>
 						<p className="opacity-75">@{backgroundDesc.userName}</p>

@@ -12,10 +12,13 @@ import { useLanguage } from "@/app/context/languageContext";
 import styled from "styled-components";
 import { useBackgroundDesc } from "@/app/context/backgroundDesc";
 import GoodsType from "@/app/types/goodsType";
+import { useMediaQuery } from "react-responsive";
 
 type ChangeImageSideProps = {
 	isChange: boolean;
 	setIsChange: (isChange: boolean) => void;
+	isVisible: boolean;
+	setIsVisible: (isVisible: boolean) => void;
 };
 
 const StyledP = styled.p`
@@ -42,6 +45,8 @@ const CreatedImageDiv = styled.div`
 export default function ChangeImageSide({
 	isChange,
 	setIsChange,
+	isVisible,
+	setIsVisible,
 }: ChangeImageSideProps) {
 	const [images, setImages] = useState<ImageType[]>([]);
 	const [searchText, setSearchText] = useState<string>("");
@@ -63,6 +68,10 @@ export default function ChangeImageSide({
 	const { isNowLanguage } = useLanguage();
 	const { setBackgroundDesc } = useBackgroundDesc();
 	const sideBarScrollWidth = useRef<HTMLDivElement>(null);
+
+	const isMobile = useMediaQuery({
+		query: "(max-width: 440px)",
+	});
 
 	useEffect(() => {
 		setHearts(isNowGoods);
@@ -184,14 +193,27 @@ export default function ChangeImageSide({
 
 	const changeSideBar = () => {
 		setIsChange(!isChange);
+		if (isMobile) setIsVisible(!isVisible);
 		localStorage.setItem("isSideBarChang", JSON.stringify(!isChange));
 	};
 
 	return (
 		<div
-			className={`side-bar absolute top-0 ${
-				isChange ? "right-0" : "-right-96"
-			} z-20 h-screen w-96 bg-gradient-to-b from-gray-100 to-white shadow-lg border-l border-gray-200 transition-all overflow-auto`}
+			className={`
+    fixed
+    side-bar
+    fixed top-0 right-0
+    z-20 
+    h-screen 
+    w-[90vw] sm:w-96
+    max-w-[384px]
+    bg-gradient-to-b from-gray-100 to-white 
+    shadow-lg border-l border-gray-200 
+    transition-transform duration-300
+    overflow-y-auto
+    overflow-x-hidden
+    ${isChange ? "translate-x-0" : "translate-x-full"}
+  `}
 			ref={sideBarScrollWidth}
 		>
 			<div className="p-4 fixid">
@@ -348,16 +370,34 @@ export default function ChangeImageSide({
 				</div>
 			</div>
 
-			<button
-				onClick={() =>
-					sideBarScrollWidth.current?.scrollTo({ top: 0, behavior: "smooth" })
-				}
-				className={`fixed ${
-					scrollGoTopButton && isChange ? "right-10" : "-right-20"
-				} transition-all bottom-10 bg-white p-5 rounded-full shadow-2xl hover:bottom-8 bg-opacity-50`}
-			>
-				<i className="fa-solid fa-jet-fighter-up text-4xl"></i>
-			</button>
+			<div className="sticky bottom-10 flex justify-end pr-2">
+				<button
+					onClick={() =>
+						sideBarScrollWidth.current?.scrollTo({
+							top: 0,
+							behavior: "smooth",
+						})
+					}
+					className={`
+              transition-all duration-300
+
+              ${
+								scrollGoTopButton && isChange
+									? "opacity-100"
+									: "opacity-0 pointer-events-none"
+							}
+
+              bg-white
+              p-5
+              rounded-full
+              shadow-2xl
+              hover:-translate-y-1
+              bg-opacity-70
+            `}
+				>
+					<i className="fa-solid fa-jet-fighter-up text-3xl"></i>
+				</button>
+			</div>
 		</div>
 	);
 }

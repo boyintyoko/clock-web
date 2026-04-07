@@ -148,15 +148,17 @@ export default function Home() {
 						/>
 					</div>
 
-					<Search
-						isDarkMode={isDarkMode}
-						isHistoriesOpen={isHistoriesOpen}
-						setIsHistoriesOpen={setIsHistoriesOpen}
-						setIsLinkSettingOpen={setIsLinkSettingOpen}
-						isLinkSettingOpen={isLinkSettingOpen}
-						urls={urls}
-						setUrls={setUrls}
-					/>
+					<div className="max-lg:hidden">
+						<Search
+							isDarkMode={isDarkMode}
+							isHistoriesOpen={isHistoriesOpen}
+							setIsHistoriesOpen={setIsHistoriesOpen}
+							setIsLinkSettingOpen={setIsLinkSettingOpen}
+							isLinkSettingOpen={isLinkSettingOpen}
+							urls={urls}
+							setUrls={setUrls}
+						/>
+					</div>
 				</div>
 				<Modal
 					isOpen={isSettingOpen}

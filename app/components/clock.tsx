@@ -9,10 +9,21 @@ interface Props {
 export default function Clock({ isDarkMode }: Props) {
 	return (
 		<div
-			className={`relative flex justify-center items-center h-96 w-96 rounded-full border-8 ${
-				isDarkMode ? "border-black" : "border-white"
-			} shadow-2xl transition-all top-0 hover:top-1 bg-white bg-opacity-25 backdrop-blur-md hover:backdrop-blur-0`}
 			id="clock"
+			className={`
+        relative
+        flex justify-center items-center
+        w-[90vw] max-w-[400px]
+        aspect-square
+        rounded-full
+        border-[8px]
+        ${isDarkMode ? "border-black" : "border-white"}
+        shadow-2xl
+        transition-all
+        hover:translate-y-1
+        bg-white/25
+        backdrop-blur-md
+        hover:backdrop-blur-0`}
 		>
 			{[...Array(12)].map((_, index) => {
 				const number = (index + 12) % 12 || 12;
