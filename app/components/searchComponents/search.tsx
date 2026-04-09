@@ -3,7 +3,7 @@
 import SearchContent from "./searchContent";
 import LinkContent from "./linkContent";
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import HistoryType from "@/app/types/HistoryType";
 import Modal from "../modalComnponents/main";
 import SerachHistroyContent from "../modalComnponents/modalContents/serachHistoryContent";
@@ -23,6 +23,10 @@ interface Props {
 	isLinkSettingOpen: boolean;
 	urls: UrlItem[];
 	setUrls: (urls: UrlItem[]) => void;
+	isSearch: boolean;
+	setIsSearch: React.Dispatch<React.SetStateAction<boolean>>;
+	histories: HistoryType[];
+	setHistories: React.Dispatch<React.SetStateAction<HistoryType[]>>;
 }
 
 export default function Search({
@@ -33,10 +37,11 @@ export default function Search({
 	isLinkSettingOpen,
 	urls,
 	setUrls,
+	isSearch,
+	setIsSearch,
+	histories,
+	setHistories,
 }: Props) {
-	const [isSearch, setIsSearch] = useState<boolean>(false);
-	const [histories, setHistories] = useState<HistoryType[]>([]);
-
 	useEffect(() => {
 		const setDataHistories = () => {
 			const histories = localStorage.getItem("history");

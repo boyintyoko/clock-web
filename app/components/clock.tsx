@@ -11,19 +11,30 @@ export default function Clock({ isDarkMode }: Props) {
 		<div
 			id="clock"
 			className={`
-        relative
-        flex justify-center items-center
-        w-[90vw] max-w-[400px]
-        aspect-square
-        rounded-full
-        border-[8px]
-        ${isDarkMode ? "border-black" : "border-white"}
-        shadow-2xl
-        transition-all
-        hover:translate-y-1
-        bg-white/25
-        backdrop-blur-md
-        hover:backdrop-blur-0`}
+    relative
+    flex justify-center items-center
+    w-[90vw] max-w-[400px]
+    aspect-square
+    rounded-full
+
+    border-[5px]
+
+    ${
+			isDarkMode ? "border-black/40 bg-black/20" : "border-white/80 bg-white/15"
+		}
+
+    shadow-xl
+
+    backdrop-blur-sm
+
+    transition-all duration-300
+
+    hover:bg-transparent
+    hover:backdrop-blur-0
+    hover:border-white/40
+    hover:translate-y-1
+hover:scale-[1.02]
+  `}
 		>
 			{[...Array(12)].map((_, index) => {
 				const number = (index + 12) % 12 || 12;

@@ -95,10 +95,12 @@ export default function ElectronicClock({ isDarkMode }: isDarkModeType) {
 
 	return (
 		<div id="electronicClock">
-			<div className="relative flex justify-center bg-opacity-25 bg-white items-center w-64 rounded-xl mb-2 shadow-md transition-all top-0 hover:top-1">
+			<div
+				className={`relative flex justify-center bg-opacity-15 backdrop-blur-sm ${isDarkMode ? "bg-black" : "bg-white"} items-center w-64 rounded-xl mb-2 shadow-md transition-all top-0 hover:top-1`}
+			>
 				<div
 					className={`flex items-center justify-center transition-all gap-5 w-full text-sm ${
-						isDarkMode ? "text-black" : "text-white"
+						isDarkMode ? "text-white" : "text-black"
 					}`}
 				>
 					<div>{days[day]}</div>
@@ -123,8 +125,8 @@ export default function ElectronicClock({ isDarkMode }: isDarkModeType) {
 				</div>
 			</div>
 			<div
-				className={`relative flex justify-center bg-opacity-25 bg-white items-center w-64 h-20 rounded-xl mb-6 shadow-md transition-all top-0 hover:top-1 ${
-					isDarkMode ? "text-black" : "text-white"
+				className={`relative flex justify-center bg-opacity-15 backdrop-blur-sm ${isDarkMode ? "bg-black" : "bg-white"} items-center w-64 h-20 rounded-xl mb-6 shadow-md transition-all top-0 hover:top-1 ${
+					isDarkMode ? "text-white" : "text-black"
 				}`}
 			>
 				<div className="flex items-end">

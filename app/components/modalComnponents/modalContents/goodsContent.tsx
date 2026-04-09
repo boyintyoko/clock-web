@@ -88,38 +88,96 @@ export default function GoodsContent({ isGoodsOpen }: GoodsItemType) {
 	};
 
 	return (
-		<div>
+		<div className="fade-in-up">
 			{goods.length > 0 ? (
-				<div className="flex flex-col gap-4">
+				<div className="flex flex-col gap-5">
 					{[...goods].reverse().map((item, index) => (
 						<div
 							key={index}
-							className="bg-white rounded-lg shadow-md p-4 hover:shadow-lg transition-shadow duration-200 relative"
+							className="
+              fade-in-up
+              relative
+              p-4
+              rounded-2xl
+              bg-white/10
+              backdrop-blur-md
+              border border-white/20
+              shadow-md
+              transition-all duration-200
+              hover:-translate-y-1
+              hover:shadow-xl
+            "
 						>
+							{/* user info */}
 							<Link
 								target="_blank"
 								href={item.userUrl}
-								className="group flex items-center gap-3 p-2 rounded-md transition"
+								className="
+                group
+                flex
+                items-center
+                gap-3
+                p-2
+                rounded-xl
+                transition-all
+                hover:bg-white/10
+              "
 							>
 								<CreatedImageDiv className="relative w-10 h-10 shrink-0">
 									<Image
 										src={item.userImageUrl}
 										alt={`${item.name}'s profile`}
 										fill
-										className="rounded-full object-cover border border-gray-300 group-hover:scale-105 transition-transform duration-300"
+										className="
+                    rounded-full
+                    object-cover
+                    border border-gray-300
+                    transition-transform duration-300
+                    group-hover:scale-105
+                  "
 									/>
 								</CreatedImageDiv>
-								<StyledP className="font-semibold text-gray-800 group-hover:underline truncate max-w-[160px]">
+
+								<StyledP
+									className="
+                  font-semibold
+                  text-gray-800
+                  truncate
+                  max-w-[160px]
+                "
+								>
 									{item.name}
 								</StyledP>
 							</Link>
 
+							{/* delete button */}
 							<button
 								onClick={() => goodDeleteHandle(item.imageUrl)}
-								className="absolute rounded-tr-lg right-0 top-0 z-10 w-10 h-10  bg-white p-1 rounded-full shadow-md hover:shadow-lg transition-shadow duration-200 text-red-500 hover:text-red-700"
+								className="
+                absolute
+                top-2
+                right-2
+                w-9
+                h-9
+                flex
+                items-center
+                justify-center
+                rounded-full
+                bg-white/70
+                backdrop-blur
+                shadow-md
+                text-red-500
+                transition-all duration-200
+                hover:bg-red-500
+                hover:text-white
+                hover:scale-105
+                active:scale-90
+              "
 							>
 								<i className="fa-solid fa-trash"></i>
 							</button>
+
+							{/* image */}
 							<div
 								onClick={() =>
 									setImageBackground(
@@ -130,14 +188,28 @@ export default function GoodsContent({ isGoodsOpen }: GoodsItemType) {
 										item.userName,
 									)
 								}
-								className="rounded-lg overflow-hidden hover:shadow-lg transition-transform hover:scale-105 duration-200 cursor-pointer"
+								className="
+                mt-3
+                rounded-xl
+                overflow-hidden
+                cursor-pointer
+                transition-all duration-300
+                hover:scale-[1.02]
+                hover:shadow-lg
+              "
 							>
 								<Image
 									src={item.imageUrl}
 									alt={`Image ${index + 1}`}
 									width={300}
 									height={200}
-									className="w-full h-auto object-cover"
+									className="
+                  w-full
+                  h-auto
+                  object-cover
+                  transition-transform duration-300
+                  hover:scale-105
+                "
 									loading="lazy"
 								/>
 							</div>
@@ -145,16 +217,26 @@ export default function GoodsContent({ isGoodsOpen }: GoodsItemType) {
 					))}
 				</div>
 			) : (
-				<p className="font-bold transition-all hover:translate-y-1">
-					{(() => {
-						if (isNowLanguage === "en") {
-							return "Nothing.";
-						} else if (isNowLanguage === "it") {
-							return "Niente.";
-						}
-						return "何もありません。";
-					})()}
-				</p>
+				<div className="fade-in-up flex justify-center items-center py-10">
+					<p
+						className="
+          font-semibold
+          text-gray-500
+          text-lg
+          transition-all
+          hover:-translate-y-1
+        "
+					>
+						{(() => {
+							if (isNowLanguage === "en") {
+								return "Nothing saved yet.";
+							} else if (isNowLanguage === "it") {
+								return "Niente salvato.";
+							}
+							return "まだ保存されていません。";
+						})()}
+					</p>
+				</div>
 			)}
 		</div>
 	);

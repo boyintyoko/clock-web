@@ -7,17 +7,18 @@ import Loading from "./components/loading/loading";
 import styled from "styled-components";
 import colors from "@/data/colorData";
 import colorsRGB from "@/data/colorRGBData";
-import Search from "./components/searchComponents/search";
 import Clock from "./components/clock";
 import { useTimeZone } from "./context/timeZoneContext";
-import Modal from "./components/modalComnponents/main";
+import HeaderMain from "./components/header/main";
+import VersionFunc from "@/lib/versionFunc";
+import ModalButton from "./components/modalComnponents/modalButton";
+import HistoryType from "@/app/types/HistoryType";
+import Modal from "./components/modal/modal";
 import SettingContent from "./components/modalComnponents/modalContents/settingContent";
 import TimeZoneContent from "./components/modalComnponents/modalContents/timeZoneContent";
 import GoodsContent from "./components/modalComnponents/modalContents/goodsContent";
-import ModalButton from "./components/modalComnponents/modalButton";
-import HeaderMain from "./components/header/main";
+import Search from "./components/searchComponents/search";
 import LinkSettingContent from "./components/modalComnponents/modalContents/linkSettingContent";
-import VersionFunc from "@/lib/versionFunc";
 
 interface MainSelectionProps {
 	$background: string;
@@ -52,6 +53,8 @@ export default function Home() {
 	const [temperatureUnits, setTempratureUnits] = useState<string>("F");
 	const [isLinkSettingOpen, setIsLinkSettingOpen] = useState<boolean>(false);
 	const [urls, setUrls] = useState<UrlItem[]>([]);
+	const [isSearch, setIsSearch] = useState<boolean>(false);
+	const [histories, setHistories] = useState<HistoryType[]>([]);
 
 	useEffect(() => {
 		VersionFunc();
@@ -106,93 +109,88 @@ export default function Home() {
 					setIsDarkMode={setIsDarkMode}
 					temperatureUnits={temperatureUnits}
 					setTempratureUnits={setTempratureUnits}
+					setHistories={setHistories}
+					histories={histories}
 				/>
 
 				<Loading />
 				<ElectronicClock isDarkMode={isDarkMode} />
 				<Clock isDarkMode={isDarkMode} />
-				<div>
-					<div className="flex gap-2 absolute right-2 bottom-2">
-						<ModalButton
-							isOpen={isGoodsOpen}
-							setIsOpen={setIsGoodsOpen}
-							isDarkMode={isDarkMode}
-							blackImageUrl={
-								"https://boyintyoko.github.io/clock-web/icons/heartIcons/heartBlack.svg"
-							}
-							whiteImageUrl={
-								"https://boyintyoko.github.io/clock-web/icons/heartIcons/heartWhite.svg"
-							}
-						/>
-						<ModalButton
-							isOpen={isSettingOpen}
-							setIsOpen={setIsSettingOpen}
-							isDarkMode={isDarkMode}
-							blackImageUrl={
-								"https://boyintyoko.github.io/clock-web/icons/settingIcons/settingBlack.svg"
-							}
-							whiteImageUrl={
-								"https://boyintyoko.github.io/clock-web/icons/settingIcons/settingWhite.svg"
-							}
-						/>
-						<ModalButton
-							isOpen={isTimeZoneOpen}
-							setIsOpen={setIsTimeZoneOpen}
-							isDarkMode={isDarkMode}
-							blackImageUrl={
-								"https://boyintyoko.github.io/clock-web/icons/timeZoneIcons/timeZoneBlack.svg"
-							}
-							whiteImageUrl={
-								"https://boyintyoko.github.io/clock-web/icons/timeZoneIcons/timeZoneWhite.svg"
-							}
-						/>
-					</div>
+			</div>
+			<div className="absolute bottom-4 right-4 flex space-x-4 z-10 max-lg:hidden">
+				<ModalButton
+					isOpen={isGoodsOpen}
+					setIsOpen={setIsGoodsOpen}
+					isDarkMode={isDarkMode}
+					blackImageUrl="https://boyintyoko.github.io/clock-web/icons/heartIcons/heartBlack.svg"
+					whiteImageUrl="https://boyintyoko.github.io/clock-web/icons/heartIcons/heartWhite.svg"
+				/>
 
-					<div className="max-lg:hidden">
-						<Search
-							isDarkMode={isDarkMode}
-							isHistoriesOpen={isHistoriesOpen}
-							setIsHistoriesOpen={setIsHistoriesOpen}
-							setIsLinkSettingOpen={setIsLinkSettingOpen}
-							isLinkSettingOpen={isLinkSettingOpen}
-							urls={urls}
-							setUrls={setUrls}
-						/>
-					</div>
-				</div>
-				<Modal
+				<ModalButton
 					isOpen={isSettingOpen}
 					setIsOpen={setIsSettingOpen}
-					title="Setting"
-				>
-					<SettingContent
-						isSettingOpen={isSettingOpen}
-						setIsSettingOpen={setIsSettingOpen}
-						temperatureUnits={temperatureUnits}
-						setTemperatureUnits={setTempratureUnits}
-					/>
-				</Modal>
+					isDarkMode={isDarkMode}
+					blackImageUrl="https://boyintyoko.github.io/clock-web/icons/settingIcons/settingBlack.svg"
+					whiteImageUrl="https://boyintyoko.github.io/clock-web/icons/settingIcons/settingWhite.svg"
+				/>
 
-				<Modal
+				<ModalButton
 					isOpen={isTimeZoneOpen}
 					setIsOpen={setIsTimeZoneOpen}
-					title="Time zone"
-				>
-					<TimeZoneContent />
-				</Modal>
-
-				<Modal isOpen={isGoodsOpen} setIsOpen={setIsGoodsOpen} title="Goods">
-					<GoodsContent isGoodsOpen={isGoodsOpen} />
-				</Modal>
-
-				<Modal
-					isOpen={isLinkSettingOpen}
-					setIsOpen={setIsLinkSettingOpen}
-					title="Link setting"
-				>
-					<LinkSettingContent urls={urls} setUrls={setUrls} />
-				</Modal>
+					isDarkMode={isDarkMode}
+					blackImageUrl="https://boyintyoko.github.io/clock-web/icons/timeZoneIcons/timeZoneBlack.svg"
+					whiteImageUrl="https://boyintyoko.github.io/clock-web/icons/timeZoneIcons/timeZoneWhite.svg"
+				/>
 			</div>
+
+			<div className="max-lg:hidden">
+				<Search
+					isDarkMode={isDarkMode}
+					isHistoriesOpen={isHistoriesOpen}
+					setIsHistoriesOpen={setIsHistoriesOpen}
+					setIsLinkSettingOpen={setIsLinkSettingOpen}
+					isLinkSettingOpen={isLinkSettingOpen}
+					urls={urls}
+					setUrls={setUrls}
+					isSearch={isSearch}
+					setIsSearch={setIsSearch}
+					histories={histories}
+					setHistories={setHistories}
+				/>
+			</div>
+
+			<Modal isOpen={isGoodsOpen} setIsOpen={setIsGoodsOpen} title="Goods">
+				<GoodsContent isGoodsOpen={isGoodsOpen} />
+			</Modal>
+
+			<Modal
+				isOpen={isSettingOpen}
+				setIsOpen={setIsSettingOpen}
+				title="Setting"
+			>
+				<SettingContent
+					temperatureUnits={temperatureUnits}
+					setTemperatureUnits={setTempratureUnits}
+					isSettingOpen={isSettingOpen}
+					setIsSettingOpen={setIsSettingOpen}
+				/>
+			</Modal>
+
+			<Modal
+				isOpen={isTimeZoneOpen}
+				setIsOpen={setIsTimeZoneOpen}
+				title="Time Zone"
+			>
+				<TimeZoneContent />
+			</Modal>
+
+			<Modal
+				isOpen={isLinkSettingOpen}
+				setIsOpen={setIsLinkSettingOpen}
+				title="Link setting"
+			>
+				<LinkSettingContent urls={urls} setUrls={setUrls} />
+			</Modal>
 		</MainSelection>
 	);
 }

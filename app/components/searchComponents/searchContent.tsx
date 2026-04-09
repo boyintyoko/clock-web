@@ -60,24 +60,50 @@ export default function SearchContent({
 		<div
 			className={`flex items-center absolute ${
 				isSearch ? "-bottom-20" : "bottom-2"
-			} left-2 h-16 w-96 bg-white bg-opacity-50 rounded-full shadow-lg hover:ring-blue-500 ring-4 transition-all hover:shadow-2xl hover:translate-y-2`}
+			} left-2
+  h-14 md:h-16
+  w-[90vw] sm:w-[60vw] md:w-[45vw]
+  max-w-96 min-w-[200px]
+  bg-white bg-opacity-50
+  rounded-full shadow-lg
+  hover:ring-blue-500 ring-4
+  transition-all hover:shadow-2xl hover:translate-y-2`}
 			id="inputSearch"
 		>
-			<div className={`${styles.input} relative w-80 h-16`}>
+			<div className={`${styles.input} relative flex-1 h-full`}>
 				<form onSubmit={(e) => searchHandler(e)}>
 					<input
 						type="text"
 						placeholder=" "
 						value={searchText}
 						onChange={(e) => setSearchText(e.target.value)}
-						className="peer h-16 w-80 pl-4 pr-8 rounded-l-full text-gray-700 bg-transparent
-               placeholder-transparent focus:outline-none font-bold"
+						className="
+          peer
+          h-16 w-full
+          pl-4 pr-8
+          rounded-l-full
+          text-gray-700
+          bg-transparent
+          placeholder-transparent
+          focus:outline-none
+          font-bold
+        "
 					/>
+
 					<p
-						className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 transition-all
-               duration-200
-               peer-focus:-top-5 peer-focus:text-blue-500
-               peer-placeholder-shown:top-1/2 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 font-bold"
+						className="
+          absolute left-4 top-1/2
+          -translate-y-1/2
+          text-gray-500
+          transition-all duration-200
+          peer-focus:-top-5
+            pointer-events-none
+          peer-focus:text-blue-500
+          peer-placeholder-shown:top-1/2
+          peer-placeholder-shown:text-base
+          peer-placeholder-shown:text-gray-500
+          font-bold
+        "
 					>
 						Search...
 					</p>
@@ -85,7 +111,14 @@ export default function SearchContent({
 			</div>
 
 			<button
-				className="flex justify-center items-center bg-blue-500 h-16 w-16 rounded-r-full hover:bg-blue-600"
+				className="
+      flex justify-center items-center
+      bg-blue-500
+      h-full
+      w-12 md:w-16
+      rounded-r-full
+      hover:bg-blue-600
+    "
 				onClick={searchHandler}
 			>
 				<Image
@@ -95,8 +128,8 @@ export default function SearchContent({
 							: "https://boyintyoko.github.io/clock-web/icons/searchIcons/whiteSearch.png"
 					}
 					alt="search icon"
-					height={30}
-					width={30}
+					height={28}
+					width={28}
 					loading="lazy"
 				/>
 			</button>

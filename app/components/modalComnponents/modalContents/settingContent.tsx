@@ -71,19 +71,44 @@ export default function SettingContent({
 	};
 
 	return (
-		<div className="space-y-6">
-			<div>
-				<label className="block font-bold text-lg mb-2 transition-all hover:translate-y-1">
+		<div className="space-y-6 fade-in-up">
+			{/* Time format */}
+			<div
+				className="
+      fade-in-up
+      p-4
+      rounded-2xl
+      bg-white/10
+      backdrop-blur-md
+      border border-white/20
+      shadow-md
+      transition-all duration-200
+      hover:-translate-y-1
+      hover:shadow-lg
+    "
+			>
+				<label className="block font-semibold text-lg mb-3">
 					{isNowLanguage === "en"
 						? "Time format"
 						: isNowLanguage === "it"
 							? "Formato dell'orologio"
 							: "時間形式"}
 				</label>
+
 				<select
 					onChange={handleFormatChange}
 					value={isNowTime}
-					className="block w-full border rounded-lg p-2 transition-all hover:translate-y-1"
+					className="
+          w-full
+          rounded-xl
+          border border-gray-400/40
+          bg-white/20
+          backdrop-blur
+          p-2
+          outline-none
+          transition-all duration-200
+          hover:bg-white/30
+        "
 				>
 					<option value="24">
 						{isNowLanguage === "en"
@@ -92,6 +117,7 @@ export default function SettingContent({
 								? "Formato 24 ore"
 								: "24時間形式"}
 					</option>
+
 					<option value="12">
 						{isNowLanguage === "en"
 							? "12-hour format (AM/PM)"
@@ -102,18 +128,43 @@ export default function SettingContent({
 				</select>
 			</div>
 
-			<div>
-				<label className="block font-bold text-lg mb-2 transition-all hover:translate-y-1">
+			{/* Language */}
+			<div
+				className="
+      fade-in-up
+      p-4
+      rounded-2xl
+      bg-white/10
+      backdrop-blur-md
+      border border-white/20
+      shadow-md
+      transition-all duration-200
+      hover:-translate-y-1
+      hover:shadow-lg
+    "
+			>
+				<label className="block font-semibold text-lg mb-3">
 					{isNowLanguage === "en"
 						? "Language"
 						: isNowLanguage === "it"
 							? "Lingua"
 							: "言語"}
 				</label>
+
 				<select
 					value={isNowLanguage}
 					onChange={handleLanguageChange}
-					className="block w-full border rounded-lg p-2 transition-all hover:translate-y-1"
+					className="
+          w-full
+          rounded-xl
+          border border-gray-400/40
+          bg-white/20
+          backdrop-blur
+          p-2
+          outline-none
+          transition-all duration-200
+          hover:bg-white/30
+        "
 				>
 					<option value="en">English</option>
 					<option value="it">Italian</option>
@@ -121,19 +172,44 @@ export default function SettingContent({
 				</select>
 			</div>
 
+			{/* Temperature */}
 			{isLocation && (
-				<div>
-					<label className="block font-bold text-lg mb-2 transition-all hover:translate-y-1">
+				<div
+					className="
+        fade-in-up
+        p-4
+        rounded-2xl
+        bg-white/10
+        backdrop-blur-md
+        border border-white/20
+        shadow-md
+        transition-all duration-200
+        hover:-translate-y-1
+        hover:shadow-lg
+      "
+				>
+					<label className="block font-semibold text-lg mb-3">
 						{isNowLanguage === "en"
 							? "Temperature units"
 							: isNowLanguage === "it"
 								? "Unità di temperatura"
 								: "温度の単位"}
 					</label>
+
 					<select
 						value={temperatureUnits}
 						onChange={handleTemperatureChange}
-						className="block w-full border rounded-lg p-2 transition-all hover:translate-y-1"
+						className="
+            w-full
+            rounded-xl
+            border border-gray-400/40
+            bg-white/20
+            backdrop-blur
+            p-2
+            outline-none
+            transition-all duration-200
+            hover:bg-white/30
+          "
 					>
 						<option value="kelvin">K</option>
 						<option value="imperial">°F</option>
@@ -142,10 +218,23 @@ export default function SettingContent({
 				</div>
 			)}
 
-			<div>
+			{/* Clear button */}
+			<div className="fade-in-up pt-2">
 				<button
 					onClick={clearMemories}
-					className="border-red-500 border p-3 rounded-full text-red-500 transition-all hover:translate-y-1"
+					className="
+          w-full
+          rounded-xl
+          border border-red-400
+          text-red-400
+          p-3
+          font-semibold
+          transition-all duration-200
+          hover:bg-red-400
+          hover:text-white
+          hover:-translate-y-1
+          active:scale-95
+        "
 				>
 					Clear memories
 				</button>

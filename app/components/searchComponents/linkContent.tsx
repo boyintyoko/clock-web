@@ -88,6 +88,7 @@ export default function LinkContent({
 				isDarkMode={isDarkMode}
 				isHistoriesOpen={isHistoriesOpen}
 				setIsHistoriesOpen={setIsHistoriesOpen}
+				isSideBar={false}
 			/>
 		</div>
 	);
