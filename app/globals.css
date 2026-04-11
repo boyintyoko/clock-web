@@ -2,10 +2,15 @@
 @tailwind components;
 @tailwind utilities;
 
-* {
+*,
+*::before,
+*::after,
+*:hover,
+*:focus,
+*:active {
 	cursor:
 		url("https://boyintyoko.github.io/clock-web/icons/cursor.png") 8 8,
-		auto;
+		auto !important;
 }
 
 body {
