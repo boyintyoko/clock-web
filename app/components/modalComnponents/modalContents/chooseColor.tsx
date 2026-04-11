@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 
 interface Props {
 	setMyColors: React.Dispatch<React.SetStateAction<string[]>>;
-	setIsChoosColorOpen: React.Dispatch<React.SetStateAction<Boolean>>;
+	setIsChoosColorOpen: React.Dispatch<React.SetStateAction<boolean>>;
 	isChooseColorOpen: boolean;
 }
 
