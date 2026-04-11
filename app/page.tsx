@@ -80,6 +80,10 @@ export default function Home() {
 			return `url(${userBackgroundImage})`;
 		}
 
+		if (userBackgroundImage.startsWith("hsl")) {
+			return userBackgroundImage;
+		}
+
 		if (colors.includes(userBackgroundImage) + ".png") {
 			return `url(/colors/${userBackgroundImage})`;
 		} else {
@@ -98,9 +102,17 @@ export default function Home() {
 	return (
 		<MainSelection $background={background}>
 			<div
-				className="flex flex-col justify-center items-center h-screen w-full bg-center bg-no-repeat bg-cover"
+				className="flex flex-col justify-center items-center h-screen w-full"
 				style={{
-					backgroundImage: checkImage(background),
+					backgroundImage: colors.includes(background)
+						? undefined
+						: checkImage(background),
+
+					backgroundColor: colors.includes(background) ? background : undefined,
+
+					backgroundPosition: "center",
+					backgroundRepeat: "no-repeat",
+					backgroundSize: "cover",
 				}}
 			>
 				<HeaderMain

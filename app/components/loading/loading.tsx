@@ -81,7 +81,7 @@ export default function Loading() {
 			} absolute h-screen w-screen bg-white z-50`}
 		>
 			<div
-				className={`relative flex justify-center items-center h-96 w-96 rounded-full border-8
+				className={`relative flex justify-center items-center h-96 w-96 min-w-48 min-h-48 rounded-full border-8
         shadow-2xl transition-all top-0 hover:top-1 bg-white bg-opacity-25 backdrop-blur-md hover:backdrop-blur-0`}
 			>
 				{[...Array(12)].map((_, index) => {
