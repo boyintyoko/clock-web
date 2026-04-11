@@ -31,7 +31,7 @@ export default function Mask({
 					? "bg-opacity-50 pointer-events-auto"
 					: "bg-opacity-0 pointer-events-none"
 			} h-screen`}
-			style={{ width: "calc(100% - 384px)" }}
+			style={{ width: "calc(100vw - 384px)" }}
 		></div>
 	);
 }

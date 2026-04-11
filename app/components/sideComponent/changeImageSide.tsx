@@ -205,8 +205,7 @@ export default function ChangeImageSide({
     fixed top-0 right-0
     z-20 
     h-screen 
-    w-[90vw] sm:w-96
-    max-w-[384px]
+    w-[384px]
     bg-gradient-to-b from-gray-100 to-white 
     shadow-lg border-l border-gray-200 
     transition-transform duration-300

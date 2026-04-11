@@ -143,7 +143,6 @@ export default function HeaderMain({
           bg-white/70
           backdrop-blur-md
           shadow-lg
-          z-50
           flex flex-col items-center justify-center gap-[5px]
         "
 			>
