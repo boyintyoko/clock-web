@@ -4,32 +4,36 @@ import { useState, useEffect } from "react";
 
 interface Props {
 	setMyColors: React.Dispatch<React.SetStateAction<string[]>>;
+	setIsChoosColorOpen: React.Dispatch<React.SetStateAction<Boolean>>;
+	isChooseColorOpen: boolean;
 }
 
-export default function ChooseColorContent({ setMyColors }: Props) {
+export default function ChooseColorContent({
+	setMyColors,
+	setIsChoosColorOpen,
+	isChooseColorOpen,
+}: Props) {
 	const [color, setColor] = useState("hsl(220, 80%, 60%)");
 
-	// HSL管理
 	const [hue, setHue] = useState(220);
 	const [saturation, setSaturation] = useState(80);
 	const [lightness, setLightness] = useState(60);
 
-	// HSL → color更新
 	useEffect(() => {
 		const hsl = `hsl(${hue}, ${saturation}%, ${lightness}%)`;
 
 		setColor(hsl);
 	}, [hue, saturation, lightness]);
 
-	// 🎯 ここが一番重要
 	const handleAddColor = () => {
 		setMyColors((prev) => {
-			// 重複防止（おすすめ）
 			if (prev.includes(color)) return prev;
 
 			const updated = [...prev, color];
 
 			localStorage.setItem("myColors", JSON.stringify(updated));
+
+			setIsChoosColorOpen(!isChooseColorOpen);
 
 			return updated;
 		});
@@ -37,10 +41,8 @@ export default function ChooseColorContent({ setMyColors }: Props) {
 
 	return (
 		<div className="flex flex-col gap-6 p-5">
-			{/* Title */}
 			<h2 className="text-lg font-semibold">Create Custom Color</h2>
 
-			{/* Preview */}
 			<div className="flex justify-center">
 				<div
 					className="
@@ -56,7 +58,6 @@ export default function ChooseColorContent({ setMyColors }: Props) {
 				/>
 			</div>
 
-			{/* Hue */}
 			<div className="flex flex-col gap-1">
 				<label className="text-sm text-neutral-600">Hue</label>
 
@@ -69,7 +70,6 @@ export default function ChooseColorContent({ setMyColors }: Props) {
 				/>
 			</div>
 
-			{/* Saturation */}
 			<div className="flex flex-col gap-1">
 				<label className="text-sm text-neutral-600">Saturation</label>
 
@@ -82,7 +82,6 @@ export default function ChooseColorContent({ setMyColors }: Props) {
 				/>
 			</div>
 
-			{/* Lightness */}
 			<div className="flex flex-col gap-1">
 				<label className="text-sm text-neutral-600">Lightness</label>
 
@@ -95,7 +94,6 @@ export default function ChooseColorContent({ setMyColors }: Props) {
 				/>
 			</div>
 
-			{/* Color Code */}
 			<div
 				className="
         flex
@@ -121,7 +119,6 @@ export default function ChooseColorContent({ setMyColors }: Props) {
 				/>
 			</div>
 
-			{/* Add Button */}
 			<button
 				onClick={handleAddColor}
 				className="

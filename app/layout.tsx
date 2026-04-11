@@ -20,18 +20,46 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-	title: "Image clock",
-	description: "綺麗な画像とともに時間を確認できます",
+	metadataBase: new URL("https://clock-web-six.vercel.app"),
+
+	title: "Image Clock | 美しい背景画像の時計",
+
+	description:
+		"綺麗な背景画像とともに現在時刻を表示できるWeb時計。背景画像の変更やカスタマイズに対応したシンプルで使いやすい時計アプリ。",
+
 	icons: {
 		icon: "/favicon.ico",
 	},
-	keywords: ["時計", "画像時計", "時間確認", "Image Clock"],
+
+	keywords: [
+		"時計",
+		"画像時計",
+		"Web時計",
+		"デジタル時計",
+		"背景画像 時計",
+		"オンライン時計",
+		"Image Clock",
+	],
+
+	alternates: {
+		canonical: "https://clock-web-six.vercel.app",
+	},
+
+	robots: {
+		index: true,
+		follow: true,
+	},
+
 	openGraph: {
 		type: "website",
 		locale: "ja_JP",
 		url: "https://clock-web-six.vercel.app",
-		title: "Image clock",
-		description: "綺麗な画像とともに時間を確認できます",
+
+		title: "Image Clock | 美しい背景画像の時計",
+
+		description:
+			"綺麗な背景画像とともに現在時刻を表示できるWeb時計。背景画像の変更やカスタマイズに対応。",
+
 		images: [
 			{
 				url: "https://boyintyoko.github.io/clock-web/assets/ogp-image-16x9.png",
@@ -41,11 +69,16 @@ export const metadata: Metadata = {
 			},
 		],
 	},
+
 	twitter: {
 		card: "summary_large_image",
 		site: "@boyintyoko",
-		title: "Image clock",
-		description: "綺麗な画像とともに時間を確認できます",
+
+		title: "Image Clock | 美しい背景画像の時計",
+
+		description:
+			"綺麗な画像とともに時間を確認できるカスタマイズ可能なWeb時計。",
+
 		images: [
 			"https://boyintyoko.github.io/clock-web/assets/ogp-image-16x9.png",
 		],

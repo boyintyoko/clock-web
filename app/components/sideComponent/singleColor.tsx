@@ -22,14 +22,12 @@ export default function SingleColor() {
 
 	const [isChooseColorOpen, setIsChoosColorOpen] = useState<boolean>(false);
 
-	// 🎯 背景変更
 	const colorChangeHandler = (color: string) => {
 		localStorage.setItem("background", color);
 		setBackground(color);
 		setIsNowBackground(color);
 	};
 
-	// 🎯 MyColor削除
 	const deleteMyColor = (index: number) => {
 		const updated = myColors.filter((_, i) => i !== index);
 
@@ -47,14 +45,12 @@ export default function SingleColor() {
 		}
 	};
 
-	// 🎯 https背景なら解除
 	useEffect(() => {
 		if (background.startsWith("https")) {
 			setIsNowBackground("");
 		}
 	}, [background]);
 
-	// 🎯 現在背景取得
 	useEffect(() => {
 		const url = localStorage.getItem("background");
 
@@ -64,7 +60,6 @@ export default function SingleColor() {
 		setIsNowBackground(url);
 	}, []);
 
-	// 🎯 APIカラー取得
 	useEffect(() => {
 		const getImages = async () => {
 			try {
@@ -79,7 +74,6 @@ export default function SingleColor() {
 		getImages();
 	}, []);
 
-	// 🎯 My Color読み込み
 	useEffect(() => {
 		const saved = localStorage.getItem("myColors");
 
@@ -178,7 +172,6 @@ export default function SingleColor() {
 				</div>
 			))}
 
-			{/* ➕ 追加ボタン */}
 			<ModalButton
 				isOpen={isChooseColorOpen}
 				setIsOpen={setIsChoosColorOpen}
@@ -187,13 +180,16 @@ export default function SingleColor() {
 				whiteImageUrl="https://raw.githubusercontent.com/boyintyoko/boyintyoko.github.io/d7a9da6b6fc683b2662a2a7efad7118f129aec6d/clock-web/icons/addIcons/addBlack.svg"
 			/>
 
-			{/* 🎨 カラーモーダル */}
 			<Modal
 				isOpen={isChooseColorOpen}
 				setIsOpen={setIsChoosColorOpen}
 				title="Choose color"
 			>
-				<ChooseColorContent setMyColors={setMyColors} />
+				<ChooseColorContent
+					setMyColors={setMyColors}
+					isChooseColorOpen={isChooseColorOpen}
+					setIsChoosColorOpen={setIsChoosColorOpen}
+				/>
 			</Modal>
 		</div>
 	);
