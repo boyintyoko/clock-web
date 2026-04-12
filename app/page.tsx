@@ -1,5 +1,4 @@
 "use client";
-import { noSSR } from "@/lib/dynamicImport";
 
 import { useEffect, useState } from "react";
 import { useBackground } from "./context/backgroundContext";
@@ -108,7 +107,7 @@ export default function Home() {
 	return (
 		<MainSelection $background={background}>
 			<div
-				className="flex flex-col justify-center items-center h-screen w-full"
+				className="flex flex-col justify-center items-center min-h-[100dvh] w-full"
 				style={{
 					backgroundImage: checkImage(background),
 
