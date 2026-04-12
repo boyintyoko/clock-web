@@ -15,21 +15,11 @@ import HistoryType from "@/app/types/HistoryType";
 import HeaderMain from "./components/header/main";
 import ModalButton from "./components/modalComnponents/modalButton";
 import Search from "./components/searchComponents/search";
-
-const Modal = noSSR(() => import("./components/modal/modal"));
-const SettingContent = noSSR(
-	() => import("./components/modalComnponents/modalContents/settingContent"),
-);
-const TimeZoneContent = noSSR(
-	() => import("./components/modalComnponents/modalContents/timeZoneContent"),
-);
-const GoodsContent = noSSR(
-	() => import("./components/modalComnponents/modalContents/goodsContent"),
-);
-const LinkSettingContent = noSSR(
-	() =>
-		import("./components/modalComnponents/modalContents/linkSettingContent"),
-);
+import Modal from "./components/modal/modal";
+import SettingContent from "./components/modalComnponents/modalContents/settingContent";
+import TimeZoneContent from "./components/modalComnponents/modalContents/timeZoneContent";
+import GoodsContent from "./components/modalComnponents/modalContents/goodsContent";
+import LinkSettingContent from "./components/modalComnponents/modalContents/linkSettingContent";
 
 interface MainSelectionProps {
 	$background: string;
@@ -101,7 +91,7 @@ export default function Home() {
 		const nameWithoutExt = userBackgroundImage.replace(".png", "");
 
 		if (colors.includes(nameWithoutExt)) {
-			return `url(/colors/${userBackgroundImage})`;
+			return `url(https://github.com/boyintyoko/boyintyoko.github.io/blob/main/clock-web/icons/colors/${userBackgroundImage}?raw=true)`;
 		}
 
 		return defaultImage;

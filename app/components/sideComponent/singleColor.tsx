@@ -79,7 +79,7 @@ export default function SingleColor() {
             hover:scale-105
             active:scale-95
             ${
-							isNowBackground === color
+							isNowBackground === color + ".png"
 								? "ring-2 ring-blue-500"
 								: "border-neutral-300"
 						}
