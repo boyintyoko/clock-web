@@ -3,21 +3,16 @@
 import Image from "next/image";
 import { useBackground } from "@/app/context/backgroundContext";
 import { useEffect, useState } from "react";
-import axios from "axios";
 import ChooseColorContent from "../modalComnponents/modalContents/chooseColor";
 import Modal from "../modal/modal";
 import ModalButton from "../modalComnponents/modalButton";
-
-interface ImagesResponse {
-	images: string[];
-}
+import colors from "@/data/colorData";
 
 export default function SingleColor() {
 	const { setBackground, background } = useBackground();
 
 	const [isNowBackground, setIsNowBackground] = useState<string>("");
 
-	const [colors, setColors] = useState<string[]>([]);
 	const [myColors, setMyColors] = useState<string[]>([]);
 
 	const [isChooseColorOpen, setIsChoosColorOpen] = useState<boolean>(false);
@@ -61,20 +56,6 @@ export default function SingleColor() {
 	}, []);
 
 	useEffect(() => {
-		const getImages = async () => {
-			try {
-				const res = await axios.get<ImagesResponse>("/api/images");
-
-				setColors(res.data.images);
-			} catch (err) {
-				console.log(err);
-			}
-		};
-
-		getImages();
-	}, []);
-
-	useEffect(() => {
 		const saved = localStorage.getItem("myColors");
 
 		if (saved) {
@@ -84,11 +65,10 @@ export default function SingleColor() {
 
 	return (
 		<div className="flex flex-nowrap overflow-x-auto gap-3 border-b p-1">
-			{/* 🎯 既存カラー */}
 			{colors.map((color, i) => (
 				<button
 					key={i}
-					onClick={() => colorChangeHandler(color)}
+					onClick={() => colorChangeHandler(color + ".png")}
 					className={`
             flex
             border-2
@@ -107,7 +87,7 @@ export default function SingleColor() {
 				>
 					<div className="h-12 w-12 overflow-hidden rounded-full">
 						<Image
-							src={`/colors/${color}`}
+							src={`https://github.com/boyintyoko/boyintyoko.github.io/blob/main/clock-web/icons/colors/${color}.png?raw=true`}
 							height={50}
 							width={50}
 							alt={color}

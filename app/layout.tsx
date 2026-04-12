@@ -1,13 +1,9 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { BackgroundProvider } from "./context/backgroundContext";
-import { GoodsProvider } from "./context/goodContext";
-import { LanguageProvider } from "./context/languageContext";
-import { TimeProvider } from "./context/timeContext";
-import { TimeZoneProvider } from "./context/timeZoneContext";
+
 import { Analytics } from "@vercel/analytics/react";
-import { BackgroundDescProvider } from "./context/backgroundDesc";
+import Providers from "./providers";
 
 const geistSans = Geist({
 	variable: "--font-geist-sans",
@@ -27,10 +23,6 @@ export const metadata: Metadata = {
 	description:
 		"綺麗な背景画像とともに現在時刻を表示できるWeb時計。背景画像の変更やカスタマイズに対応したシンプルで使いやすい時計アプリ。",
 
-	icons: {
-		icon: "/favicon.ico",
-	},
-
 	keywords: [
 		"時計",
 		"画像時計",
@@ -40,6 +32,23 @@ export const metadata: Metadata = {
 		"オンライン時計",
 		"Image Clock",
 	],
+
+	icons: {
+		icon: [
+			{ url: "/favicons/favicon.ico" },
+			{ url: "/favicons/favicon.svg", type: "image/svg+xml" },
+			{ url: "/favicons/favicon-96x96.png", sizes: "96x96", type: "image/png" },
+		],
+		apple: [
+			{
+				url: "/favicons/apple-touch-icon.png",
+				sizes: "180x180",
+				type: "image/png",
+			},
+		],
+	},
+
+	manifest: "/favicons/site.webmanifest",
 
 	alternates: {
 		canonical: "https://clock-web-six.vercel.app",
@@ -83,68 +92,36 @@ export const metadata: Metadata = {
 			"https://boyintyoko.github.io/clock-web/assets/ogp-image-16x9.png",
 		],
 	},
+
+	viewport: {
+		width: "device-width",
+		initialScale: 1,
+	},
 };
 
 export default function RootLayout({
 	children,
-}: Readonly<{
+}: {
 	children: React.ReactNode;
-}>) {
+}) {
 	return (
 		<html lang="ja">
 			<head>
-				<link
-					rel="icon"
-					type="image/png"
-					href="https://boyintyoko.github.io/clock-web/assets/favicon-96x96.png"
-					sizes="96x96"
-				/>
-				<link rel="canonical" href="https://clock-web-six.vercel.app/" />
-
-				<link
-					rel="stylesheet"
-					href="https://unpkg.com/driver.js/dist/driver.min.css"
-				/>
-
-				<link
-					rel="icon"
-					type="image/svg+xml"
-					href="https://boyintyoko.github.io/images/assets/favicon.svg"
-				/>
-				<link
-					rel="apple-touch-icon"
-					sizes="180x180"
-					href="https://boyintyoko.github.io/clock-web/assets/apple-touch-icon.png"
-				/>
-				<link
-					rel="stylesheet"
-					href="https://use.fontawesome.com/releases/v6.2.0/css/all.css"
-				/>
-				<meta name="apple-mobile-web-app-title" content="MyWebSite" />
-				<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 				<meta
 					name="google-site-verification"
 					content="r9bgfR9jIhvPVPAHKCoYpVPS3jrkj4baVspn_fISchA"
 				/>
-				<link rel="manifest" href="/site.webmanifest" />
+
+				<meta name="apple-mobile-web-app-title" content="Image Clock" />
 			</head>
+
 			<body
 				className={`${geistSans.variable} ${geistMono.variable} antialiased`}
 			>
-				<BackgroundDescProvider>
-					<TimeZoneProvider>
-						<TimeProvider>
-							<LanguageProvider>
-								<BackgroundProvider>
-									<GoodsProvider>
-										{children}
-										<Analytics />
-									</GoodsProvider>
-								</BackgroundProvider>
-							</LanguageProvider>
-						</TimeProvider>
-					</TimeZoneProvider>
-				</BackgroundDescProvider>
+				<Providers>
+					{children}
+					<Analytics />
+				</Providers>
 			</body>
 		</html>
 	);

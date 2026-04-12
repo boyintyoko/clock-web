@@ -46,7 +46,7 @@ export default function NavigatorPermisson({
 						</div>
 					) : (
 						<div
-							className={`${isDarkMode ? "text-gray-700" : "text-white"} text-sm`}
+							className={`${isDarkMode ? "text-white" : "text-gray-700"} text-sm`}
 						>
 							Loading weather...
 						</div>

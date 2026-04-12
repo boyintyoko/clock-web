@@ -1,4 +1,5 @@
 "use client";
+import { noSSR } from "@/lib/dynamicImport";
 
 import { useEffect, useState } from "react";
 import { useBackground } from "./context/backgroundContext";
@@ -9,16 +10,26 @@ import colors from "@/data/colorData";
 import colorsRGB from "@/data/colorRGBData";
 import Clock from "./components/clock";
 import { useTimeZone } from "./context/timeZoneContext";
-import HeaderMain from "./components/header/main";
 import VersionFunc from "@/lib/versionFunc";
-import ModalButton from "./components/modalComnponents/modalButton";
 import HistoryType from "@/app/types/HistoryType";
-import Modal from "./components/modal/modal";
-import SettingContent from "./components/modalComnponents/modalContents/settingContent";
-import TimeZoneContent from "./components/modalComnponents/modalContents/timeZoneContent";
-import GoodsContent from "./components/modalComnponents/modalContents/goodsContent";
+import HeaderMain from "./components/header/main";
+import ModalButton from "./components/modalComnponents/modalButton";
 import Search from "./components/searchComponents/search";
-import LinkSettingContent from "./components/modalComnponents/modalContents/linkSettingContent";
+
+const Modal = noSSR(() => import("./components/modal/modal"));
+const SettingContent = noSSR(
+	() => import("./components/modalComnponents/modalContents/settingContent"),
+);
+const TimeZoneContent = noSSR(
+	() => import("./components/modalComnponents/modalContents/timeZoneContent"),
+);
+const GoodsContent = noSSR(
+	() => import("./components/modalComnponents/modalContents/goodsContent"),
+);
+const LinkSettingContent = noSSR(
+	() =>
+		import("./components/modalComnponents/modalContents/linkSettingContent"),
+);
 
 interface MainSelectionProps {
 	$background: string;
@@ -72,23 +83,28 @@ export default function Home() {
 	}, [isDarkMode]);
 
 	const checkImage = (userBackgroundImage: string) => {
+		const defaultImage =
+			"url(https://boyintyoko.github.io/clock-web/assets/initialValuePhoto.avif)";
+
 		if (!userBackgroundImage) {
-			return "url(https://boyintyoko.github.io/clock-web/assets/initialValuePhoto.avif)";
+			return defaultImage;
+		}
+
+		if (userBackgroundImage.startsWith("hsl")) {
+			return undefined;
 		}
 
 		if (userBackgroundImage.startsWith("https")) {
 			return `url(${userBackgroundImage})`;
 		}
 
-		if (userBackgroundImage.startsWith("hsl")) {
-			return userBackgroundImage;
+		const nameWithoutExt = userBackgroundImage.replace(".png", "");
+
+		if (colors.includes(nameWithoutExt)) {
+			return `url(/colors/${userBackgroundImage})`;
 		}
 
-		if (colors.includes(userBackgroundImage) + ".png") {
-			return `url(/colors/${userBackgroundImage})`;
-		} else {
-			return "url(https://boyintyoko.github.io/clock-web/assets/initialValuePhoto.avif)";
-		}
+		return defaultImage;
 	};
 
 	useEffect(() => {
@@ -104,11 +120,14 @@ export default function Home() {
 			<div
 				className="flex flex-col justify-center items-center h-screen w-full"
 				style={{
-					backgroundImage: colors.includes(background)
-						? undefined
-						: checkImage(background),
+					backgroundImage: checkImage(background),
 
-					backgroundColor: colors.includes(background) ? background : undefined,
+					backgroundColor:
+						background.startsWith("hsl") ||
+						background.startsWith("rgb") ||
+						background.startsWith("#")
+							? background
+							: undefined,
 
 					backgroundPosition: "center",
 					backgroundRepeat: "no-repeat",
