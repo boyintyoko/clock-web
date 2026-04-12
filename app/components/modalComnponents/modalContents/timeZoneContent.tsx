@@ -33,16 +33,17 @@ export default function TimeZoneContent() {
 
 	return (
 		<div className="fade-in-up max-w-xl mx-auto space-y-4">
-			{/* 検索ボックス */}
 			<div
 				className="
-          p-3
-          rounded-2xl
-          bg-white/10
-          backdrop-blur-md
-          border border-white/20
-          shadow-md
-        "
+    p-3
+    rounded-2xl
+    bg-white/10
+    backdrop-blur-md
+    border border-white/20
+    shadow-md
+    sticky top-0
+    z-10
+  "
 			>
 				<input
 					type="text"

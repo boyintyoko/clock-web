@@ -64,7 +64,7 @@ export default function SingleColor() {
 	}, []);
 
 	return (
-		<div className="flex flex-nowrap overflow-x-auto gap-3 border-b p-1">
+		<div className="flex flex-nowrap overflow-x-auto gap-3 border-b p-1 pt-2">
 			{colors.map((color, i) => (
 				<button
 					key={i}
@@ -97,10 +97,8 @@ export default function SingleColor() {
 				</button>
 			))}
 
-			{/* 🎯 My Colors（削除可能） */}
 			{myColors.map((color, i) => (
 				<div key={`my-${i}`} className="relative">
-					{/* ❌ 削除ボタン */}
 					<button
 						onClick={() => deleteMyColor(i)}
 						className="

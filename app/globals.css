@@ -53,3 +53,11 @@ body {
 .fade-in-up {
   animation: fadeInUp 0.25s ease-out;
 }
+
+.rotate-y-180 {
+  transform: rotateY(180deg);
+}
+
+.backface-hidden {
+  backface-visibility: hidden;
+}

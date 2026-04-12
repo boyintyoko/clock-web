@@ -369,7 +369,7 @@ w-56
 				className={`
           max-lg:hidden
           flex flex-row-reverse gap-5 items-center
-          absolute top-2 right-2 z-10
+          absolute top-2 right-2 z-10 hover:top-3 transition-all
           ${isDarkMode ? "bg-black text-white" : "bg-white text-black"}
           bg-opacity-50
           rounded-md

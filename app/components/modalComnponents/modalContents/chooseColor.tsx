@@ -19,19 +19,30 @@ export default function ChooseColorContent({
 	const [saturation, setSaturation] = useState(80);
 	const [lightness, setLightness] = useState(60);
 
+	const [message, setMessage] = useState("");
+
 	useEffect(() => {
 		const hsl = `hsl(${hue}, ${saturation}%, ${lightness}%)`;
-
 		setColor(hsl);
 	}, [hue, saturation, lightness]);
 
 	const handleAddColor = () => {
 		setMyColors((prev) => {
-			if (prev.includes(color)) return prev;
+			if (prev.includes(color)) {
+				setMessage("既存のものがあります");
+
+				setTimeout(() => {
+					setMessage("");
+				}, 3000);
+
+				return prev;
+			}
 
 			const updated = [...prev, color];
 
 			localStorage.setItem("myColors", JSON.stringify(updated));
+
+			setMessage("");
 
 			setIsChoosColorOpen(!isChooseColorOpen);
 
@@ -45,13 +56,7 @@ export default function ChooseColorContent({
 
 			<div className="flex justify-center">
 				<div
-					className="
-            w-24
-            h-24
-            rounded-full
-            border
-            shadow-inner
-          "
+					className="w-24 h-24 rounded-full border shadow-inner"
 					style={{
 						background: color,
 					}}
@@ -93,43 +98,21 @@ export default function ChooseColorContent({
 					onChange={(e) => setLightness(Number(e.target.value))}
 				/>
 			</div>
-
-			<div
-				className="
-        flex
-        items-center
-        gap-2
-        border
-        rounded-lg
-        p-2
-        bg-neutral-50
-      "
-			>
+			<div className="flex items-center gap-2 border rounded-lg p-2 bg-neutral-50">
 				<div className="w-6 h-6 rounded" style={{ background: color }} />
 
 				<input
 					value={color}
 					readOnly
-					className="
-            bg-transparent
-            text-sm
-            flex-1
-            outline-none
-          "
+					className="bg-transparent text-sm flex-1 outline-none"
 				/>
 			</div>
 
+			{message && <p className="text-sm text-red-500">{message}</p>}
+
 			<button
 				onClick={handleAddColor}
-				className="
-          px-4
-          py-2
-          text-sm
-          rounded-lg
-          bg-blue-500
-          text-white
-          hover:bg-blue-600
-        "
+				className="px-4 py-2 text-sm rounded-lg bg-blue-500 text-white hover:bg-blue-600"
 			>
 				Add Color
 			</button>
