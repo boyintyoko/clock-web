@@ -101,7 +101,7 @@ export default function Home() {
 		const nameWithoutExt = userBackgroundImage.replace(".png", "");
 
 		if (colors.includes(nameWithoutExt)) {
-			return `url(/colors/${userBackgroundImage})`;
+			return `url(https://github.com/boyintyoko/boyintyoko.github.io/blob/main/clock-web/icons/colors/${userBackgroundImage}?raw=true)`;
 		}
 
 		return defaultImage;
