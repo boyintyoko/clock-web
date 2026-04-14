@@ -21,6 +21,7 @@ import urlsData from "@/data/urlData";
 import History from "../searchComponents/historyComponents/history";
 import LinkSettingContent from "../modalComnponents/modalContents/linkSettingContent";
 import SerachHistroyContent from "../modalComnponents/modalContents/serachHistoryContent";
+import LapsContent from "../modalComnponents/modalContents/lapsContent";
 
 interface Props {
 	isDarkMode: boolean;
@@ -65,6 +66,8 @@ export default function HeaderMain({
 	const [isHistoriesOpen, setIsHistoriesOpen] = useState(false);
 
 	const [isLinkSettingOpen, setIsLinkSettingOpen] = useState(false);
+
+	const [isLapsOpen, setIsLapsOpen] = useState(false);
 
 	const { background } = useBackground();
 
@@ -354,6 +357,14 @@ w-56
 							whiteImageUrl="https://boyintyoko.github.io/clock-web/icons/timeZoneIcons/timeZoneBlack.svg"
 							blackImageUrl="https://boyintyoko.github.io/clock-web/icons/timeZoneIcons/timeZoneWhite.svg"
 						/>
+
+						<ModalButton
+							isOpen={isLapsOpen}
+							setIsOpen={setIsLapsOpen}
+							isDarkMode={isDarkMode}
+							whiteImageUrl="https://raw.githubusercontent.com/boyintyoko/boyintyoko.github.io/1d309029b0cdbcc1fac719489923a8570a038ad0/clock-web/icons/lapsIcons/lapsBlack.svg"
+							blackImageUrl="https://raw.githubusercontent.com/boyintyoko/boyintyoko.github.io/1d309029b0cdbcc1fac719489923a8570a038ad0/clock-web/icons/lapsIcons/lapsWhite.svg"
+						/>
 					</div>
 
 					<p
@@ -448,6 +459,10 @@ w-56
 					histories={histories}
 					setHistories={setHistories}
 				/>
+			</Modal>
+
+			<Modal isOpen={isLapsOpen} setIsOpen={setIsLapsOpen} title="Laps">
+				<LapsContent />
 			</Modal>
 		</div>
 	);

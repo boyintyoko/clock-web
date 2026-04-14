@@ -12,7 +12,9 @@ interface Props {
 export default function ClockApp({ isDarkMode }: Props) {
 	const [mode, setMode] = useState<"clock" | "stopwatch">("clock");
 	const [time, setTime] = useState(0);
+	const [isStart, setIsStart] = useState(false);
 	const [running, setRunning] = useState(false);
+	const [laps, setLaps] = useState<number[]>([]);
 
 	const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
@@ -34,6 +36,27 @@ export default function ClockApp({ isDarkMode }: Props) {
 
 		return clearTimer;
 	}, [mode, running]);
+
+	useEffect(() => {
+		const savedTime = localStorage.getItem("stopwatch-time");
+		const savedLaps = localStorage.getItem("stopwatch-laps");
+
+		if (savedTime) {
+			setTime(Number(savedTime));
+		}
+
+		if (savedLaps) {
+			setLaps(JSON.parse(savedLaps));
+		}
+	}, []);
+
+	useEffect(() => {
+		localStorage.setItem("stopwatch-time", String(time));
+	}, [time]);
+
+	useEffect(() => {
+		localStorage.setItem("stopwatch-laps", JSON.stringify(laps));
+	}, [laps]);
 
 	const handleSwap = () => {
 		setMode((prev) => (prev === "clock" ? "stopwatch" : "clock"));
@@ -58,9 +81,10 @@ export default function ClockApp({ isDarkMode }: Props) {
 			>
 				⇄
 			</button>
+
 			<div
 				className={`relative w-[90vw] max-w-[400px] aspect-square transition-transform duration-700 [transform-style:preserve-3d] border-white/20 shadow-2xl rounded-full
-          ${mode === "stopwatch" ? "rotate-y-180" : ""}
+        ${mode === "stopwatch" ? "rotate-y-180" : ""}
         `}
 			>
 				<div
@@ -105,55 +129,62 @@ export default function ClockApp({ isDarkMode }: Props) {
 
 				<div
 					className="absolute inset-0 flex flex-col items-center justify-center rounded-full
-  rotate-y-180 backface-hidden
-  bg-white/5 backdrop-blur-xl
-  border border-white/20 shadow-2xl
-  px-8"
+          rotate-y-180 backface-hidden
+          bg-white/5 backdrop-blur-xl
+          border border-white/20 shadow-2xl
+          px-8"
 				>
 					<div
-						className="text-5xl font-mono tracking-widest mb-10
-    text-white drop-shadow-[0_0_10px_rgba(255,255,255,0.2)]"
+						className="text-5xl font-mono tracking-widest mb-6
+            text-white drop-shadow-[0_0_10px_rgba(255,255,255,0.2)]"
 					>
 						{format(time)}
 					</div>
 
 					<div className="flex gap-4">
 						<button
-							onClick={() => setRunning(true)}
+							onClick={() => {
+								setRunning(!running);
+								setIsStart(!isStart);
+							}}
 							className="px-5 py-2 rounded-full
-      bg-emerald-400/20 text-emerald-200
-      border border-emerald-400/40
-      backdrop-blur-md
-      transition-all duration-200
-      hover:bg-emerald-400/30 hover:scale-105 active:scale-95"
+              bg-emerald-400/20 text-emerald-200
+              border border-emerald-400/40
+              backdrop-blur-md
+              transition-all duration-200
+              hover:bg-emerald-400/30 hover:scale-105 active:scale-95"
 						>
-							Start
+							{isStart ? "Stop" : "Start"}
 						</button>
 
 						<button
-							onClick={() => setRunning(false)}
+							onClick={() => {
+								if (running) return;
+								setLaps((prev) => [...prev, time]);
+							}}
 							className="px-5 py-2 rounded-full
-      bg-yellow-400/20 text-yellow-200
-      border border-yellow-400/40
-      backdrop-blur-md
-      transition-all duration-200
-      hover:bg-yellow-400/30 hover:scale-105 active:scale-95"
+              bg-yellow-400/20 text-yellow-200
+              border border-yellow-400/40
+              backdrop-blur-md
+              transition-all duration-200
+              hover:bg-yellow-400/30 hover:scale-105 active:scale-95"
 						>
-							Stop
+							Lap
 						</button>
 
 						<button
 							onClick={() => {
 								setTime(0);
 								setRunning(false);
+								setIsStart(false);
 								clearTimer();
 							}}
 							className="px-5 py-2 rounded-full
-      bg-red-400/20 text-red-200
-      border border-red-400/40
-      backdrop-blur-md
-      transition-all duration-200
-      hover:bg-red-400/30 hover:scale-105 active:scale-95"
+              bg-red-400/20 text-red-200
+              border border-red-400/40
+              backdrop-blur-md
+              transition-all duration-200
+              hover:bg-red-400/30 hover:scale-105 active:scale-95"
 						>
 							Reset
 						</button>

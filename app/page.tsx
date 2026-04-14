@@ -19,6 +19,7 @@ import SettingContent from "./components/modalComnponents/modalContents/settingC
 import TimeZoneContent from "./components/modalComnponents/modalContents/timeZoneContent";
 import GoodsContent from "./components/modalComnponents/modalContents/goodsContent";
 import LinkSettingContent from "./components/modalComnponents/modalContents/linkSettingContent";
+import LapsContent from "./components/modalComnponents/modalContents/lapsContent";
 
 interface MainSelectionProps {
 	$background: string;
@@ -45,6 +46,7 @@ const MainSelection = styled.div<MainSelectionProps>`
 export default function Home() {
 	const [isDarkMode, setIsDarkMode] = useState<boolean>(false);
 	const [isSettingOpen, setIsSettingOpen] = useState<boolean>(false);
+	const [isLapsOpen, setIsLapsOpen] = useState<boolean>(false);
 	const [isGoodsOpen, setIsGoodsOpen] = useState<boolean>(false);
 	const [isTimeZoneOpen, setIsTimeZoneOpen] = useState<boolean>(false);
 	const [isHistoriesOpen, setIsHistoriesOpen] = useState<boolean>(false);
@@ -61,15 +63,18 @@ export default function Home() {
 	}, []);
 
 	useEffect(() => {
-		const isDarkMode = localStorage.getItem("isDarkMode");
-		if (!(isDarkMode === "true" || isDarkMode === "false")) {
+		const saved = localStorage.getItem("isDarkMode");
+
+		if (!(saved === "true" || saved === "false")) {
 			localStorage.setItem("isDarkMode", "false");
 			setIsDarkMode(false);
 			return;
 		}
-		if (!isDarkMode) return;
-		setIsDarkMode(JSON.parse(isDarkMode));
-	}, [isDarkMode]);
+
+		if (!saved) return;
+
+		setIsDarkMode(JSON.parse(saved));
+	}, []);
 
 	const checkImage = (userBackgroundImage: string) => {
 		const defaultImage =
@@ -161,6 +166,14 @@ export default function Home() {
 					blackImageUrl="https://boyintyoko.github.io/clock-web/icons/timeZoneIcons/timeZoneBlack.svg"
 					whiteImageUrl="https://boyintyoko.github.io/clock-web/icons/timeZoneIcons/timeZoneWhite.svg"
 				/>
+
+				<ModalButton
+					isOpen={isLapsOpen}
+					setIsOpen={setIsLapsOpen}
+					isDarkMode={isDarkMode}
+					blackImageUrl="https://raw.githubusercontent.com/boyintyoko/boyintyoko.github.io/1d309029b0cdbcc1fac719489923a8570a038ad0/clock-web/icons/lapsIcons/lapsBlack.svg"
+					whiteImageUrl="https://raw.githubusercontent.com/boyintyoko/boyintyoko.github.io/1d309029b0cdbcc1fac719489923a8570a038ad0/clock-web/icons/lapsIcons/lapsWhite.svg"
+				/>
 			</div>
 
 			<div className="max-lg:hidden">
@@ -210,6 +223,10 @@ export default function Home() {
 				title="Link setting"
 			>
 				<LinkSettingContent urls={urls} setUrls={setUrls} />
+			</Modal>
+
+			<Modal isOpen={isLapsOpen} setIsOpen={setIsLapsOpen} title="Laps">
+				<LapsContent />
 			</Modal>
 		</MainSelection>
 	);
