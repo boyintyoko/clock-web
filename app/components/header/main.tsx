@@ -74,8 +74,6 @@ export default function HeaderMain({
 
 	const handleSwitchChange = () => {
 		setIsDarkMode(!isDarkMode);
-
-		localStorage.setItem("isDarkMode", !isDarkMode ? "true" : "false");
 	};
 
 	const searchHandler = (

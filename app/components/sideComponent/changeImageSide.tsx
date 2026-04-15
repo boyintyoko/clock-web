@@ -189,28 +189,83 @@ export default function ChangeImageSide({
 	};
 
 	useEffect(() => {
+		const loadGoods = async () => {
+			const {
+				data: { user },
+			} = await supabase.auth.getUser();
+
+			if (!user) return;
+
+			const { data, error } = await supabase
+				.from("goods")
+				.select("*")
+				.eq("user_id", user.id);
+
+			if (error) {
+				console.error(error);
+				return;
+			}
+
+			const formatted =
+				data?.map((item) => ({
+					imageUrl: item.image_url,
+					userUrl: item.user_url,
+					name: item.name,
+					userName: item.user_name,
+					userImageUrl: item.user_image_url,
+				})) || [];
+
+			setHearts(formatted);
+		};
+
+		loadGoods();
+	}, []);
+
+	useEffect(() => {
 		localStorage.setItem("goods", JSON.stringify(hearts));
 	}, [hearts]);
 
-	const goodClickHandler = (
+	const goodClickHandler = async (
 		imageUrl: string,
 		userUrl: string,
 		name: string,
 		userName: string,
 		userImageUrl: string,
 	) => {
-		setHearts((prevGoods) => {
-			const exists = prevGoods.some((item) => item.imageUrl === imageUrl);
-			if (exists) {
-				return prevGoods.filter((item) => item.imageUrl !== imageUrl);
-			}
-			return [
+		const {
+			data: { user },
+		} = await supabase.auth.getUser();
+
+		if (!user) return;
+
+		const exists = hearts.some((item) => item.imageUrl === imageUrl);
+
+		if (exists) {
+			await supabase
+				.from("goods")
+				.delete()
+				.eq("user_id", user.id)
+				.eq("image_url", imageUrl);
+
+			setHearts((prevGoods) =>
+				prevGoods.filter((item) => item.imageUrl !== imageUrl),
+			);
+		} else {
+			await supabase.from("goods").insert({
+				user_id: user.id,
+				image_url: imageUrl,
+				user_url: userUrl,
+				name: name,
+				user_name: userName,
+				user_image_url: userImageUrl,
+			});
+
+			setHearts((prevGoods) => [
 				...prevGoods,
 				{ imageUrl, userUrl, name, userName, userImageUrl },
-			];
-		});
+			]);
+		}
 	};
-
 	const changeSideBar = () => {
 		setIsChange(!isChange);
 		if (isMobile) setIsVisible(!isVisible);

@@ -29,10 +29,15 @@ export default function SingleColor() {
 
 		if (!user) return;
 
-		const { error } = await supabase.from("settings").upsert({
-			user_id: user.id,
-			background: color,
-		});
+		const { error } = await supabase.from("settings").upsert(
+			{
+				user_id: user.id,
+				background: color,
+			},
+			{
+				onConflict: "user_id",
+			},
+		);
 
 		if (error) {
 			console.error("単色背景保存失敗:", error);

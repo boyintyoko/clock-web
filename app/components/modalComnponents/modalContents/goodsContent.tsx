@@ -2,13 +2,14 @@
 
 import { useEffect, useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
+import styled from "styled-components";
+import GoodsType from "@/app/types/goodsType";
 import { useBackground } from "@/app/context/backgroundContext";
 import { useGoods } from "@/app/context/goodContext";
 import { useLanguage } from "@/app/context/languageContext";
-import GoodsType from "@/app/types/goodsType";
-import Link from "next/link";
-import styled from "styled-components";
 import { useBackgroundDesc } from "@/app/context/backgroundDesc";
+import { supabase } from "@/lib/supabase";
 
 interface GoodsItemType {
 	isGoodsOpen: boolean;
@@ -16,6 +17,7 @@ interface GoodsItemType {
 
 const StyledP = styled.p`
   position: relative;
+
   &::before {
     content: "";
     position: absolute;
@@ -38,6 +40,7 @@ const CreatedImageDiv = styled.div`
 
 export default function GoodsContent({ isGoodsOpen }: GoodsItemType) {
 	const [goods, setGoods] = useState<GoodsType[]>([]);
+	const [loading, setLoading] = useState(false);
 
 	const { setBackground } = useBackground();
 	const { setIsNowGoods } = useGoods();
@@ -57,35 +60,87 @@ export default function GoodsContent({ isGoodsOpen }: GoodsItemType) {
 	};
 
 	useEffect(() => {
-		const goods = localStorage.getItem("goods");
-		if (!goods) return;
-		setIsNowGoods(JSON.parse(goods));
-	}, [setIsNowGoods]);
-
-	useEffect(() => {
 		if (!isGoodsOpen) return;
 
-		const storedGoods = localStorage.getItem("goods");
-		if (!storedGoods) return;
+		const loadGoods = async () => {
+			setLoading(true);
 
-		try {
-			const parsedGoods = JSON.parse(storedGoods);
-			if (Array.isArray(parsedGoods)) {
-				setGoods(parsedGoods);
-			} else {
-				console.error("Invalid goods data in localStorage");
+			const {
+				data: { user },
+			} = await supabase.auth.getUser();
+
+			if (!user) {
+				setLoading(false);
+				return;
 			}
-		} catch (error) {
-			console.error("Failed to parse goods from localStorage:", error);
-		}
-	}, [isGoodsOpen]);
 
-	const goodDeleteHandle = (url: string) => {
+			const { data, error } = await supabase
+				.from("goods")
+				.select("*")
+				.eq("user_id", user.id)
+				.order("created_at", { ascending: false });
+
+			if (error) {
+				console.error("goods取得失敗:", error);
+				setLoading(false);
+				return;
+			}
+
+			const formatted: GoodsType[] =
+				data?.map((item) => ({
+					imageUrl: item.image_url,
+					userUrl: item.user_url,
+					name: item.name,
+					userName: item.user_name,
+					userImageUrl: item.user_image_url,
+				})) || [];
+
+			setGoods(formatted);
+			setIsNowGoods(formatted);
+
+			setLoading(false);
+		};
+
+		loadGoods();
+	}, [isGoodsOpen, setIsNowGoods]);
+
+	const goodDeleteHandle = async (url: string) => {
+		const {
+			data: { user },
+		} = await supabase.auth.getUser();
+
+		if (!user) return;
+
+		const { error } = await supabase
+			.from("goods")
+			.delete()
+			.eq("user_id", user.id)
+			.eq("image_url", url);
+
+		if (error) {
+			console.error("削除失敗:", error);
+			return;
+		}
+
 		const updatedGoods = goods.filter((good) => good.imageUrl !== url);
+
 		setGoods(updatedGoods);
 		setIsNowGoods(updatedGoods);
-		localStorage.setItem("goods", JSON.stringify(updatedGoods));
 	};
+
+	// =========================
+	// LOADING UI
+	// =========================
+	if (loading) {
+		return (
+			<div className="flex justify-center items-center py-10">
+				<div className="flex flex-col items-center gap-3">
+					<div className="w-10 h-10 border-4 border-gray-300 border-t-gray-700 rounded-full animate-spin" />
+					<p className="text-gray-500 font-semibold">Loading...</p>
+				</div>
+			</div>
+		);
+	}
 
 	return (
 		<div className="fade-in-up">
@@ -95,33 +150,33 @@ export default function GoodsContent({ isGoodsOpen }: GoodsItemType) {
 						<div
 							key={index}
 							className="
-              fade-in-up
-              relative
-              p-4
-              rounded-2xl
-              bg-white/10
-              backdrop-blur-md
-              border border-white/20
-              shadow-md
-              transition-all duration-200
-              hover:-translate-y-1
-              hover:shadow-xl
-            "
+                fade-in-up
+                relative
+                p-4
+                rounded-2xl
+                bg-white/10
+                backdrop-blur-md
+                border border-white/20
+                shadow-md
+                transition-all duration-200
+                hover:-translate-y-1
+                hover:shadow-xl
+              "
 						>
 							{/* user info */}
 							<Link
 								target="_blank"
 								href={item.userUrl}
 								className="
-                group
-                flex
-                items-center
-                gap-3
-                p-2
-                rounded-xl
-                transition-all
-                hover:bg-white/10
-              "
+                  group
+                  flex
+                  items-center
+                  gap-3
+                  p-2
+                  rounded-xl
+                  transition-all
+                  hover:bg-white/10
+                "
 							>
 								<CreatedImageDiv className="relative w-10 h-10 shrink-0">
 									<Image
@@ -129,23 +184,16 @@ export default function GoodsContent({ isGoodsOpen }: GoodsItemType) {
 										alt={`${item.name}'s profile`}
 										fill
 										className="
-                    rounded-full
-                    object-cover
-                    border border-gray-300
-                    transition-transform duration-300
-                    group-hover:scale-105
-                  "
+                      rounded-full
+                      object-cover
+                      border border-gray-300
+                      transition-transform duration-300
+                      group-hover:scale-105
+                    "
 									/>
 								</CreatedImageDiv>
 
-								<StyledP
-									className="
-                  font-semibold
-                  text-gray-800
-                  truncate
-                  max-w-[160px]
-                "
-								>
+								<StyledP className="font-semibold text-gray-800 truncate max-w-[160px]">
 									{item.name}
 								</StyledP>
 							</Link>
@@ -154,25 +202,25 @@ export default function GoodsContent({ isGoodsOpen }: GoodsItemType) {
 							<button
 								onClick={() => goodDeleteHandle(item.imageUrl)}
 								className="
-                absolute
-                top-2
-                right-2
-                w-9
-                h-9
-                flex
-                items-center
-                justify-center
-                rounded-full
-                bg-white/70
-                backdrop-blur
-                shadow-md
-                text-red-500
-                transition-all duration-200
-                hover:bg-red-500
-                hover:text-white
-                hover:scale-105
-                active:scale-90
-              "
+                  absolute
+                  top-2
+                  right-2
+                  w-9
+                  h-9
+                  flex
+                  items-center
+                  justify-center
+                  rounded-full
+                  bg-white/70
+                  backdrop-blur
+                  shadow-md
+                  text-red-500
+                  transition-all duration-200
+                  hover:bg-red-500
+                  hover:text-white
+                  hover:scale-105
+                  active:scale-90
+                "
 							>
 								<i className="fa-solid fa-trash"></i>
 							</button>
@@ -189,14 +237,14 @@ export default function GoodsContent({ isGoodsOpen }: GoodsItemType) {
 									)
 								}
 								className="
-                mt-3
-                rounded-xl
-                overflow-hidden
-                cursor-pointer
-                transition-all duration-300
-                hover:scale-[1.02]
-                hover:shadow-lg
-              "
+                  mt-3
+                  rounded-xl
+                  overflow-hidden
+                  cursor-pointer
+                  transition-all duration-300
+                  hover:scale-[1.02]
+                  hover:shadow-lg
+                "
 							>
 								<Image
 									src={item.imageUrl}
@@ -204,12 +252,12 @@ export default function GoodsContent({ isGoodsOpen }: GoodsItemType) {
 									width={300}
 									height={200}
 									className="
-                  w-full
-                  h-auto
-                  object-cover
-                  transition-transform duration-300
-                  hover:scale-105
-                "
+                    w-full
+                    h-auto
+                    object-cover
+                    transition-transform duration-300
+                    hover:scale-105
+                  "
 									loading="lazy"
 								/>
 							</div>
@@ -218,23 +266,12 @@ export default function GoodsContent({ isGoodsOpen }: GoodsItemType) {
 				</div>
 			) : (
 				<div className="fade-in-up flex justify-center items-center py-10">
-					<p
-						className="
-          font-semibold
-          text-gray-500
-          text-lg
-          transition-all
-          hover:-translate-y-1
-        "
-					>
-						{(() => {
-							if (isNowLanguage === "en") {
-								return "Nothing saved yet.";
-							} else if (isNowLanguage === "it") {
-								return "Niente salvato.";
-							}
-							return "まだ保存されていません。";
-						})()}
+					<p className="font-semibold text-gray-500 text-lg">
+						{isNowLanguage === "en"
+							? "Nothing saved yet."
+							: isNowLanguage === "it"
+								? "Niente salvato."
+								: "まだ保存されていません。"}
 					</p>
 				</div>
 			)}

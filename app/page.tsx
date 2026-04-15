@@ -21,6 +21,7 @@ import GoodsContent from "./components/modalComnponents/modalContents/goodsConte
 import LinkSettingContent from "./components/modalComnponents/modalContents/linkSettingContent";
 import LapsContent from "./components/modalComnponents/modalContents/lapsContent";
 import AuthGuard from "./components/AuthGuard";
+import { supabase } from "@/lib/supabase";
 
 interface MainSelectionProps {
 	$background: string;
@@ -77,6 +78,33 @@ export default function Home() {
 		setIsDarkMode(JSON.parse(saved));
 	}, []);
 
+	const changeDarkMode = async (value: boolean) => {
+		localStorage.setItem("isDarkMode", JSON.stringify(value));
+		setIsDarkMode(value);
+
+		const {
+			data: { user },
+		} = await supabase.auth.getUser();
+
+		if (!user) return;
+
+		const { error } = await supabase.from("settings").upsert(
+			{
+				user_id: user.id,
+				dark_mode: value,
+			},
+			{
+				onConflict: "user_id",
+			},
+		);
+
+		if (error) {
+			console.error("ダークモード保存失敗:", error);
+		} else {
+			console.log("ダークモード保存成功");
+		}
+	};
+
 	const checkImage = (userBackgroundImage: string) => {
 		const defaultImage =
 			"url(https://boyintyoko.github.io/clock-web/assets/initialValuePhoto.avif)";
@@ -110,6 +138,35 @@ export default function Home() {
 		}
 	}, []);
 
+	useEffect(() => {
+		const loadDarkMode = async () => {
+			const {
+				data: { session },
+			} = await supabase.auth.getSession();
+
+			if (!session?.user) return;
+
+			const { data, error } = await supabase
+				.from("settings")
+				.select("dark_mode")
+				.eq("user_id", session.user.id)
+				.single();
+
+			if (!error && data) {
+				setIsDarkMode(data.dark_mode ?? false);
+
+				localStorage.setItem(
+					"isDarkMode",
+					JSON.stringify(data.dark_mode ?? false),
+				);
+
+				console.log("Supabaseからdark_mode取得成功");
+			}
+		};
+
+		loadDarkMode();
+	}, []);
+
 	return (
 		<AuthGuard>
 			<MainSelection $background={background}>
@@ -133,7 +190,7 @@ export default function Home() {
 					<HeaderMain
 						isDarkMode={isDarkMode}
 						isNowTimeZone={isNowTimeZone}
-						setIsDarkMode={setIsDarkMode}
+						setIsDarkMode={changeDarkMode}
 						temperatureUnits={temperatureUnits}
 						setTempratureUnits={setTempratureUnits}
 						setHistories={setHistories}

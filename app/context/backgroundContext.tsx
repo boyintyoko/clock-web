@@ -8,6 +8,8 @@ import {
 	useEffect,
 } from "react";
 
+import { supabase } from "@/lib/supabase";
+
 interface BackgroundContextType {
 	background: string;
 	setBackground: (background: string) => void;
@@ -21,9 +23,37 @@ export const BackgroundProvider = ({ children }: { children: ReactNode }) => {
 	const [background, setBackground] = useState<string>("");
 
 	useEffect(() => {
-		const url = localStorage.getItem("background");
-		if (!url) return;
-		setBackground(url);
+		const fetchBackground = async () => {
+			const localBg = localStorage.getItem("background");
+
+			const {
+				data: { user },
+			} = await supabase.auth.getUser();
+
+			if (user) {
+				const { data, error } = await supabase
+					.from("settings")
+					.select("background")
+					.eq("user_id", user.id)
+					.single();
+
+				if (!error && data?.background) {
+					setBackground(data.background);
+
+					localStorage.setItem("background", data.background);
+
+					console.log("背景をSupabaseから取得");
+					return;
+				}
+			}
+
+			if (localBg) {
+				setBackground(localBg);
+				console.log("背景をlocalStorageから取得");
+			}
+		};
+
+		fetchBackground();
 	}, []);
 
 	return (
@@ -35,8 +65,10 @@ export const BackgroundProvider = ({ children }: { children: ReactNode }) => {
 
 export const useBackground = () => {
 	const context = useContext(BackgroundContext);
+
 	if (!context) {
 		throw new Error("useBackground must be used within a BackgroundProvider");
 	}
+
 	return context;
 };
