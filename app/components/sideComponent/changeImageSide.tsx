@@ -13,6 +13,7 @@ import styled from "styled-components";
 import { useBackgroundDesc } from "@/app/context/backgroundDesc";
 import GoodsType from "@/app/types/goodsType";
 import { useMediaQuery } from "react-responsive";
+import { supabase } from "@/lib/supabase";
 
 type ChangeImageSideProps = {
 	isChange: boolean;
@@ -133,20 +134,39 @@ export default function ChangeImageSide({
 		};
 	}, [loading]);
 
-	const imageChangeHandler = (
+	const imageChangeHandler = async (
 		imageUrl: string,
 		name: string,
 		userImage: string,
 		userUrl: string,
 		userName: string,
-	): void => {
+	): Promise<void> => {
 		localStorage.setItem("background", imageUrl);
+
 		localStorage.setItem(
 			"backgroundDescription",
 			JSON.stringify({ imageUrl, name, userImage, userUrl, userName }),
 		);
+
 		setBackgroundDesc({ imageUrl, name, userImage, userUrl, userName });
 		setBackground(imageUrl);
+
+		const {
+			data: { user },
+		} = await supabase.auth.getUser();
+
+		if (!user) return;
+
+		const { error } = await supabase.from("settings").upsert({
+			user_id: user.id,
+			background: imageUrl,
+		});
+
+		if (error) {
+			console.error("背景保存失敗:", error);
+		} else {
+			console.log("背景保存成功");
+		}
 	};
 
 	const searchSubmitHandler = async (e: React.FormEvent<HTMLFormElement>) => {

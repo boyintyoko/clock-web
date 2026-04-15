@@ -22,6 +22,7 @@ import History from "../searchComponents/historyComponents/history";
 import LinkSettingContent from "../modalComnponents/modalContents/linkSettingContent";
 import SerachHistroyContent from "../modalComnponents/modalContents/serachHistoryContent";
 import LapsContent from "../modalComnponents/modalContents/lapsContent";
+import LogoutButton from "../logoutButton";
 
 interface Props {
 	isDarkMode: boolean;
@@ -312,10 +313,14 @@ w-56
 					</div>
 
 					<div className="flex justify-between">
-						<ToggleSwitch
-							handleSwitchChange={handleSwitchChange}
-							isDarkMode={isDarkMode}
-						/>
+						<div className="flex gap-10">
+							<ToggleSwitch
+								handleSwitchChange={handleSwitchChange}
+								isDarkMode={isDarkMode}
+							/>
+
+							<LogoutButton />
+						</div>
 
 						<NavigatorPermisson
 							isDarkMode={isDarkMode}
@@ -387,6 +392,7 @@ w-56
           p-1
         `}
 			>
+				<LogoutButton />
 				<ToggleSwitch
 					handleSwitchChange={handleSwitchChange}
 					isDarkMode={isDarkMode}
