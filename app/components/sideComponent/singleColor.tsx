@@ -7,6 +7,7 @@ import ChooseColorContent from "../modalComnponents/modalContents/chooseColor";
 import Modal from "../modal/modal";
 import ModalButton from "../modalComnponents/modalButton";
 import colors from "@/data/colorData";
+import { supabase } from "@/lib/supabase";
 
 export default function SingleColor() {
 	const { setBackground, background } = useBackground();
@@ -17,10 +18,32 @@ export default function SingleColor() {
 
 	const [isChooseColorOpen, setIsChoosColorOpen] = useState<boolean>(false);
 
-	const colorChangeHandler = (color: string) => {
+	const colorChangeHandler = async (color: string) => {
 		localStorage.setItem("background", color);
 		setBackground(color);
 		setIsNowBackground(color);
+
+		const {
+			data: { user },
+		} = await supabase.auth.getUser();
+
+		if (!user) return;
+
+		const { error } = await supabase.from("settings").upsert(
+			{
+				user_id: user.id,
+				background: color,
+			},
+			{
+				onConflict: "user_id",
+			},
+		);
+
+		if (error) {
+			console.error("単色背景保存失敗:", error);
+		} else {
+			console.log("単色背景保存成功");
+		}
 	};
 
 	const deleteMyColor = (index: number) => {

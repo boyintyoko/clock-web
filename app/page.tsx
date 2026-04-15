@@ -20,6 +20,8 @@ import TimeZoneContent from "./components/modalComnponents/modalContents/timeZon
 import GoodsContent from "./components/modalComnponents/modalContents/goodsContent";
 import LinkSettingContent from "./components/modalComnponents/modalContents/linkSettingContent";
 import LapsContent from "./components/modalComnponents/modalContents/lapsContent";
+import AuthGuard from "./components/AuthGuard";
+import { supabase } from "@/lib/supabase";
 
 interface MainSelectionProps {
 	$background: string;
@@ -76,6 +78,33 @@ export default function Home() {
 		setIsDarkMode(JSON.parse(saved));
 	}, []);
 
+	const changeDarkMode = async (value: boolean) => {
+		localStorage.setItem("isDarkMode", JSON.stringify(value));
+		setIsDarkMode(value);
+
+		const {
+			data: { user },
+		} = await supabase.auth.getUser();
+
+		if (!user) return;
+
+		const { error } = await supabase.from("settings").upsert(
+			{
+				user_id: user.id,
+				dark_mode: value,
+			},
+			{
+				onConflict: "user_id",
+			},
+		);
+
+		if (error) {
+			console.error("ダークモード保存失敗:", error);
+		} else {
+			console.log("ダークモード保存成功");
+		}
+	};
+
 	const checkImage = (userBackgroundImage: string) => {
 		const defaultImage =
 			"url(https://boyintyoko.github.io/clock-web/assets/initialValuePhoto.avif)";
@@ -109,125 +138,156 @@ export default function Home() {
 		}
 	}, []);
 
+	useEffect(() => {
+		const loadDarkMode = async () => {
+			const {
+				data: { session },
+			} = await supabase.auth.getSession();
+
+			if (!session?.user) return;
+
+			const { data, error } = await supabase
+				.from("settings")
+				.select("dark_mode")
+				.eq("user_id", session.user.id)
+				.single();
+
+			if (!error && data) {
+				setIsDarkMode(data.dark_mode ?? false);
+
+				localStorage.setItem(
+					"isDarkMode",
+					JSON.stringify(data.dark_mode ?? false),
+				);
+
+				console.log("Supabaseからdark_mode取得成功");
+			}
+		};
+
+		loadDarkMode();
+	}, []);
+
 	return (
-		<MainSelection $background={background}>
-			<div
-				className="flex flex-col justify-center items-center min-h-[100dvh] w-full"
-				style={{
-					backgroundImage: checkImage(background),
+		<AuthGuard>
+			<MainSelection $background={background}>
+				<div
+					className="flex flex-col justify-center items-center min-h-[100dvh] w-full"
+					style={{
+						backgroundImage: checkImage(background),
 
-					backgroundColor:
-						background.startsWith("hsl") ||
-						background.startsWith("rgb") ||
-						background.startsWith("#")
-							? background
-							: undefined,
+						backgroundColor:
+							background.startsWith("hsl") ||
+							background.startsWith("rgb") ||
+							background.startsWith("#")
+								? background
+								: undefined,
 
-					backgroundPosition: "center",
-					backgroundRepeat: "no-repeat",
-					backgroundSize: "cover",
-				}}
-			>
-				<HeaderMain
-					isDarkMode={isDarkMode}
-					isNowTimeZone={isNowTimeZone}
-					setIsDarkMode={setIsDarkMode}
-					temperatureUnits={temperatureUnits}
-					setTempratureUnits={setTempratureUnits}
-					setHistories={setHistories}
-					histories={histories}
-				/>
+						backgroundPosition: "center",
+						backgroundRepeat: "no-repeat",
+						backgroundSize: "cover",
+					}}
+				>
+					<HeaderMain
+						isDarkMode={isDarkMode}
+						isNowTimeZone={isNowTimeZone}
+						setIsDarkMode={changeDarkMode}
+						temperatureUnits={temperatureUnits}
+						setTempratureUnits={setTempratureUnits}
+						setHistories={setHistories}
+						histories={histories}
+					/>
 
-				<Loading />
-				<ElectronicClock isDarkMode={isDarkMode} />
-				<Clock isDarkMode={isDarkMode} />
-			</div>
-			<div className="absolute bottom-4 right-4 flex space-x-4 z-10 max-lg:hidden">
-				<ModalButton
-					isOpen={isGoodsOpen}
-					setIsOpen={setIsGoodsOpen}
-					isDarkMode={isDarkMode}
-					blackImageUrl="https://boyintyoko.github.io/clock-web/icons/heartIcons/heartBlack.svg"
-					whiteImageUrl="https://boyintyoko.github.io/clock-web/icons/heartIcons/heartWhite.svg"
-				/>
+					<Loading />
+					<ElectronicClock isDarkMode={isDarkMode} />
+					<Clock isDarkMode={isDarkMode} />
+				</div>
+				<div className="absolute bottom-4 right-4 flex space-x-4 z-10 max-lg:hidden">
+					<ModalButton
+						isOpen={isGoodsOpen}
+						setIsOpen={setIsGoodsOpen}
+						isDarkMode={isDarkMode}
+						blackImageUrl="https://boyintyoko.github.io/clock-web/icons/heartIcons/heartBlack.svg"
+						whiteImageUrl="https://boyintyoko.github.io/clock-web/icons/heartIcons/heartWhite.svg"
+					/>
 
-				<ModalButton
+					<ModalButton
+						isOpen={isSettingOpen}
+						setIsOpen={setIsSettingOpen}
+						isDarkMode={isDarkMode}
+						blackImageUrl="https://boyintyoko.github.io/clock-web/icons/settingIcons/settingBlack.svg"
+						whiteImageUrl="https://boyintyoko.github.io/clock-web/icons/settingIcons/settingWhite.svg"
+					/>
+
+					<ModalButton
+						isOpen={isTimeZoneOpen}
+						setIsOpen={setIsTimeZoneOpen}
+						isDarkMode={isDarkMode}
+						blackImageUrl="https://boyintyoko.github.io/clock-web/icons/timeZoneIcons/timeZoneBlack.svg"
+						whiteImageUrl="https://boyintyoko.github.io/clock-web/icons/timeZoneIcons/timeZoneWhite.svg"
+					/>
+
+					<ModalButton
+						isOpen={isLapsOpen}
+						setIsOpen={setIsLapsOpen}
+						isDarkMode={isDarkMode}
+						blackImageUrl="https://raw.githubusercontent.com/boyintyoko/boyintyoko.github.io/1d309029b0cdbcc1fac719489923a8570a038ad0/clock-web/icons/lapsIcons/lapsBlack.svg"
+						whiteImageUrl="https://raw.githubusercontent.com/boyintyoko/boyintyoko.github.io/1d309029b0cdbcc1fac719489923a8570a038ad0/clock-web/icons/lapsIcons/lapsWhite.svg"
+					/>
+				</div>
+
+				<div className="max-lg:hidden">
+					<Search
+						isDarkMode={isDarkMode}
+						isHistoriesOpen={isHistoriesOpen}
+						setIsHistoriesOpen={setIsHistoriesOpen}
+						setIsLinkSettingOpen={setIsLinkSettingOpen}
+						isLinkSettingOpen={isLinkSettingOpen}
+						urls={urls}
+						setUrls={setUrls}
+						isSearch={isSearch}
+						setIsSearch={setIsSearch}
+						histories={histories}
+						setHistories={setHistories}
+					/>
+				</div>
+
+				<Modal isOpen={isGoodsOpen} setIsOpen={setIsGoodsOpen} title="Goods">
+					<GoodsContent isGoodsOpen={isGoodsOpen} />
+				</Modal>
+
+				<Modal
 					isOpen={isSettingOpen}
 					setIsOpen={setIsSettingOpen}
-					isDarkMode={isDarkMode}
-					blackImageUrl="https://boyintyoko.github.io/clock-web/icons/settingIcons/settingBlack.svg"
-					whiteImageUrl="https://boyintyoko.github.io/clock-web/icons/settingIcons/settingWhite.svg"
-				/>
+					title="Setting"
+				>
+					<SettingContent
+						temperatureUnits={temperatureUnits}
+						setTemperatureUnits={setTempratureUnits}
+						isSettingOpen={isSettingOpen}
+						setIsSettingOpen={setIsSettingOpen}
+					/>
+				</Modal>
 
-				<ModalButton
+				<Modal
 					isOpen={isTimeZoneOpen}
 					setIsOpen={setIsTimeZoneOpen}
-					isDarkMode={isDarkMode}
-					blackImageUrl="https://boyintyoko.github.io/clock-web/icons/timeZoneIcons/timeZoneBlack.svg"
-					whiteImageUrl="https://boyintyoko.github.io/clock-web/icons/timeZoneIcons/timeZoneWhite.svg"
-				/>
+					title="Time Zone"
+				>
+					<TimeZoneContent />
+				</Modal>
 
-				<ModalButton
-					isOpen={isLapsOpen}
-					setIsOpen={setIsLapsOpen}
-					isDarkMode={isDarkMode}
-					blackImageUrl="https://raw.githubusercontent.com/boyintyoko/boyintyoko.github.io/1d309029b0cdbcc1fac719489923a8570a038ad0/clock-web/icons/lapsIcons/lapsBlack.svg"
-					whiteImageUrl="https://raw.githubusercontent.com/boyintyoko/boyintyoko.github.io/1d309029b0cdbcc1fac719489923a8570a038ad0/clock-web/icons/lapsIcons/lapsWhite.svg"
-				/>
-			</div>
+				<Modal
+					isOpen={isLinkSettingOpen}
+					setIsOpen={setIsLinkSettingOpen}
+					title="Link setting"
+				>
+					<LinkSettingContent urls={urls} setUrls={setUrls} />
+				</Modal>
 
-			<div className="max-lg:hidden">
-				<Search
-					isDarkMode={isDarkMode}
-					isHistoriesOpen={isHistoriesOpen}
-					setIsHistoriesOpen={setIsHistoriesOpen}
-					setIsLinkSettingOpen={setIsLinkSettingOpen}
-					isLinkSettingOpen={isLinkSettingOpen}
-					urls={urls}
-					setUrls={setUrls}
-					isSearch={isSearch}
-					setIsSearch={setIsSearch}
-					histories={histories}
-					setHistories={setHistories}
-				/>
-			</div>
-
-			<Modal isOpen={isGoodsOpen} setIsOpen={setIsGoodsOpen} title="Goods">
-				<GoodsContent isGoodsOpen={isGoodsOpen} />
-			</Modal>
-
-			<Modal
-				isOpen={isSettingOpen}
-				setIsOpen={setIsSettingOpen}
-				title="Setting"
-			>
-				<SettingContent
-					temperatureUnits={temperatureUnits}
-					setTemperatureUnits={setTempratureUnits}
-					isSettingOpen={isSettingOpen}
-					setIsSettingOpen={setIsSettingOpen}
-				/>
-			</Modal>
-
-			<Modal
-				isOpen={isTimeZoneOpen}
-				setIsOpen={setIsTimeZoneOpen}
-				title="Time Zone"
-			>
-				<TimeZoneContent />
-			</Modal>
-
-			<Modal
-				isOpen={isLinkSettingOpen}
-				setIsOpen={setIsLinkSettingOpen}
-				title="Link setting"
-			>
-				<LinkSettingContent urls={urls} setUrls={setUrls} />
-			</Modal>
-
-			<Modal isOpen={isLapsOpen} setIsOpen={setIsLapsOpen} title="Laps">
-				<LapsContent />
-			</Modal>
-		</MainSelection>
+				<Modal isOpen={isLapsOpen} setIsOpen={setIsLapsOpen} title="Laps">
+					<LapsContent />
+				</Modal>
+			</MainSelection>
+		</AuthGuard>
 	);
 }

@@ -1,8 +1,9 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useLanguage } from "@/app/context/languageContext";
 import { useTime } from "@/app/context/timeContext";
+import { supabase } from "@/lib/supabase";
 
 interface SettingType {
 	isSettingOpen: boolean;
@@ -19,74 +20,166 @@ export default function SettingContent({
 }: SettingType) {
 	const { setIsNowLanguage, isNowLanguage } = useLanguage();
 	const { setIsNowTime, isNowTime } = useTime();
-	const [isLocation, setIsLocation] = useState<boolean>(false);
 
+	const handleLanguageChange = async (
+		e: React.ChangeEvent<HTMLSelectElement>,
+	) => {
+		const selectedLanguage = e.target.value;
+
+		setIsNowLanguage(selectedLanguage);
+
+		const {
+			data: { user },
+		} = await supabase.auth.getUser();
+
+		if (!user) return;
+
+		const { error } = await supabase.from("settings").upsert(
+			{
+				user_id: user.id,
+				language: selectedLanguage,
+			},
+			{
+				onConflict: "user_id",
+			},
+		);
+
+		if (error) console.error("language error:", error);
+	};
+
+	const handleFormatChange = async (
+		e: React.ChangeEvent<HTMLSelectElement>,
+	) => {
+		const selectedFormat = Number(e.target.value);
+
+		setIsNowTime(selectedFormat);
+
+		const {
+			data: { user },
+		} = await supabase.auth.getUser();
+
+		if (!user) return;
+
+		const { error } = await supabase.from("settings").upsert(
+			{
+				user_id: user.id,
+				time_format: selectedFormat,
+			},
+			{
+				onConflict: "user_id",
+			},
+		);
+
+		if (error) console.error("time error:", error);
+	};
+
+	const handleTemperatureChange = async (
+		e: React.ChangeEvent<HTMLSelectElement>,
+	) => {
+		const value = e.target.value;
+
+		setTemperatureUnits(value);
+
+		const {
+			data: { user },
+		} = await supabase.auth.getUser();
+
+		if (!user) return;
+
+		const { error } = await supabase.from("settings").upsert(
+			{
+				user_id: user.id,
+				temperature_unit: value,
+			},
+			{
+				onConflict: "user_id",
+			},
+		);
+
+		if (error) console.error("temperature error:", error);
+	};
+
+	// 🔥 初回ロード（Supabase → state）
 	useEffect(() => {
-		if (navigator.geolocation) {
-			navigator.geolocation.getCurrentPosition(
-				() => {
-					setIsLocation(true);
-				},
-				() => {
-					setIsLocation(false);
-				},
-			);
-		} else {
-			setIsLocation(false);
-		}
+		const fetchSettings = async () => {
+			const {
+				data: { user },
+			} = await supabase.auth.getUser();
+
+			if (!user) return;
+
+			const { data, error } = await supabase
+				.from("settings")
+				.select("*")
+				.eq("user_id", user.id)
+				.maybeSingle();
+
+			if (error) {
+				console.error("fetch error:", error);
+				return;
+			}
+
+			if (data) {
+				setIsNowLanguage(data.language ?? "en");
+
+				setIsNowTime(data.time_format ?? 24);
+
+				setTemperatureUnits(data.temperature_unit ?? "metric");
+			} else {
+				// 🔥 初回ユーザー用（ここ超重要）
+				await supabase.from("settings").insert({
+					user_id: user.id,
+				});
+			}
+		};
+
+		fetchSettings();
 	}, []);
 
-	const handleLanguageChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-		const selectedLanguage = e.target.value;
-		setIsNowLanguage(selectedLanguage);
-		localStorage.setItem("language", selectedLanguage);
-	};
+	const clearMemories = async () => {
+		const {
+			data: { user },
+		} = await supabase.auth.getUser();
 
-	const handleFormatChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-		const selectedFormat = e.target.value;
-		setIsNowTime(Number(selectedFormat));
-		localStorage.setItem("time", selectedFormat);
-	};
+		if (!user) return;
 
-	const handleTemperatureChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-		setTemperatureUnits(e.target.value);
-		localStorage.setItem("temperatureUnits", e.target.value);
-	};
+		const { error: settingsError } = await supabase.from("settings").upsert(
+			{
+				user_id: user.id,
+				language: "en",
+				time_format: 24,
+				temperature_unit: "metric",
+			},
+			{
+				onConflict: "user_id",
+			},
+		);
 
-	useEffect(() => {
-		const time = localStorage.getItem("time");
-		const language = localStorage.getItem("language");
-		const tempUnit = localStorage.getItem("temperatureUnits");
+		if (settingsError) {
+			console.error("settings reset error:", settingsError);
+			return;
+		}
+		const { error: goodsError } = await supabase
+			.from("goods")
+			.delete()
+			.eq("user_id", user.id);
 
-		if (time) setIsNowTime(Number(time));
-		if (language) setIsNowLanguage(language);
-		if (!language) setIsNowLanguage("en");
-		if (tempUnit) setTemperatureUnits(tempUnit);
-	}, [setIsNowLanguage, setIsNowTime, setTemperatureUnits]);
+		if (goodsError) {
+			console.error("goods delete error:", goodsError);
+			return;
+		}
 
-	const clearMemories = () => {
-		localStorage.clear();
-		setIsSettingOpen(!isSettingOpen);
+		setIsSettingOpen(false);
+
+		setIsNowLanguage("en");
+		setIsNowTime(24);
+		setTemperatureUnits("metric");
+
 		window.location.reload();
 	};
-
 	return (
 		<div className="space-y-6 fade-in-up">
-			{/* Time format */}
-			<div
-				className="
-      fade-in-up
-      p-4
-      rounded-2xl
-      bg-white/10
-      backdrop-blur-md
-      border border-white/20
-      shadow-md
-      transition-all duration-200
-      hover:-translate-y-1
-      hover:shadow-lg
-    "
-			>
+			<div className="p-4 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 shadow-md">
 				<label className="block font-semibold text-lg mb-3">
 					{isNowLanguage === "en"
 						? "Time format"
@@ -98,146 +191,46 @@ export default function SettingContent({
 				<select
 					onChange={handleFormatChange}
 					value={isNowTime}
-					className="
-          w-full
-          rounded-xl
-          border border-gray-400/40
-          bg-white/20
-          backdrop-blur
-          p-2
-          outline-none
-          transition-all duration-200
-          hover:bg-white/30
-        "
+					className="w-full rounded-xl border border-gray-400/40 bg-white/20 p-2"
 				>
-					<option value="24">
-						{isNowLanguage === "en"
-							? "24-hour format"
-							: isNowLanguage === "it"
-								? "Formato 24 ore"
-								: "24時間形式"}
-					</option>
+					<option value="24">24-hour format</option>
 
-					<option value="12">
-						{isNowLanguage === "en"
-							? "12-hour format (AM/PM)"
-							: isNowLanguage === "it"
-								? "Formato 12 ore (AM/PM)"
-								: "12時間形式 (AM/PM)"}
-					</option>
+					<option value="12">12-hour format (AM/PM)</option>
 				</select>
 			</div>
 
-			{/* Language */}
-			<div
-				className="
-      fade-in-up
-      p-4
-      rounded-2xl
-      bg-white/10
-      backdrop-blur-md
-      border border-white/20
-      shadow-md
-      transition-all duration-200
-      hover:-translate-y-1
-      hover:shadow-lg
-    "
-			>
-				<label className="block font-semibold text-lg mb-3">
-					{isNowLanguage === "en"
-						? "Language"
-						: isNowLanguage === "it"
-							? "Lingua"
-							: "言語"}
-				</label>
+			<div className="p-4 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 shadow-md">
+				<label className="block font-semibold text-lg mb-3">Language</label>
 
 				<select
 					value={isNowLanguage}
 					onChange={handleLanguageChange}
-					className="
-          w-full
-          rounded-xl
-          border border-gray-400/40
-          bg-white/20
-          backdrop-blur
-          p-2
-          outline-none
-          transition-all duration-200
-          hover:bg-white/30
-        "
+					className="w-full rounded-xl border border-gray-400/40 bg-white/20 p-2"
 				>
 					<option value="en">English</option>
+
 					<option value="it">Italian</option>
+
 					<option value="ja">日本語</option>
 				</select>
 			</div>
 
-			{/* Temperature */}
-			{isLocation && (
-				<div
-					className="
-        fade-in-up
-        p-4
-        rounded-2xl
-        bg-white/10
-        backdrop-blur-md
-        border border-white/20
-        shadow-md
-        transition-all duration-200
-        hover:-translate-y-1
-        hover:shadow-lg
-      "
-				>
-					<label className="block font-semibold text-lg mb-3">
-						{isNowLanguage === "en"
-							? "Temperature units"
-							: isNowLanguage === "it"
-								? "Unità di temperatura"
-								: "温度の単位"}
-					</label>
+			<div className="p-4 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 shadow-md">
+				<label className="block font-semibold text-lg mb-3">
+					Temperature units
+				</label>
 
-					<select
-						value={temperatureUnits}
-						onChange={handleTemperatureChange}
-						className="
-            w-full
-            rounded-xl
-            border border-gray-400/40
-            bg-white/20
-            backdrop-blur
-            p-2
-            outline-none
-            transition-all duration-200
-            hover:bg-white/30
-          "
-					>
-						<option value="kelvin">K</option>
-						<option value="imperial">°F</option>
-						<option value="metric">°C</option>
-					</select>
-				</div>
-			)}
-
-			{/* Clear button */}
-			<div className="fade-in-up pt-2">
-				<button
-					onClick={clearMemories}
-					className="
-          w-full
-          rounded-xl
-          border border-red-400
-          text-red-400
-          p-3
-          font-semibold
-          transition-all duration-200
-          hover:bg-red-400
-          hover:text-white
-          hover:-translate-y-1
-          active:scale-95
-        "
+				<select
+					value={temperatureUnits}
+					onChange={handleTemperatureChange}
+					className="w-full rounded-xl border border-gray-400/40 bg-white/20 p-2"
 				>
-					Clear memories
-				</button>
+					<option value="kelvin">K</option>
+
+					<option value="imperial">°F</option>
+
+					<option value="metric">°C</option>
+				</select>
 			</div>
 		</div>
 	);

@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import SecondHand from "./secondHand";
 import MinuteHand from "./minuteHand";
 import HourHand from "./hourHand";
+import { supabase } from "@/lib/supabase";
 
 interface Props {
 	isDarkMode: boolean;
@@ -11,6 +12,7 @@ interface Props {
 
 export default function ClockApp({ isDarkMode }: Props) {
 	const [mode, setMode] = useState<"clock" | "stopwatch">("clock");
+
 	const [time, setTime] = useState(0);
 	const [isStart, setIsStart] = useState(false);
 	const [running, setRunning] = useState(false);
@@ -26,6 +28,39 @@ export default function ClockApp({ isDarkMode }: Props) {
 	};
 
 	useEffect(() => {
+		const loadSettings = async () => {
+			const {
+				data: { user },
+			} = await supabase.auth.getUser();
+
+			if (!user) return;
+
+			const { data } = await supabase
+				.from("settings")
+				.select("*")
+				.eq("user_id", user.id)
+				.maybeSingle();
+
+			if (data) {
+				if (data.timer_time) {
+					setTime(data.timer_time);
+				}
+
+				if (data.laps) {
+					setLaps(data.laps);
+				}
+
+				if (data.is_front === false) {
+					setMode("stopwatch");
+				}
+			}
+		};
+
+		loadSettings();
+	}, []);
+
+	// 🔥 stopwatch動作
+	useEffect(() => {
 		clearTimer();
 
 		if (mode === "stopwatch" && running) {
@@ -37,40 +72,54 @@ export default function ClockApp({ isDarkMode }: Props) {
 		return clearTimer;
 	}, [mode, running]);
 
-	useEffect(() => {
-		const savedTime = localStorage.getItem("stopwatch-time");
-		const savedLaps = localStorage.getItem("stopwatch-laps");
+	// 🔥 保存関数
+	const saveSetting = async (key: string, value: any) => {
+		const {
+			data: { user },
+		} = await supabase.auth.getUser();
 
-		if (savedTime) {
-			setTime(Number(savedTime));
+		if (!user) return;
+
+		await supabase.from("settings").upsert(
+			{
+				user_id: user.id,
+				[key]: value,
+			},
+			{
+				onConflict: "user_id",
+			},
+		);
+	};
+
+	// ⏱ time 保存（止まった時だけ）
+	useEffect(() => {
+		if (!running) {
+			saveSetting("timer_time", time);
 		}
+	}, [running]);
 
-		if (savedLaps) {
-			setLaps(JSON.parse(savedLaps));
-		}
-	}, []);
-
+	// 🏁 laps 保存
 	useEffect(() => {
-		localStorage.setItem("stopwatch-time", String(time));
-	}, [time]);
-
-	useEffect(() => {
-		localStorage.setItem("stopwatch-laps", JSON.stringify(laps));
+		saveSetting("laps", laps);
 	}, [laps]);
 
+	// 🔄 表裏保存
 	const handleSwap = () => {
-		setMode((prev) => (prev === "clock" ? "stopwatch" : "clock"));
+		const newMode = mode === "clock" ? "stopwatch" : "clock";
+
+		setMode(newMode);
+
+		saveSetting("is_front", newMode === "clock");
 	};
 
 	const format = (ms: number) => {
 		const m = Math.floor(ms / 60000);
+
 		const s = Math.floor((ms % 60000) / 1000);
+
 		const cs = Math.floor((ms % 1000) / 10);
 
-		return `${String(m).padStart(2, "0")}:${String(s).padStart(
-			2,
-			"0",
-		)}:${String(cs).padStart(2, "0")}`;
+		return `${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}:${String(cs).padStart(2, "0")}`;
 	};
 
 	return (
@@ -87,6 +136,8 @@ export default function ClockApp({ isDarkMode }: Props) {
         ${mode === "stopwatch" ? "rotate-y-180" : ""}
         `}
 			>
+				{/* CLOCK */}
+
 				<div
 					className={`absolute inset-0 flex justify-center items-center rounded-full border-[5px]
           ${
@@ -99,6 +150,7 @@ export default function ClockApp({ isDarkMode }: Props) {
 				>
 					{[...Array(12)].map((_, index) => {
 						const number = (index + 12) % 12 || 12;
+
 						const rotation = index * 30;
 
 						return (
@@ -127,6 +179,8 @@ export default function ClockApp({ isDarkMode }: Props) {
 					<HourHand isDarkMode={isDarkMode} />
 				</div>
 
+				{/* STOPWATCH */}
+
 				<div
 					className="absolute inset-0 flex flex-col items-center justify-center rounded-full
           rotate-y-180 backface-hidden
@@ -150,9 +204,7 @@ export default function ClockApp({ isDarkMode }: Props) {
 							className="px-5 py-2 rounded-full
               bg-emerald-400/20 text-emerald-200
               border border-emerald-400/40
-              backdrop-blur-md
-              transition-all duration-200
-              hover:bg-emerald-400/30 hover:scale-105 active:scale-95"
+              backdrop-blur-md"
 						>
 							{isStart ? "Stop" : "Start"}
 						</button>
@@ -160,14 +212,12 @@ export default function ClockApp({ isDarkMode }: Props) {
 						<button
 							onClick={() => {
 								if (running) return;
+
 								setLaps((prev) => [...prev, time]);
 							}}
 							className="px-5 py-2 rounded-full
               bg-yellow-400/20 text-yellow-200
-              border border-yellow-400/40
-              backdrop-blur-md
-              transition-all duration-200
-              hover:bg-yellow-400/30 hover:scale-105 active:scale-95"
+              border border-yellow-400/40"
 						>
 							Lap
 						</button>
@@ -177,14 +227,17 @@ export default function ClockApp({ isDarkMode }: Props) {
 								setTime(0);
 								setRunning(false);
 								setIsStart(false);
+								setLaps([]);
+
 								clearTimer();
+
+								saveSetting("timer_time", 0);
+
+								saveSetting("laps", []);
 							}}
 							className="px-5 py-2 rounded-full
               bg-red-400/20 text-red-200
-              border border-red-400/40
-              backdrop-blur-md
-              transition-all duration-200
-              hover:bg-red-400/30 hover:scale-105 active:scale-95"
+              border border-red-400/40"
 						>
 							Reset
 						</button>
