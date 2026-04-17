@@ -1,106 +1,181 @@
 "use client";
+
 import { useEffect, useState } from "react";
 import LoadingSecondHand from "./loadingSecondHand";
 import { driver } from "driver.js";
 import "driver.js/dist/driver.css";
+import { supabase } from "@/lib/supabase";
 
-export default function Loading() {
-	const [isLoading, setIsLoading] = useState<boolean>(false);
+export default function LoadingScreen() {
+	const [isLoading, setIsLoading] = useState(true);
+
+	// 表示状態
+	const [visible, setVisible] = useState(true);
+
+	// transition有効化フラグ（←重要）
+	const [enableTransition, setEnableTransition] = useState(false);
+
+	const [username, setUsername] = useState("");
+	const [showWelcome, setShowWelcome] = useState(false);
 
 	useEffect(() => {
-		const isFirstVisit = localStorage.getItem("hasVisited") !== "true";
+		const init = async () => {
+			try {
+				// ⭐ 最初は即表示（transitionなし）
+				setVisible(true);
 
-		setTimeout(() => {
-			setIsLoading(true);
-
-			if (isFirstVisit) {
-				const driverObj = driver({
-					showProgress: true,
-					steps: [
-						{
-							element: "#toggleMode",
-							popover: {
-								title: "Theme Switching",
-								description:
-									"You can change the theme of your website with a toggle.",
-								side: "left",
-								align: "start",
-							},
-						},
-						{
-							element: "#changeImageButton",
-							popover: {
-								title: "Image Change Button",
-								description:
-									"This button lets you change the background image.",
-								side: "left",
-								align: "start",
-							},
-						},
-						{
-							element: "#electronicClock",
-							popover: {
-								title: "Digital Clock",
-								description: "Displays the current date and time.",
-								side: "left",
-								align: "start",
-							},
-						},
-						{
-							element: "#clock",
-							popover: {
-								title: "Analog Clock",
-								description: "Check the current time in analog format.",
-								side: "left",
-								align: "start",
-							},
-						},
-						{
-							element: "#inputSearch",
-							popover: {
-								title: "Search",
-								description: "You can search using this input.",
-								side: "left",
-								align: "start",
-							},
-						},
-					],
+				// ⭐ 次フレームでtransition有効化
+				requestAnimationFrame(() => {
+					setEnableTransition(true);
 				});
 
-				driverObj.drive();
-				localStorage.setItem("hasVisited", "true");
+				const isFirstVisit = localStorage.getItem("hasVisited") !== "true";
+
+				const {
+					data: { user },
+				} = await supabase.auth.getUser();
+
+				if (user) {
+					const { data } = await supabase
+						.from("profiles")
+						.select("username")
+						.eq("id", user.id)
+						.single();
+
+					if (data?.username) {
+						setUsername(data.username);
+
+						setTimeout(() => {
+							setShowWelcome(true);
+						}, 300);
+					}
+				}
+
+				// ⭐ ツアー
+				setTimeout(() => {
+					if (isFirstVisit) {
+						const driverObj = driver({
+							showProgress: true,
+							steps: [
+								{
+									element: "#toggleMode",
+									popover: {
+										title: "Theme",
+										description: "Switch light / dark mode.",
+									},
+								},
+							],
+						});
+
+						driverObj.drive();
+
+						localStorage.setItem("hasVisited", "true");
+					}
+				}, 1500);
+
+				// ⭐ フェードアウト
+				setTimeout(() => {
+					setVisible(false);
+				}, 1500);
+
+				// ⭐ 完全削除
+				setTimeout(() => {
+					setIsLoading(false);
+				}, 2300);
+			} catch (error) {
+				console.error(error);
+
+				setVisible(false);
+
+				setTimeout(() => {
+					setIsLoading(false);
+				}, 800);
 			}
-		}, 1500);
+		};
+
+		init();
 	}, []);
+
+	if (!isLoading) return null;
 
 	return (
 		<div
-			style={{ zIndex: "500" }}
-			className={`flex justify-center items-center transition-all bg-center bg-cover ${
-				isLoading ? "opacity-0 pointer-events-none" : "opacity-100"
-			} absolute h-screen w-screen bg-white z-50`}
+			className={`
+      fixed inset-0
+      flex items-center justify-center
+
+      bg-gradient-to-br
+      from-zinc-900
+      via-black
+      to-zinc-800
+
+      z-20
+
+      ${enableTransition ? "transition-opacity duration-700" : ""}
+
+      ${visible ? "opacity-100" : "opacity-0"}
+      `}
+			style={{ zIndex: 500 }}
 		>
+			<div className="absolute inset-0 backdrop-blur-2xl bg-white/5" />
+
 			<div
-				className={`relative flex justify-center items-center h-96 w-96 min-w-48 min-h-48 rounded-full border-8
-        shadow-2xl transition-all top-0 hover:top-1 bg-white bg-opacity-25 backdrop-blur-md hover:backdrop-blur-0`}
+				className="
+        relative
+        flex items-center justify-center
+
+        w-[320px]
+        h-[320px]
+
+        rounded-full
+
+        bg-white/10
+        backdrop-blur-xl
+
+        border border-white/20
+
+        shadow-[0_0_60px_rgba(255,255,255,0.08)]
+        "
 			>
-				{[...Array(12)].map((_, index) => {
-					const number = (index + 12) % 12 || 12;
-					const rotation = index * 30;
-					return (
-						<div
-							key={index}
-							className={`absolute flex justify-center items-center w-10 h-10 font-black text-xl`}
-							style={{
-								transform: `rotate(${rotation}deg) translate(0, -140px) rotate(-${rotation}deg)`,
-							}}
-						>
-							{number}
-						</div>
-					);
-				})}
-				<div className="h-5 w-5 bg-black rounded-full"></div>
+				{/* Welcome */}
+				{username && (
+					<div
+						className={`
+            absolute
+            text-xl
+            -top-32
+            font-semibold
+            text-white/80
+
+            transition-all
+            duration-700
+
+            ${
+							showWelcome
+								? "opacity-100 translate-y-0"
+								: "opacity-0 translate-y-4"
+						}
+            `}
+					>
+						Welcome back,
+						<span className="ml-2 text-white font-bold">{username}</span>
+					</div>
+				)}
+
+				{/* 秒針 */}
 				<LoadingSecondHand />
+			</div>
+
+			<div
+				className="
+        absolute
+        bottom-12
+        text-white/40
+        text-sm
+        tracking-widest
+        "
+			>
+				Loading your workspace...
 			</div>
 		</div>
 	);

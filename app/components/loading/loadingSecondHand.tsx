@@ -6,21 +6,37 @@ export default function LoadingSecondHand() {
 	useEffect(() => {
 		const timeout = setTimeout(() => {
 			setAngle(270);
-		}, 0);
+		}, 50);
+
 		return () => clearTimeout(timeout);
 	}, []);
 
 	return (
 		<div
-			className="absolute left-1/2 w-44 bg-black"
+			className="
+			absolute
+			left-1/2
+			top-1/2
+
+			w-[160px]
+			h-[2px]
+
+			rounded-full
+
+			bg-gradient-to-r
+			from-white
+			to-white/20
+
+			shadow-[0_0_8px_rgba(255,255,255,0.8)]
+
+			transition-transform
+			duration-[1400ms]
+			ease-in-out
+			"
 			style={{
-				height: "2px",
-				borderRadius: "9999px",
 				transformOrigin: "0% 50%",
-				boxShadow: "0px 0px 4px rgba(0, 0, 0, 0.4)",
-				transition: "transform 1s ease-in-out",
 				transform: `rotate(${angle}deg)`,
 			}}
-		></div>
+		/>
 	);
 }
