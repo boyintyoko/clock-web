@@ -41,15 +41,12 @@ export const BackgroundProvider = ({ children }: { children: ReactNode }) => {
 					setBackground(data.background);
 
 					localStorage.setItem("background", data.background);
-
-					console.log("背景をSupabaseから取得");
 					return;
 				}
 			}
 
 			if (localBg) {
 				setBackground(localBg);
-				console.log("背景をlocalStorageから取得");
 			}
 		};
 

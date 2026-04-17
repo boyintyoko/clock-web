@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
 import { useRouter } from "next/navigation";
+import axios from "axios";
 
 export default function SignupPage() {
 	const router = useRouter();
@@ -12,6 +13,16 @@ export default function SignupPage() {
 	const [password, setPassword] = useState("");
 	const [isSeePassword, setIsSeePassword] = useState(false);
 	const [loading, setLoading] = useState(false);
+	const [imageUrl, setImageUrl] = useState("");
+
+	useEffect(() => {
+		const getPhoto = async () => {
+			const res = await axios.get("/api/unsplash/photo");
+			const data = res.data;
+			setImageUrl(data.imageUrl);
+		};
+		getPhoto();
+	}, []);
 
 	useEffect(() => {
 		checkUser();
@@ -69,156 +80,159 @@ export default function SignupPage() {
 
 	return (
 		<div className="relative min-h-screen flex items-center justify-center">
+			{/* Background */}
 			<div
 				className="absolute inset-0"
 				style={{
-					backgroundImage:
-						"url(https://boyintyoko.github.io/clock-web/assets/initialValuePhoto.avif)",
+					backgroundImage: `url(${imageUrl})`,
 					backgroundPosition: "center",
 					backgroundRepeat: "no-repeat",
 					backgroundSize: "cover",
 				}}
 			/>
 
-			<div className="absolute inset-0 bg-black/50 backdrop-blur-sm" />
+			{/* Dark overlay */}
+			<div className="absolute inset-0 bg-black/40 backdrop-blur-sm" />
 
+			{/* Card */}
 			<div
 				className="
-          glass-card
-          relative
-          w-96
-          p-8
-          rounded-2xl
-          bg-white/80
-          shadow-2xl
-          flex flex-col
-          gap-6
-        "
+				relative
+				w-[380px]
+				p-8
+				rounded-2xl
+				bg-white/10
+				backdrop-blur-xl
+				border border-white/20
+				shadow-2xl
+				flex flex-col
+				gap-5
+			"
 			>
-				<h1
-					className="
-            text-3xl
-            font-bold
-            text-center
-            text-gray-900
-          "
-				>
-					Create Account
-				</h1>
+				{/* Title */}
+				<div className="text-center space-y-1">
+					<h1 className="text-3xl font-bold text-white">Create Account</h1>
 
+					<p className="text-sm text-white/70">Start your journey</p>
+				</div>
+
+				{/* Username */}
 				<div className="relative">
 					<i
 						className="
-    absolute
-    fa-solid fa-user
-    text-gray-500
-    left-3
-    top-1/2
-    -translate-y-1/2
-  "
+						absolute
+						fa-solid fa-user
+						text-white/70
+						left-3
+						top-1/2
+						-translate-y-1/2
+					"
 					/>
 
 					<input
 						type="text"
 						placeholder="Username"
 						className="
-      w-full
-      pl-10
-      pr-3
-      py-3
-      rounded-xl
-      bg-white
-      border
-      border-gray-300
-      text-black
-      outline-none
-      focus:ring-2
-      focus:ring-green-500
-      transition
-    "
+						w-full
+						pl-10
+						pr-3
+						py-3
+						rounded-xl
+						bg-white/20
+						text-white
+						placeholder-white/60
+						border border-white/20
+						outline-none
+						focus:border-blue-400
+						focus:ring-2
+						focus:ring-blue-400/40
+						transition
+					"
 						onChange={(e) => setUsername(e.target.value)}
 					/>
 				</div>
 
+				{/* Email */}
 				<div className="relative">
 					<i
 						className="
-            absolute
-            fa-solid fa-envelope
-            text-gray-500
-            left-3
-            top-1/2
-            -translate-y-1/2
-          "
+						absolute
+						fa-solid fa-envelope
+						text-white/70
+						left-3
+						top-1/2
+						-translate-y-1/2
+					"
 					/>
 
 					<input
 						type="email"
 						placeholder="Email address"
 						className="
-              w-full
-              pl-10
-              pr-3
-              py-3
-              rounded-xl
-              bg-white
-              border
-              border-gray-300
-              text-black
-              outline-none
-              focus:ring-2
-              focus:ring-green-500
-              focus:border-green-500
-              transition
-            "
+						w-full
+						pl-10
+						pr-3
+						py-3
+						rounded-xl
+						bg-white/20
+						text-white
+						placeholder-white/60
+						border border-white/20
+						outline-none
+						focus:border-blue-400
+						focus:ring-2
+						focus:ring-blue-400/40
+						transition
+					"
 						onChange={(e) => setEmail(e.target.value)}
 					/>
 				</div>
 
+				{/* Password */}
 				<div className="relative">
 					<i
 						className="
-            absolute
-            fa-solid fa-key
-            text-gray-500
-            left-3
-            top-1/2
-            -translate-y-1/2
-          "
+						absolute
+						fa-solid fa-key
+						text-white/70
+						left-3
+						top-1/2
+						-translate-y-1/2
+					"
 					/>
 
 					<input
 						type={isSeePassword ? "text" : "password"}
 						placeholder="Password"
 						className="
-              w-full
-              pl-10
-              pr-10
-              py-3
-              rounded-xl
-              bg-white
-              border
-              border-gray-300
-              text-black
-              outline-none
-              focus:ring-2
-              focus:ring-green-500
-              focus:border-green-500
-              transition
-            "
+						w-full
+						pl-10
+						pr-10
+						py-3
+						rounded-xl
+						bg-white/20
+						text-white
+						placeholder-white/60
+						border border-white/20
+						outline-none
+						focus:border-blue-400
+						focus:ring-2
+						focus:ring-blue-400/40
+						transition
+					"
 						onChange={(e) => setPassword(e.target.value)}
 					/>
 
 					<button
 						type="button"
 						className="
-              absolute
-              right-3
-              top-1/2
-              -translate-y-1/2
-              text-gray-500
-              hover:text-black
-            "
+						absolute
+						right-3
+						top-1/2
+						-translate-y-1/2
+						text-white/70
+						hover:text-white
+					"
 						onClick={() => setIsSeePassword(!isSeePassword)}
 					>
 						{isSeePassword ? (
@@ -229,33 +243,40 @@ export default function SignupPage() {
 					</button>
 				</div>
 
+				{/* Button */}
 				<button
 					onClick={handleSignup}
 					disabled={loading}
 					className="
-            py-3
-            rounded-xl
-            font-semibold
-            text-white
-            bg-green-500
-            hover:bg-green-600
-            active:scale-95
-            transition
-            shadow-md
-            disabled:opacity-50
-          "
+					mt-2
+					py-3
+					rounded-xl
+					font-semibold
+					text-white
+					bg-gradient-to-r
+					from-blue-500
+					to-blue-600
+					hover:from-blue-600
+					hover:to-blue-700
+					active:scale-95
+					transition
+					shadow-lg
+					disabled:opacity-50
+				"
 				>
 					{loading ? "Creating..." : "Create Account"}
 				</button>
 
+				{/* Login link */}
 				<button
 					onClick={() => router.push("/login")}
 					className="
-            text-sm
-            text-center
-            text-blue-500
-            hover:underline
-          "
+					text-sm
+					text-center
+					text-white/80
+					hover:text-white
+					hover:underline
+				"
 				>
 					Already have an account? Login
 				</button>
