@@ -2,7 +2,10 @@ import { NextResponse } from "next/server";
 import axios from "axios";
 import type ImageType from "@/app/types/ImagesType";
 
-export async function GET(context: { params: Promise<{ id: string }> }) {
+export async function GET(
+	req: Request,
+	context: { params: Promise<{ id: string }> },
+) {
 	try {
 		const { id } = await context.params;
 		const response = await axios.get<ImageType[]>(
