@@ -74,7 +74,7 @@ export default function SignupPage() {
 			}
 		}
 
-		router.push("/login");
+		router.push("/check-email");
 
 		setLoading(false);
 	};
