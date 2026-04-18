@@ -243,11 +243,10 @@ export default function SignupPage() {
 					</button>
 				</div>
 
-				{/* Button */}
 				<button
 					onClick={handleSignup}
 					disabled={loading}
-					className="
+					className={`
 					mt-2
 					py-3
 					rounded-xl
@@ -262,12 +261,12 @@ export default function SignupPage() {
 					transition
 					shadow-lg
 					disabled:opacity-50
-				"
+          ${!(password && email && username) && "bg-none"}
+        `}
 				>
 					{loading ? "Creating..." : "Create Account"}
 				</button>
 
-				{/* Login link */}
 				<button
 					onClick={() => router.push("/login")}
 					className="

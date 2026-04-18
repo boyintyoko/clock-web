@@ -58,7 +58,6 @@ export default function LoginPage() {
 
 	return (
 		<div className="relative min-h-screen flex items-center justify-center">
-			{/* Background */}
 			<div
 				className="absolute inset-0"
 				style={{
@@ -69,10 +68,8 @@ export default function LoginPage() {
 				}}
 			/>
 
-			{/* Dark overlay */}
 			<div className="absolute inset-0 bg-black/40 backdrop-blur-sm" />
 
-			{/* Card */}
 			<div
 				className="
 				relative
@@ -87,14 +84,12 @@ export default function LoginPage() {
 				gap-5
 			"
 			>
-				{/* Title */}
 				<div className="text-center space-y-1">
 					<h1 className="text-3xl font-bold text-white">Welcome Back</h1>
 
 					<p className="text-sm text-white/70">Login to continue</p>
 				</div>
 
-				{/* Error */}
 				{errorMsg && (
 					<div
 						className="
@@ -111,7 +106,6 @@ export default function LoginPage() {
 					</div>
 				)}
 
-				{/* Email */}
 				<div className="relative">
 					<i
 						className="
@@ -205,7 +199,7 @@ export default function LoginPage() {
 				<button
 					onClick={handleLogin}
 					disabled={loading}
-					className="
+					className={`
 					mt-2
 					py-3
 					rounded-xl
@@ -220,7 +214,8 @@ export default function LoginPage() {
 					transition
 					shadow-lg
 					disabled:opacity-50
-				"
+          ${!(password && email) && "bg-none"}
+          `}
 				>
 					{loading ? "Logging in..." : "Login"}
 				</button>
