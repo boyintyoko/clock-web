@@ -426,7 +426,7 @@ export default function ChangeImageSide({
     rounded-xl
     bg-white
     text-gray-800
-    font-medium
+    font-bold
     shadow-sm
     cursor-pointer
     transition
