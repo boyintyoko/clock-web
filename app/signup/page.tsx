@@ -14,6 +14,7 @@ export default function SignupPage() {
 	const [isSeePassword, setIsSeePassword] = useState(false);
 	const [loading, setLoading] = useState(false);
 	const [imageUrl, setImageUrl] = useState("");
+	const [errMsg, setErrMsg] = useState("");
 
 	useEffect(() => {
 		const getPhoto = async () => {
@@ -40,9 +41,10 @@ export default function SignupPage() {
 
 	const handleSignup = async () => {
 		setLoading(true);
+		setErrMsg("");
 
 		if (!username || !email || !password) {
-			alert("すべて入力してください");
+			setErrMsg("Please enter all the information");
 			setLoading(false);
 			return;
 		}
@@ -53,7 +55,7 @@ export default function SignupPage() {
 		});
 
 		if (error) {
-			alert("登録失敗：" + error.message);
+			setErrMsg("Registration failed");
 			setLoading(false);
 			return;
 		}
@@ -68,12 +70,11 @@ export default function SignupPage() {
 			});
 
 			if (profileError) {
-				alert("プロフィール保存失敗：" + profileError.message);
+				setErrMsg("Failed to save profile");
 			}
 		}
 
-		alert("登録成功！");
-		router.push("/login");
+		router.push("/check-email");
 
 		setLoading(false);
 	};
@@ -115,6 +116,22 @@ export default function SignupPage() {
 
 					<p className="text-sm text-white/70">Start your journey</p>
 				</div>
+
+				{errMsg && (
+					<div
+						className="
+						bg-red-500/20
+						text-red-300
+						text-sm
+						p-2
+						rounded-lg
+						text-center
+						border border-red-400/30
+					"
+					>
+						{errMsg}
+					</div>
+				)}
 
 				{/* Username */}
 				<div className="relative">
@@ -243,11 +260,10 @@ export default function SignupPage() {
 					</button>
 				</div>
 
-				{/* Button */}
 				<button
 					onClick={handleSignup}
 					disabled={loading}
-					className="
+					className={`
 					mt-2
 					py-3
 					rounded-xl
@@ -262,12 +278,12 @@ export default function SignupPage() {
 					transition
 					shadow-lg
 					disabled:opacity-50
-				"
+          ${!(password && email && username) && "bg-none"}
+        `}
 				>
 					{loading ? "Creating..." : "Create Account"}
 				</button>
 
-				{/* Login link */}
 				<button
 					onClick={() => router.push("/login")}
 					className="

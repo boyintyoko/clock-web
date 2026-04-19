@@ -189,8 +189,8 @@ export default function ClockApp({ isDarkMode }: Props) {
           px-8"
 				>
 					<div
-						className="text-5xl font-mono tracking-widest mb-6
-            text-white drop-shadow-[0_0_10px_rgba(255,255,255,0.2)]"
+						className={`text-5xl font-mono tracking-widest mb-6
+            ${isDarkMode ? "text-black" : "text-white"} drop-shadow-[0_0_10px_rgba(255,255,255,0.2)]`}
 					>
 						{format(time)}
 					</div>
