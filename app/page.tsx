@@ -137,6 +137,10 @@ export default function Home() {
 			return `url(https://github.com/boyintyoko/boyintyoko.github.io/blob/main/clock-web/icons/colors/${userBackgroundImage}?raw=true)`;
 		}
 
+		if (userBackgroundImage === "Random") {
+			return `url(${imageUrl})`;
+		}
+
 		return defaultImage;
 	};
 
@@ -169,8 +173,6 @@ export default function Home() {
 					"isDarkMode",
 					JSON.stringify(data.dark_mode ?? false),
 				);
-
-				console.log("Supabaseからdark_mode取得成功");
 			}
 		};
 
