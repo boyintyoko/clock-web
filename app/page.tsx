@@ -22,6 +22,7 @@ import LinkSettingContent from "./components/modalComnponents/modalContents/link
 import LapsContent from "./components/modalComnponents/modalContents/lapsContent";
 import AuthGuard from "./components/AuthGuard";
 import { supabase } from "@/lib/supabase";
+import axios from "axios";
 
 interface MainSelectionProps {
 	$background: string;
@@ -59,6 +60,7 @@ export default function Home() {
 	const [urls, setUrls] = useState<UrlItem[]>([]);
 	const [isSearch, setIsSearch] = useState<boolean>(false);
 	const [histories, setHistories] = useState<HistoryType[]>([]);
+	const [imageUrl, setImageUrl] = useState<string>("");
 
 	useEffect(() => {
 		VersionFunc();
@@ -105,9 +107,17 @@ export default function Home() {
 		}
 	};
 
+	useEffect(() => {
+		const getPhoto = async () => {
+			const res = await axios.get("/api/unsplash/photo");
+			const data = res.data;
+			setImageUrl(data.imageUrl);
+		};
+		getPhoto();
+	}, []);
+
 	const checkImage = (userBackgroundImage: string) => {
-		const defaultImage =
-			"url(https://boyintyoko.github.io/clock-web/assets/initialValuePhoto.avif)";
+		const defaultImage = `url(${imageUrl})`;
 
 		if (!userBackgroundImage) {
 			return defaultImage;
