@@ -160,16 +160,9 @@ export default function ChangeImageSide({
 				data: { user },
 			} = await supabase.auth.getUser();
 
-			if (!user) {
-				console.log("User not logged in");
-				return;
-			}
+			if (!user) return;
 
 			if (!isNormal) {
-				console.log("Random mode");
-
-				localStorage.setItem("background", "Random");
-
 				setBackground("Random");
 
 				const { error } = await supabase.from("settings").upsert(
@@ -192,10 +185,6 @@ export default function ChangeImageSide({
 			}
 
 			if (imageUrl && name && userImage && userUrl && userName) {
-				console.log("Normal image mode:", imageUrl);
-
-				// local保存
-
 				localStorage.setItem(
 					"backgroundDescription",
 					JSON.stringify({
@@ -270,10 +259,7 @@ export default function ChangeImageSide({
 				.select("*")
 				.eq("user_id", user.id);
 
-			if (error) {
-				console.error(error);
-				return;
-			}
+			if (error) return;
 
 			const formatted =
 				data?.map((item) => ({
@@ -418,25 +404,32 @@ export default function ChangeImageSide({
 				)}
 
 				<div className="grid grid-cols-1 gap-4 pt-4">
-					<div
+					<button
 						onClick={() => imageChangeHandler({ isNormal: false })}
-						className="
-    flex items-center justify-center
+						className={`
+    relative
+    flex items-center justify-center gap-2
     h-16 w-full
-    rounded-xl
-    bg-white
-    text-gray-800
-    font-bold
+    rounded-2xl
+    font-semibold
+    text-gray-700
+    bg-gradient-to-r from-gray-100 to-gray-200
     shadow-sm
-    cursor-pointer
     transition
-    hover:bg-gray-100
+    hover:scale-[1.02]
+    hover:shadow-md
     active:scale-[0.98]
     select-none
-  "
+    border
+    ${
+			background === "Random"
+				? "ring-2 ring-blue-500 border-transparent bg-gradient-to-r from-blue-50 to-blue-100 text-blue-600"
+				: "border-gray-200"
+		}
+  `}
 					>
-						Random
-					</div>
+						Random Background
+					</button>
 					{images.map((image, index) => {
 						const isLiked = hearts.some(
 							(item) => item.imageUrl === image.urls.regular,
