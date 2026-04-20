@@ -29,7 +29,7 @@ export default function SingleColor() {
 
 		if (!user) return;
 
-		const { error } = await supabase.from("settings").upsert(
+		await supabase.from("settings").upsert(
 			{
 				user_id: user.id,
 				background: color,
@@ -38,12 +38,6 @@ export default function SingleColor() {
 				onConflict: "user_id",
 			},
 		);
-
-		if (error) {
-			console.error("単色背景保存失敗:", error);
-		} else {
-			console.log("単色背景保存成功");
-		}
 	};
 
 	const deleteMyColor = (index: number) => {
@@ -64,8 +58,12 @@ export default function SingleColor() {
 	};
 
 	useEffect(() => {
-		if (background.startsWith("https")) {
+		if (!background) return;
+
+		if (background === "Random" || background.startsWith("https")) {
 			setIsNowBackground("");
+		} else {
+			setIsNowBackground(background);
 		}
 	}, [background]);
 
@@ -102,7 +100,7 @@ export default function SingleColor() {
             hover:scale-105
             active:scale-95
             ${
-							isNowBackground === color + ".png"
+							isNowBackground === color + ".png" && isNowBackground !== "Random"
 								? "ring-2 ring-blue-500"
 								: "border-neutral-300"
 						}
