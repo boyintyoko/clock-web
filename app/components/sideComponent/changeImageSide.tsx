@@ -43,6 +43,15 @@ const CreatedImageDiv = styled.div`
   }
 `;
 
+type ImageChangeParams = {
+	imageUrl?: string;
+	name?: string;
+	userImage?: string;
+	userUrl?: string;
+	userName?: string;
+	isNormal?: boolean;
+};
+
 export default function ChangeImageSide({
 	isChange,
 	setIsChange,
@@ -135,37 +144,97 @@ export default function ChangeImageSide({
 	}, [loading]);
 
 	const imageChangeHandler = async (
-		imageUrl: string,
-		name: string,
-		userImage: string,
-		userUrl: string,
-		userName: string,
+		params: ImageChangeParams = {},
 	): Promise<void> => {
-		localStorage.setItem("background", imageUrl);
-
-		localStorage.setItem(
-			"backgroundDescription",
-			JSON.stringify({ imageUrl, name, userImage, userUrl, userName }),
-		);
-
-		setBackgroundDesc({ imageUrl, name, userImage, userUrl, userName });
-		setBackground(imageUrl);
-
 		const {
-			data: { user },
-		} = await supabase.auth.getUser();
+			imageUrl,
+			name,
+			userImage,
+			userUrl,
+			userName,
+			isNormal = true,
+		} = params;
 
-		if (!user) return;
+		try {
+			const {
+				data: { user },
+			} = await supabase.auth.getUser();
 
-		const { error } = await supabase.from("settings").upsert({
-			user_id: user.id,
-			background: imageUrl,
-		});
+			if (!user) {
+				console.log("User not logged in");
+				return;
+			}
 
-		if (error) {
-			console.error("背景保存失敗:", error);
-		} else {
-			console.log("背景保存成功");
+			if (!isNormal) {
+				console.log("Random mode");
+
+				localStorage.setItem("background", "Random");
+
+				setBackground("Random");
+
+				const { error } = await supabase.from("settings").upsert(
+					{
+						user_id: user.id,
+						background: "Random",
+					},
+					{
+						onConflict: "user_id",
+					},
+				);
+
+				if (error) {
+					console.error("Random upsert error:", error);
+				} else {
+					console.log("Random saved successfully");
+				}
+
+				return;
+			}
+
+			if (imageUrl && name && userImage && userUrl && userName) {
+				console.log("Normal image mode:", imageUrl);
+
+				// local保存
+
+				localStorage.setItem(
+					"backgroundDescription",
+					JSON.stringify({
+						imageUrl,
+						name,
+						userImage,
+						userUrl,
+						userName,
+					}),
+				);
+
+				setBackgroundDesc({
+					imageUrl,
+					name,
+					userImage,
+					userUrl,
+					userName,
+				});
+
+				setBackground(imageUrl);
+
+				const { error } = await supabase.from("settings").upsert(
+					{
+						user_id: user.id,
+						background: imageUrl,
+					},
+					{
+						onConflict: "user_id",
+					},
+				);
+
+				if (error) {
+					console.error("Normal upsert error:", error);
+				} else {
+					console.log("Image saved successfully");
+				}
+			}
+		} catch (err) {
+			console.error("imageChangeHandler error:", err);
 		}
 	};
 
@@ -349,6 +418,25 @@ export default function ChangeImageSide({
 				)}
 
 				<div className="grid grid-cols-1 gap-4 pt-4">
+					<div
+						onClick={() => imageChangeHandler({ isNormal: false })}
+						className="
+    flex items-center justify-center
+    h-16 w-full
+    rounded-xl
+    bg-white
+    text-gray-800
+    font-bold
+    shadow-sm
+    cursor-pointer
+    transition
+    hover:bg-gray-100
+    active:scale-[0.98]
+    select-none
+  "
+					>
+						Random
+					</div>
 					{images.map((image, index) => {
 						const isLiked = hearts.some(
 							(item) => item.imageUrl === image.urls.regular,
@@ -402,13 +490,14 @@ export default function ChangeImageSide({
 
 								<div
 									onClick={() =>
-										imageChangeHandler(
-											image.urls.regular,
-											image.user.name,
-											image.user.profile_image.medium,
-											image.user.links.html,
-											image.user.username,
-										)
+										imageChangeHandler({
+											imageUrl: image.urls.regular,
+											name: image.user.name,
+											userImage: image.user.profile_image.medium,
+											userUrl: image.user.links.html,
+											userName: image.user.username,
+											isNormal: true,
+										})
 									}
 									className={`${
 										image.urls.regular === background &&

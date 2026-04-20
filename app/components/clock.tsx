@@ -59,7 +59,6 @@ export default function ClockApp({ isDarkMode }: Props) {
 		loadSettings();
 	}, []);
 
-	// 🔥 stopwatch動作
 	useEffect(() => {
 		clearTimer();
 
@@ -72,7 +71,6 @@ export default function ClockApp({ isDarkMode }: Props) {
 		return clearTimer;
 	}, [mode, running]);
 
-	// 🔥 保存関数
 	const saveSetting = async (key: string, value: any) => {
 		const {
 			data: { user },
@@ -91,19 +89,16 @@ export default function ClockApp({ isDarkMode }: Props) {
 		);
 	};
 
-	// ⏱ time 保存（止まった時だけ）
 	useEffect(() => {
 		if (!running) {
 			saveSetting("timer_time", time);
 		}
 	}, [running]);
 
-	// 🏁 laps 保存
 	useEffect(() => {
 		saveSetting("laps", laps);
 	}, [laps]);
 
-	// 🔄 表裏保存
 	const handleSwap = () => {
 		const newMode = mode === "clock" ? "stopwatch" : "clock";
 
@@ -126,7 +121,7 @@ export default function ClockApp({ isDarkMode }: Props) {
 		<div className="flex items-center justify-center text-white [perspective:1000px]">
 			<button
 				onClick={handleSwap}
-				className="absolute top-2 right-2 z-50 bg-white/10 px-3 py-2 rounded"
+				className={`absolute top-2 right-2 z-50 bg-white/10 px-3 py-2 rounded ${isDarkMode ? "text-gray-700" : "text-white"}`}
 			>
 				⇄
 			</button>
@@ -136,8 +131,6 @@ export default function ClockApp({ isDarkMode }: Props) {
         ${mode === "stopwatch" ? "rotate-y-180" : ""}
         `}
 			>
-				{/* CLOCK */}
-
 				<div
 					className={`absolute inset-0 flex justify-center items-center rounded-full border-[5px]
           ${
@@ -178,8 +171,6 @@ export default function ClockApp({ isDarkMode }: Props) {
 					<MinuteHand isDarkMode={isDarkMode} />
 					<HourHand isDarkMode={isDarkMode} />
 				</div>
-
-				{/* STOPWATCH */}
 
 				<div
 					className="absolute inset-0 flex flex-col items-center justify-center rounded-full
