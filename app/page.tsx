@@ -9,7 +9,6 @@ import colors from "@/data/colorData";
 import colorsRGB from "@/data/colorRGBData";
 import Clock from "@@/components/clock/clock";
 import { useTimeZone } from "@@/context/timeZoneContext";
-import VersionFunc from "@/lib/versionFunc";
 import HistoryType from "@/app/types/HistoryType";
 import HeaderMain from "@@/components/header/main";
 import ModalButton from "@@/components/modalComnponents/modalButton";
@@ -61,10 +60,6 @@ export default function Home() {
 	const [isSearch, setIsSearch] = useState<boolean>(false);
 	const [histories, setHistories] = useState<HistoryType[]>([]);
 	const [imageUrl, setImageUrl] = useState<string>("");
-
-	useEffect(() => {
-		VersionFunc();
-	}, []);
 
 	useEffect(() => {
 		const saved = localStorage.getItem("isDarkMode");
@@ -137,14 +132,6 @@ export default function Home() {
 
 		return defaultImage;
 	};
-
-	useEffect(() => {
-		const hasVisited = localStorage.getItem("hasVisited");
-
-		if (!hasVisited) {
-			localStorage.setItem("hasVisited", JSON.stringify(true));
-		}
-	}, []);
 
 	useEffect(() => {
 		const loadDarkMode = async () => {

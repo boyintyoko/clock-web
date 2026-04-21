@@ -2,15 +2,11 @@
 
 import { useEffect, useState } from "react";
 import LoadingSecondHand from "@@/components/loading/loadingSecondHand";
-import { driver } from "driver.js";
-import "driver.js/dist/driver.css";
 import { supabase } from "@/lib/supabase";
 
 export default function LoadingScreen() {
 	const [isLoading, setIsLoading] = useState(true);
-
 	const [visible, setVisible] = useState(true);
-
 	const [enableTransition, setEnableTransition] = useState(false);
 
 	const [username, setUsername] = useState("");
@@ -25,18 +21,18 @@ export default function LoadingScreen() {
 					setEnableTransition(true);
 				});
 
-				const isFirstVisit = localStorage.getItem("hasVisited") !== "true";
-
 				const {
 					data: { user },
 				} = await supabase.auth.getUser();
 
 				if (user) {
-					const { data } = await supabase
+					const { data, error } = await supabase
 						.from("profiles")
-						.select("username")
+						.select("username, has_visited")
 						.eq("id", user.id)
 						.single();
+
+					if (error) throw error;
 
 					if (data?.username) {
 						setUsername(data.username);
@@ -44,33 +40,20 @@ export default function LoadingScreen() {
 						setTimeout(() => {
 							setShowWelcome(true);
 						}, 300);
+
+						if (!data.has_visited) {
+							await supabase
+								.from("profiles")
+								.update({ has_visited: true })
+								.eq("id", user.id);
+						}
 					}
 				}
 
 				setTimeout(() => {
-					if (isFirstVisit) {
-						const driverObj = driver({
-							showProgress: true,
-							steps: [
-								{
-									element: "#toggleMode",
-									popover: {
-										title: "Theme",
-										description: "Switch light / dark mode.",
-									},
-								},
-							],
-						});
-
-						driverObj.drive();
-
-						localStorage.setItem("hasVisited", "true");
-					}
-				}, 1500);
-
-				setTimeout(() => {
 					setVisible(false);
 				}, 1500);
+
 				setTimeout(() => {
 					setIsLoading(false);
 				}, 2300);
@@ -104,7 +87,6 @@ export default function LoadingScreen() {
       z-20
 
       ${enableTransition ? "transition-opacity duration-700" : ""}
-
       ${visible ? "opacity-100" : "opacity-0"}
       `}
 			style={{ zIndex: 500 }}
@@ -115,17 +97,12 @@ export default function LoadingScreen() {
 				className="
         relative
         flex items-center justify-center
-
         w-[320px]
         h-[320px]
-
         rounded-full
-
         bg-white/10
         backdrop-blur-xl
-
         border border-white/20
-
         shadow-[0_0_60px_rgba(255,255,255,0.08)]
         "
 			>
