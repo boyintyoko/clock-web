@@ -1,10 +1,13 @@
-import { useLanguage } from "@/app/context/languageContext";
-import HistoryType from "@/app/types/HistoryType";
+"use client";
 
-interface Props {
+import { useLanguage } from "@@/context/languageContext";
+import HistoryType from "@@/types/HistoryType";
+import { supabase } from "@/lib/supabase";
+
+type Props = {
 	histories: HistoryType[];
 	setHistories: (histories: HistoryType[]) => void;
-}
+};
 
 export default function SearchHistoryContent({
 	histories,
@@ -12,19 +15,30 @@ export default function SearchHistoryContent({
 }: Props) {
 	const { isNowLanguage } = useLanguage();
 
-	/* 履歴削除 */
-	const historyDelete = (id: number) => {
-		const updatedHistories = histories.filter((h) => h.id !== id);
+	const historyDelete = async (id: number) => {
+		console.log("delete id:", id);
 
-		localStorage.setItem("history", JSON.stringify(updatedHistories));
+		try {
+			const { error } = await supabase.from("histories").delete().eq("id", id);
 
-		setHistories(updatedHistories);
+			if (error) {
+				console.error("delete error:", error);
+				return;
+			}
+
+			const updatedHistories = histories.filter((h) => h.id !== id);
+
+			setHistories(updatedHistories);
+
+			console.log("delete success");
+		} catch (err) {
+			console.error("delete failed:", err);
+		}
 	};
 
-	/* 履歴が空 */
 	if (histories.length === 0) {
 		return (
-			<div className="fade-in-up flex justify-center py-10">
+			<div className="fade-in-up flex justify-center p-10">
 				<p
 					className="
             text-gray-500
@@ -44,72 +58,68 @@ export default function SearchHistoryContent({
 	}
 
 	return (
-		<ul className="fade-in-up space-y-3 mt-3">
+		<ul className="fade-in-up">
 			{[...histories].reverse().map((history) => (
 				<li
 					key={history.id}
 					className="
-            fade-in-up
-            flex
-            items-center
-            justify-between
-            p-4
-            rounded-2xl
-            bg-white/10
-            backdrop-blur-md
-            border border-white/20
-            shadow-md
-            transition-all duration-200
-            hover:-translate-y-1
-            hover:shadow-lg
-          "
+              fade-in-up
+              flex
+              items-center
+              justify-between
+              p-4
+              rounded-2xl
+              bg-white/10
+              backdrop-blur-md
+              border border-white/20
+              shadow-md
+              transition-all duration-200
+              hover:-translate-y-1
+              hover:shadow-lg
+            "
 				>
-					{/* 左側 */}
 					<div className="flex items-center gap-3 min-w-0">
-						{/* 時刻 */}
 						<span
 							className="
-                text-xs
-                text-gray-500
-                min-w-[55px]
-                font-mono
-              "
+                  text-xs
+                  text-gray-500
+                  min-w-[55px]
+                  font-mono
+                "
 						>
 							{history.create_hours.toString().padStart(2, "0")}:
 							{history.create_minutes.toString().padStart(2, "0")}
 						</span>
 
-						{/* 検索内容 */}
 						<span
 							className="
-                text-sm
-                text-gray-800
-                truncate
-                font-semibold
-              "
+                  text-sm
+                  text-gray-800
+                  truncate
+                  font-semibold
+                "
 						>
 							{history.content}
 						</span>
 					</div>
 
-					{/* 削除ボタン */}
 					<button
 						onClick={() => historyDelete(history.id)}
 						className="
-              ml-3
-              px-3
-              py-1
-              rounded-lg
-              border border-red-400
-              text-red-400
-              text-xs
-              font-semibold
-              transition-all duration-200
-              hover:bg-red-400
-              hover:text-white
-              hover:scale-105
-              active:scale-90
-            "
+                ml-3
+                px-3
+                py-1
+                rounded-lg
+                border border-red-400
+                text-red-400
+                text-xs
+                font-semibold
+                transition-all duration-200
+                hover:bg-red-400
+                hover:text-white
+                hover:scale-105
+                active:scale-90
+              "
 					>
 						{isNowLanguage === "en"
 							? "Delete"

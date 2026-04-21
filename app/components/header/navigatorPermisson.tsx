@@ -1,13 +1,13 @@
 import Image from "next/image";
 
-interface Props {
+type Props = {
 	navigatorPermission: boolean;
 	isDarkMode: boolean;
 	temperature: number | null;
 	temperatureUnits: string;
 	wheatherIcon: string;
 	humidity: number | null;
-}
+};
 
 export default function NavigatorPermisson({
 	navigatorPermission,

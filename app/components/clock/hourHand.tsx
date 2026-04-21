@@ -1,13 +1,13 @@
 "use client";
 import { useEffect, useState } from "react";
-import { useTimeZone } from "../context/timeZoneContext";
+import { useTimeZone } from "@@/context/timeZoneContext";
 
-interface isDarkModeType {
+type Props = {
 	isDarkMode: boolean;
-}
+};
 
-export default function MinuteHand({ isDarkMode }: isDarkModeType) {
-	const [minuteAngle, setMinuteAngle] = useState<number>(0);
+export default function HourHand({ isDarkMode }: Props) {
+	const [hourAngle, setHourAngle] = useState<number>(0);
 	const { isNowTimeZone } = useTimeZone();
 
 	useEffect(() => {
@@ -15,22 +15,29 @@ export default function MinuteHand({ isDarkMode }: isDarkModeType) {
 
 		const formatter = new Intl.DateTimeFormat("ja-JP", {
 			timeZone: isNowTimeZone,
+			hour: "2-digit",
 			minute: "2-digit",
+			hour12: false,
 		});
 
-		const getMinutes = () => {
+		const updateHourAngle = () => {
 			const parts = formatter.formatToParts(new Date());
+
+			const hourStr = parts.find((p) => p.type === "hour")?.value ?? "0";
 
 			const minuteStr = parts.find((p) => p.type === "minute")?.value ?? "0";
 
+			const hours = parseInt(hourStr, 10);
 			const minutes = parseInt(minuteStr, 10);
 
-			setMinuteAngle((360 + minutes * 6 - 90) % 360);
+			const angle = (360 + (hours % 12) * 30 + minutes * 0.5 - 90) % 360;
+
+			setHourAngle(angle);
 		};
 
-		getMinutes();
+		updateHourAngle();
 
-		const intervalId = setInterval(getMinutes, 1000);
+		const intervalId = setInterval(updateHourAngle, 60000);
 
 		return () => clearInterval(intervalId);
 	}, [isNowTimeZone]);
@@ -41,8 +48,8 @@ export default function MinuteHand({ isDarkMode }: isDarkModeType) {
         absolute
         top-1/2
         left-1/2
-        h-[3px]
-        w-[35%]
+        h-[4px]
+        w-[25%]
         transition-all
         ${isDarkMode ? "bg-black" : "bg-white"}
       `}
@@ -51,7 +58,7 @@ export default function MinuteHand({ isDarkMode }: isDarkModeType) {
 				transformOrigin: "0% 50%",
 				transform: `
           translate(0%, -50%)
-          rotate(${minuteAngle}deg)
+          rotate(${hourAngle}deg)
         `,
 				boxShadow: "0px 0px 4px rgba(0,0,0,0.4)",
 				transition: "transform 0.2s linear",

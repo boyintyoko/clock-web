@@ -1,12 +1,12 @@
 import Image from "next/image";
-import Mask from "./mask";
+import Mask from "@@/components/modalComnponents/mask";
 
-interface Props {
+type Props = {
 	title: string;
 	isOpen: boolean;
 	setIsOpen: (isOpen: boolean) => void;
 	children: React.ReactNode;
-}
+};
 
 export default function Modal({ title, isOpen, setIsOpen, children }: Props) {
 	return (
@@ -40,7 +40,7 @@ export default function Modal({ title, isOpen, setIsOpen, children }: Props) {
 						<h3 className="font-bold">{title}</h3>
 					</div>
 				</div>
-				<div className="p-6">{children}</div>
+				<div className="">{children}</div>
 			</div>
 		</div>
 	);

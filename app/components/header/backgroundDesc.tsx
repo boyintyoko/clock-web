@@ -1,11 +1,11 @@
 import Link from "next/link";
 import Image from "next/image";
-import { useBackgroundDesc } from "../../context/backgroundDesc";
-import { useBackground } from "../../context/backgroundContext";
+import { useBackgroundDesc } from "@@/context/backgroundDesc";
+import { useBackground } from "@@/context/backgroundContext";
 
-interface Props {
+type Props = {
 	isDarkMode: boolean;
-}
+};
 
 export default function BackgroundDesc({ isDarkMode }: Props) {
 	const { backgroundDesc } = useBackgroundDesc();

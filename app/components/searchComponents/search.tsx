@@ -1,21 +1,21 @@
 "use client";
 
-import SearchContent from "./searchContent";
-import LinkContent from "./linkContent";
+import SearchContent from "@@/components/searchComponents/searchContent";
+import LinkContent from "@@/components/searchComponents/linkContent";
 import Image from "next/image";
 import { useEffect } from "react";
-import HistoryType from "@/app/types/HistoryType";
-import Modal from "../modalComnponents/main";
-import SerachHistroyContent from "../modalComnponents/modalContents/serachHistoryContent";
+import HistoryType from "@@/types/HistoryType";
+import Modal from "@@/components/modalComnponents/main";
+import SerachHistroyContent from "@@/components/modalComnponents/modalContents/serachHistoryContent";
 
-interface UrlItem {
+type UrlItem = {
 	link: string;
 	url: string;
 	alt: string;
 	id: number;
-}
+};
 
-interface Props {
+type Props = {
 	isDarkMode: boolean;
 	isHistoriesOpen: boolean;
 	setIsHistoriesOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -27,7 +27,7 @@ interface Props {
 	setIsSearch: React.Dispatch<React.SetStateAction<boolean>>;
 	histories: HistoryType[];
 	setHistories: React.Dispatch<React.SetStateAction<HistoryType[]>>;
-}
+};
 
 export default function Search({
 	isDarkMode,

@@ -1,12 +1,12 @@
 "use client";
 import { useEffect, useState } from "react";
-import { useTimeZone } from "../context/timeZoneContext";
+import { useTimeZone } from "@@/context/timeZoneContext";
 
-interface isDarkModeType {
+type Props = {
 	isDarkMode: boolean;
-}
+};
 
-export default function SecondHand({ isDarkMode }: isDarkModeType) {
+export default function SecondHand({ isDarkMode }: Props) {
 	const [angle, setAngle] = useState(0);
 	const { isNowTimeZone } = useTimeZone();
 

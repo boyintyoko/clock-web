@@ -1,15 +1,15 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import ChangeImageSide from "./sideComponent/changeImageSide";
-import Mask from "./sideComponent/mask";
+import ChangeImageSide from "@@/components/sideComponent/changeImageSide";
+import Mask from "@@/components/sideComponent/mask";
 import { useMediaQuery } from "react-responsive";
 
-interface isDarkModeType {
+type Props = {
 	isDarkMode: boolean;
-}
+};
 
-export default function ChangeImageButton({ isDarkMode }: isDarkModeType) {
+export default function ChangeImageButton({ isDarkMode }: Props) {
 	const [isChange, setIsChange] = useState(false);
 
 	const [isVisible, setIsVisible] = useState(true);

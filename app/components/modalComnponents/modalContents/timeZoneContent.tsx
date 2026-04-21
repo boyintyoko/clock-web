@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useTimeZone } from "@/app/context/timeZoneContext";
+import { useTimeZone } from "@@/context/timeZoneContext";
 import { supabase } from "@/lib/supabase";
 
 export default function TimeZoneContent() {

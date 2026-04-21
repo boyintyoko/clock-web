@@ -1,41 +1,45 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect } from "react";
-import urlData from "@/data/urlData";
+import { supabase } from "@/lib/supabase";
 
-interface UrlItem {
+type UrlItem = {
 	link: string;
 	url: string;
 	alt: string;
 	id: number;
-}
+};
 
-interface Props {
+type Props = {
 	urls: UrlItem[];
 	setUrls: (urls: UrlItem[]) => void;
-}
+};
 
 export default function LinkSettingContent({ urls, setUrls }: Props) {
-	useEffect(() => {
-		const stored = localStorage.getItem("urlData");
+	const changeLinkSetting = async (id: number, newUrl: string) => {
+		console.log("update start:", id, newUrl);
 
-		if (stored) {
-			setUrls(JSON.parse(stored));
-		} else {
-			localStorage.setItem("urlData", JSON.stringify(urlData));
-			setUrls(urlData);
-		}
-	}, [setUrls]);
-
-	const changeLinkSetting = (id: number, newUrl: string) => {
 		const updated = urls.map((item) =>
 			item.id === id ? { ...item, url: newUrl } : item,
 		);
 
 		setUrls(updated);
 
-		localStorage.setItem("urlData", JSON.stringify(updated));
+		const {
+			data: { session },
+		} = await supabase.auth.getSession();
+
+		if (!session) {
+			console.log("❌ no session");
+			return;
+		}
+
+		await supabase
+			.from("urls")
+			.update({
+				url: newUrl,
+			})
+			.eq("id", id);
 	};
 
 	return (
@@ -56,7 +60,6 @@ export default function LinkSettingContent({ urls, setUrls }: Props) {
 						animationFillMode: "forwards",
 					}}
 				>
-					{/* アイコン */}
 					<div
 						className="
               flex items-center justify-center
@@ -77,7 +80,6 @@ export default function LinkSettingContent({ urls, setUrls }: Props) {
 						/>
 					</div>
 
-					{/* 入力欄 */}
 					<input
 						onChange={(e) => changeLinkSetting(url.id, e.target.value)}
 						value={url.url}

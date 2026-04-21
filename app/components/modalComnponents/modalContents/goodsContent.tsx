@@ -4,16 +4,16 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import styled from "styled-components";
-import GoodsType from "@/app/types/goodsType";
-import { useBackground } from "@/app/context/backgroundContext";
-import { useGoods } from "@/app/context/goodContext";
-import { useLanguage } from "@/app/context/languageContext";
-import { useBackgroundDesc } from "@/app/context/backgroundDesc";
+import GoodsType from "@@/types/goodsType";
+import { useBackground } from "@@/context/backgroundContext";
+import { useGoods } from "@@/context/goodContext";
+import { useLanguage } from "@@/context/languageContext";
+import { useBackgroundDesc } from "@@/context/backgroundDesc";
 import { supabase } from "@/lib/supabase";
 
-interface GoodsItemType {
+type Props = {
 	isGoodsOpen: boolean;
-}
+};
 
 const StyledP = styled.p`
   position: relative;
@@ -38,7 +38,7 @@ const CreatedImageDiv = styled.div`
   }
 `;
 
-export default function GoodsContent({ isGoodsOpen }: GoodsItemType) {
+export default function GoodsContent({ isGoodsOpen }: Props) {
 	const [goods, setGoods] = useState<GoodsType[]>([]);
 	const [loading, setLoading] = useState(false);
 

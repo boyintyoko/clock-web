@@ -1,9 +1,9 @@
-interface Props {
+type Props = {
 	isHistoriesOpen: boolean;
 	setIsHistoriesOpen: React.Dispatch<React.SetStateAction<boolean>>;
 	isDarkMode: boolean;
 	isSideBar: boolean;
-}
+};
 
 export default function History({
 	isDarkMode,

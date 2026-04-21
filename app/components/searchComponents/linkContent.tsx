@@ -1,16 +1,20 @@
+"use client";
+
 import Link from "next/link";
 import Image from "next/image";
-import History from "./historyComponents/history";
+import History from "@@/components/searchComponents/historyComponents/history";
 import { useEffect } from "react";
+import { supabase } from "@/lib/supabase";
+import urlData from "@/data/urlData";
 
-interface UrlItem {
+type UrlItem = {
 	link: string;
 	url: string;
 	alt: string;
 	id: number;
-}
+};
 
-interface Props {
+type Props = {
 	isSearch: boolean;
 	isHistoriesOpen: boolean;
 	setIsHistoriesOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -19,7 +23,7 @@ interface Props {
 	urls: UrlItem[];
 	setUrls: (urls: UrlItem[]) => void;
 	isDarkMode: boolean;
-}
+};
 
 export default function LinkContent({
 	isDarkMode,
@@ -32,21 +36,73 @@ export default function LinkContent({
 	setUrls,
 }: Props) {
 	useEffect(() => {
-		const stored = localStorage.getItem("urlData");
+		async function loadUrls() {
+			console.log("loadUrls start");
 
-		if (!stored) return;
+			const { data: userData } = await supabase.auth.getUser();
 
-		const urlData = JSON.parse(stored);
+			const user = userData.user;
 
-		setUrls(urlData);
-	}, []);
+			if (!user) {
+				console.log("no user");
+				return;
+			}
+
+			const { data, error } = await supabase
+				.from("urls")
+				.select("*")
+				.eq("user_id", user.id)
+				.order("id");
+
+			if (error) {
+				console.error("fetch error:", error);
+				return;
+			}
+
+			if (!data || data.length === 0) {
+				console.log("no urls → insert template");
+
+				const templateData = urlData.map((item) => ({
+					user_id: user.id,
+					link: item.link,
+					url: item.url,
+					alt: item.alt,
+				}));
+
+				const { error: insertError } = await supabase
+					.from("urls")
+					.insert(templateData);
+
+				if (insertError) {
+					console.error("template insert error:", insertError);
+					return;
+				}
+
+				const { data: newData } = await supabase
+					.from("urls")
+					.select("*")
+					.eq("user_id", user.id)
+					.order("id");
+
+				if (newData) {
+					setUrls(newData);
+				}
+			} else {
+				setUrls(data);
+			}
+		}
+
+		loadUrls();
+	}, [setUrls]);
 
 	return (
 		<div
-			className={`flex items-center justify-evenly absolute ${isSearch ? "bottom-2" : "-bottom-20"}
-    left-2 h-16 w-96 bg-white bg-opacity-50
-    shadow-lg ring-blue-500 ring-4 transition-all
-    hover:shadow-2xl hover:translate-y-2`}
+			className={`flex items-center justify-evenly absolute ${
+				isSearch ? "bottom-2" : "-bottom-20"
+			}
+      left-2 h-16 w-96 bg-white bg-opacity-50
+      shadow-lg ring-blue-500 ring-4 transition-all
+      hover:shadow-2xl hover:translate-y-2`}
 			style={{
 				borderRadius: "50px",
 				borderTopRightRadius: "3px",
@@ -66,9 +122,9 @@ export default function LinkContent({
 				/>
 			</button>
 
-			{urls.map((url, id) => (
+			{urls.map((url) => (
 				<Link
-					key={id}
+					key={url.id}
 					href={url.url}
 					rel="noopener noreferrer"
 					target="_blank"
@@ -84,6 +140,7 @@ export default function LinkContent({
 					/>
 				</Link>
 			))}
+
 			<History
 				isDarkMode={isDarkMode}
 				isHistoriesOpen={isHistoriesOpen}

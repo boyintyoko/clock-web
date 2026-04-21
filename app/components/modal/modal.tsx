@@ -2,19 +2,18 @@
 
 import { createPortal } from "react-dom";
 
-interface Props {
+type Props = {
 	isOpen: boolean;
 	setIsOpen: (v: boolean) => void;
 	title: string;
 	children: React.ReactNode;
-}
+};
 
 export default function Modal({ isOpen, setIsOpen, title, children }: Props) {
 	if (!isOpen) return null;
 
 	return createPortal(
 		<div className="fixed inset-0 z-[999] flex items-center justify-center">
-			{/* 背景 */}
 			<div
 				className="absolute inset-0 bg-black/50"
 				onClick={() => setIsOpen(false)}

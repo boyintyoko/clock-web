@@ -5,19 +5,17 @@ import { useLanguage } from "@/app/context/languageContext";
 import { useTime } from "@/app/context/timeContext";
 import { supabase } from "@/lib/supabase";
 
-interface SettingType {
-	isSettingOpen: boolean;
+type Props = {
 	setIsSettingOpen: (isOpen: boolean) => void;
 	temperatureUnits: string;
 	setTemperatureUnits: (temperatureUnits: string) => void;
-}
+};
 
 export default function SettingContent({
-	isSettingOpen,
 	setIsSettingOpen,
 	temperatureUnits,
 	setTemperatureUnits,
-}: SettingType) {
+}: Props) {
 	const { setIsNowLanguage, isNowLanguage } = useLanguage();
 	const { setIsNowTime, isNowTime } = useTime();
 
@@ -231,6 +229,15 @@ export default function SettingContent({
 
 					<option value="metric">°C</option>
 				</select>
+			</div>
+
+			<div className="pt-2">
+				<button
+					onClick={clearMemories}
+					className="w-full rounded-xl border border-red-400 text-red-400 p-3 font-semibold hover:bg-red-400 hover:text-white"
+				>
+					Clear memories
+				</button>
 			</div>
 		</div>
 	);

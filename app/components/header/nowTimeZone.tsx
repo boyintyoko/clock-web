@@ -1,7 +1,7 @@
-interface Props {
+type Props = {
 	isDarkMode: boolean;
 	isNowTimeZone: string;
-}
+};
 
 export default function NowTimeZone({ isDarkMode, isNowTimeZone }: Props) {
 	return (
