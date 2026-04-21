@@ -1,37 +1,81 @@
+"use client";
+
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import HistoryType from "@/app/types/HistoryType";
-import styles from "../../css/inputLabel.module.css";
+import styles from "@@/css/inputLabel.module.css";
+import { supabase } from "@/lib/supabase";
 
-interface Search {
+type Props = {
 	isSearch: boolean;
 	setHistories: React.Dispatch<React.SetStateAction<HistoryType[]>>;
 	histories: HistoryType[];
 	isDarkMode: boolean;
-}
+};
 
 export default function SearchContent({
 	isSearch,
 	setHistories,
 	histories,
 	isDarkMode,
-}: Search) {
+}: Props) {
 	const [searchText, setSearchText] = useState<string>("");
-
 	useEffect(() => {
-		try {
-			const storedHistories = localStorage.getItem("history");
-			if (!storedHistories) return;
-			setHistories(JSON.parse(storedHistories));
-		} catch (err) {
-			console.log(err);
-			localStorage.removeItem("history");
+		async function fetchHistories() {
+			const { data: userData } = await supabase.auth.getUser();
+
+			if (!userData.user) return;
+
+			const userId = userData.user.id;
+
+			const { data, error } = await supabase
+				.from("histories")
+				.select("*")
+				.eq("user_id", userId)
+				.order("id", { ascending: true });
+
+			if (error) {
+				console.error(error);
+				return;
+			}
+
+			if (data) {
+				setHistories(
+					data.map((item) => ({
+						id: item.id,
+						content: item.content,
+						create_minutes: item.create_minutes,
+						create_hours: item.create_hours,
+					})),
+				);
+			}
 		}
+
+		fetchHistories();
 	}, [setHistories]);
 
-	const searchHandler = (
+	async function saveHistory(newHistory: HistoryType) {
+		const { data: userData } = await supabase.auth.getUser();
+
+		if (!userData.user) return;
+
+		const userId = userData.user.id;
+
+		const { error } = await supabase.from("histories").insert({
+			user_id: userId,
+			content: newHistory.content,
+			create_minutes: newHistory.create_minutes,
+			create_hours: newHistory.create_hours,
+		});
+
+		if (error) {
+			console.error(error);
+		}
+	}
+
+	const searchHandler = async (
 		e: React.FormEvent<HTMLFormElement> | React.MouseEvent<HTMLButtonElement>,
-	): void => {
+	): Promise<void> => {
 		e.preventDefault();
 
 		if (searchText.trim().length > 0) {
@@ -50,7 +94,8 @@ export default function SearchContent({
 			const updatedHistory = [...histories, newHistory];
 
 			setHistories(updatedHistory);
-			localStorage.setItem("history", JSON.stringify(updatedHistory));
+
+			await saveHistory(newHistory);
 
 			setSearchText("");
 		}
@@ -61,13 +106,13 @@ export default function SearchContent({
 			className={`flex items-center absolute ${
 				isSearch ? "-bottom-20" : "bottom-2"
 			} left-2
-  h-14 md:h-16
-  w-[90vw] sm:w-[60vw] md:w-[45vw]
-  max-w-96 min-w-[200px]
-  bg-white bg-opacity-50
-  rounded-full shadow-lg
-  hover:ring-blue-500 ring-4
-  transition-all hover:shadow-2xl hover:translate-y-2`}
+      h-14 md:h-16
+      w-[90vw] sm:w-[60vw] md:w-[45vw]
+      max-w-96 min-w-[200px]
+      bg-white bg-opacity-50
+      rounded-full shadow-lg
+      hover:ring-blue-500 ring-4
+      transition-all hover:shadow-2xl hover:translate-y-2`}
 			id="inputSearch"
 		>
 			<div className={`${styles.input} relative flex-1 h-full`}>
@@ -78,32 +123,32 @@ export default function SearchContent({
 						value={searchText}
 						onChange={(e) => setSearchText(e.target.value)}
 						className="
-          peer
-          h-16 w-full
-          pl-4 pr-8
-          rounded-l-full
-          text-gray-700
-          bg-transparent
-          placeholder-transparent
-          focus:outline-none
-          font-bold
-        "
+            peer
+            h-16 w-full
+            pl-4 pr-8
+            rounded-l-full
+            text-gray-700
+            bg-transparent
+            placeholder-transparent
+            focus:outline-none
+            font-bold
+          "
 					/>
 
 					<p
 						className="
-          absolute left-4 top-1/2
-          -translate-y-1/2
-          text-gray-500
-          transition-all duration-200
-          peer-focus:-top-5
+            absolute left-4 top-1/2
+            -translate-y-1/2
+            text-gray-500
+            transition-all duration-200
+            peer-focus:-top-5
             pointer-events-none
-          peer-focus:text-blue-500
-          peer-placeholder-shown:top-1/2
-          peer-placeholder-shown:text-base
-          peer-placeholder-shown:text-gray-500
-          font-bold
-        "
+            peer-focus:text-blue-500
+            peer-placeholder-shown:top-1/2
+            peer-placeholder-shown:text-base
+            peer-placeholder-shown:text-gray-500
+            font-bold
+          "
 					>
 						Search...
 					</p>
@@ -112,13 +157,13 @@ export default function SearchContent({
 
 			<button
 				className="
-      flex justify-center items-center
-      bg-blue-500
-      h-full
-      w-12 md:w-16
-      rounded-r-full
-      hover:bg-blue-600
-    "
+        flex justify-center items-center
+        bg-blue-500
+        h-full
+        w-12 md:w-16
+        rounded-r-full
+        hover:bg-blue-600
+      "
 				onClick={searchHandler}
 			>
 				<Image

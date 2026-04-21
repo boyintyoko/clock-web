@@ -10,10 +10,10 @@ import {
 
 import { supabase } from "@/lib/supabase";
 
-interface TimeZoneType {
+type TimeZoneType = {
 	isNowTimeZone: string;
 	setIsNowTimeZone: (tz: string) => void;
-}
+};
 
 const TimeZoneContext = createContext<TimeZoneType | undefined>(undefined);
 
@@ -71,7 +71,7 @@ export const TimeZoneProvider = ({ children }: { children: ReactNode }) => {
 		} = await supabase.auth.getUser();
 
 		if (user) {
-			const { error } = await supabase.from("settings").upsert(
+			await supabase.from("settings").upsert(
 				{
 					user_id: user.id,
 					timezone: tz,
@@ -80,12 +80,6 @@ export const TimeZoneProvider = ({ children }: { children: ReactNode }) => {
 					onConflict: "user_id",
 				},
 			);
-
-			if (error) {
-				console.error("timezone保存失敗:", error);
-			} else {
-				console.log("timezone保存成功");
-			}
 		}
 	};
 

@@ -1,7 +1,7 @@
-interface Props {
+type Props = {
 	isOpen: boolean;
 	setIsOpen(isOpen: boolean): void;
-}
+};
 
 export default function Mask({ isOpen, setIsOpen }: Props) {
 	return (

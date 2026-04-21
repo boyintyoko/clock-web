@@ -1,7 +1,7 @@
-interface Props {
+type Props = {
 	handleSwitchChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 	isDarkMode: boolean;
-}
+};
 
 export default function ToggleSwitch({
 	handleSwitchChange,

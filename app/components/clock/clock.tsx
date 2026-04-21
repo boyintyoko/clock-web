@@ -1,14 +1,14 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import SecondHand from "./secondHand";
-import MinuteHand from "./minuteHand";
-import HourHand from "./hourHand";
+import SecondHand from "@@/components/clock/secondHand";
+import MinuteHand from "@@/components/clock/minuteHand";
+import HourHand from "@@/components/clock/hourHand";
 import { supabase } from "@/lib/supabase";
 
-interface Props {
+type Props = {
 	isDarkMode: boolean;
-}
+};
 
 export default function ClockApp({ isDarkMode }: Props) {
 	const [mode, setMode] = useState<"clock" | "stopwatch">("clock");

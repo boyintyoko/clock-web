@@ -2,11 +2,11 @@
 
 import { useState, useEffect } from "react";
 
-interface Props {
+type Props = {
 	setMyColors: React.Dispatch<React.SetStateAction<string[]>>;
 	setIsChoosColorOpen: React.Dispatch<React.SetStateAction<boolean>>;
 	isChooseColorOpen: boolean;
-}
+};
 
 export default function ChooseColorContent({
 	setMyColors,

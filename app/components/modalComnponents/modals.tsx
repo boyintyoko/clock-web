@@ -1,11 +1,11 @@
 import Modal from "./main";
-import SettingContent from "./modalContents/settingContent";
-import TimeZoneContent from "./modalContents/timeZoneContent";
-import GoodsContent from "./modalContents/goodsContent";
-import LinkSettingContent from "./modalContents/linkSettingContent";
+import SettingContent from "@@/components/modalComnponents/modalContents/settingContent";
+import TimeZoneContent from "@@/components/modalComnponents/modalContents/timeZoneContent";
+import GoodsContent from "@@/components/modalComnponents/modalContents/goodsContent";
+import LinkSettingContent from "@@/components/modalComnponents/modalContents/linkSettingContent";
 import UrlItem from "@/app/types/UrlItems";
 
-interface Props {
+type Props = {
 	isSettingOpen: boolean;
 	setIsSettingOpen: (isSettingOpen: boolean) => void;
 	temperatureUnits: string;
@@ -18,7 +18,7 @@ interface Props {
 	setIsLinkSettingOpen: (isLinksettingOpen: boolean) => void;
 	urls: UrlItem[];
 	setUrls: (url: UrlItem[]) => void;
-}
+};
 
 export default function Modals({
 	isSettingOpen,
@@ -42,7 +42,6 @@ export default function Modals({
 				title="Setting"
 			>
 				<SettingContent
-					isSettingOpen={isSettingOpen}
 					setIsSettingOpen={setIsSettingOpen}
 					temperatureUnits={temperatureUnits}
 					setTemperatureUnits={setTemperatureUnits}

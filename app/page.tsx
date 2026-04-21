@@ -1,39 +1,39 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useBackground } from "./context/backgroundContext";
-import ElectronicClock from "./components/electronicClock";
-import Loading from "./components/loading/loading";
+import { useBackground } from "@@/context/backgroundContext";
+import ElectronicClock from "@@/components/clock/electronicClock";
+import Loading from "@@/components/loading/loading";
 import styled from "styled-components";
 import colors from "@/data/colorData";
 import colorsRGB from "@/data/colorRGBData";
-import Clock from "./components/clock";
-import { useTimeZone } from "./context/timeZoneContext";
+import Clock from "@@/components/clock/clock";
+import { useTimeZone } from "@@/context/timeZoneContext";
 import VersionFunc from "@/lib/versionFunc";
 import HistoryType from "@/app/types/HistoryType";
-import HeaderMain from "./components/header/main";
-import ModalButton from "./components/modalComnponents/modalButton";
-import Search from "./components/searchComponents/search";
-import Modal from "./components/modal/modal";
-import SettingContent from "./components/modalComnponents/modalContents/settingContent";
-import TimeZoneContent from "./components/modalComnponents/modalContents/timeZoneContent";
-import GoodsContent from "./components/modalComnponents/modalContents/goodsContent";
-import LinkSettingContent from "./components/modalComnponents/modalContents/linkSettingContent";
-import LapsContent from "./components/modalComnponents/modalContents/lapsContent";
-import AuthGuard from "./components/AuthGuard";
+import HeaderMain from "@@/components/header/main";
+import ModalButton from "@@/components/modalComnponents/modalButton";
+import Search from "@@/components/searchComponents/search";
+import Modal from "@@/components/modal/modal";
+import SettingContent from "@@/components/modalComnponents/modalContents/settingContent";
+import TimeZoneContent from "@@/components/modalComnponents/modalContents/timeZoneContent";
+import GoodsContent from "@@/components/modalComnponents/modalContents/goodsContent";
+import LinkSettingContent from "@@/components/modalComnponents/modalContents/linkSettingContent";
+import LapsContent from "@@/components/modalComnponents/modalContents/lapsContent";
+import AuthGuard from "@@/components/AuthGuard";
 import { supabase } from "@/lib/supabase";
 import axios from "axios";
 
-interface MainSelectionProps {
+type MainSelectionProps = {
 	$background: string;
-}
+};
 
-interface UrlItem {
+type UrlItem = {
 	link: string;
 	url: string;
 	alt: string;
 	id: number;
-}
+};
 
 const MainSelection = styled.div<MainSelectionProps>`
   ::selection {
@@ -90,7 +90,7 @@ export default function Home() {
 
 		if (!user) return;
 
-		const { error } = await supabase.from("settings").upsert(
+		await supabase.from("settings").upsert(
 			{
 				user_id: user.id,
 				dark_mode: value,
@@ -99,12 +99,6 @@ export default function Home() {
 				onConflict: "user_id",
 			},
 		);
-
-		if (error) {
-			console.error("ダークモード保存失敗:", error);
-		} else {
-			console.log("ダークモード保存成功");
-		}
 	};
 
 	useEffect(() => {
@@ -160,20 +154,11 @@ export default function Home() {
 
 			if (!session?.user) return;
 
-			const { data, error } = await supabase
+			await supabase
 				.from("settings")
 				.select("dark_mode")
 				.eq("user_id", session.user.id)
 				.single();
-
-			if (!error && data) {
-				setIsDarkMode(data.dark_mode ?? false);
-
-				localStorage.setItem(
-					"isDarkMode",
-					JSON.stringify(data.dark_mode ?? false),
-				);
-			}
 		};
 
 		loadDarkMode();
@@ -275,7 +260,6 @@ export default function Home() {
 					<SettingContent
 						temperatureUnits={temperatureUnits}
 						setTemperatureUnits={setTempratureUnits}
-						isSettingOpen={isSettingOpen}
 						setIsSettingOpen={setIsSettingOpen}
 					/>
 				</Modal>

@@ -8,10 +8,10 @@ import {
 	useEffect,
 } from "react";
 
-interface LanguageType {
+type LanguageType = {
 	isNowLanguage: string;
 	setIsNowLanguage: (isNowLanguage: string) => void;
-}
+};
 
 const LanguageContext = createContext<LanguageType | undefined>(undefined);
 

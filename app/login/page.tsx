@@ -141,7 +141,6 @@ export default function LoginPage() {
 					/>
 				</div>
 
-				{/* Password */}
 				<div className="relative">
 					<i
 						className="

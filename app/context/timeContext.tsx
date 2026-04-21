@@ -8,10 +8,10 @@ import {
 	useEffect,
 } from "react";
 
-interface TimeType {
+type TimeType = {
 	isNowTime: number | undefined;
 	setIsNowTime: (isNowTime: number) => void;
-}
+};
 
 const TimeContext = createContext<TimeType | undefined>(undefined);
 

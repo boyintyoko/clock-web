@@ -1,6 +1,6 @@
-import ModalButton from "./modalButton";
+import ModalButton from "@@/components/modalComnponents/modalButton";
 
-interface Props {
+type Props = {
 	isGoodsOpen: boolean;
 	setIsGoodsOpen: (isGoodsOpen: boolean) => void;
 	isDarkMode: boolean;
@@ -8,7 +8,7 @@ interface Props {
 	setIsSettingOpen: (isSettingOpen: boolean) => void;
 	isTimeZoneOpen: boolean;
 	setIsTimeZoneOpen: (isTimeZoneOpen: boolean) => void;
-}
+};
 
 export default function ModalButtons({
 	isGoodsOpen,

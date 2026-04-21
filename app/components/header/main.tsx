@@ -2,29 +2,31 @@
 
 import axios from "axios";
 import { useEffect, useState } from "react";
-import ToggleSwitch from "./toggleSwitch";
-import BackgroundDesc from "./backgroundDesc";
-import NavigatorPermisson from "./navigatorPermisson";
-import NowTimeZone from "./nowTimeZone";
-import ChangeImageButton from "../changeImageButton";
-import { useBackground } from "../../context/backgroundContext";
-import styles from "../../css/inputLabel.module.css";
-import HistoryType from "@/app/types/HistoryType";
+import ToggleSwitch from "@@/components/header/toggleSwitch";
+import BackgroundDesc from "@@/components/header/backgroundDesc";
+import NavigatorPermisson from "@@/components/header/navigatorPermisson";
+import NowTimeZone from "@@/components/header/nowTimeZone";
+import ChangeImageButton from "@@/components/buttons/changeImageButton";
+import { useBackground } from "@@/context/backgroundContext";
+import styles from "@@/css/inputLabel.module.css";
+import HistoryType from "@@/types/HistoryType";
 import Image from "next/image";
-import Modal from "../modal/modal";
-import SettingContent from "../modalComnponents/modalContents/settingContent";
-import TimeZoneContent from "../modalComnponents/modalContents/timeZoneContent";
-import GoodsContent from "../modalComnponents/modalContents/goodsContent";
-import ModalButton from "../modalComnponents/modalButton";
+import Modal from "@@/components/modal/modal";
+import SettingContent from "@@/components/modalComnponents/modalContents/settingContent";
+import TimeZoneContent from "@@/components/modalComnponents/modalContents/timeZoneContent";
+import GoodsContent from "@@/components/modalComnponents/modalContents/goodsContent";
+import ModalButton from "@@/components/modalComnponents/modalButton";
 import Link from "next/link";
 import urlsData from "@/data/urlData";
-import History from "../searchComponents/historyComponents/history";
-import LinkSettingContent from "../modalComnponents/modalContents/linkSettingContent";
-import SerachHistroyContent from "../modalComnponents/modalContents/serachHistoryContent";
-import LapsContent from "../modalComnponents/modalContents/lapsContent";
-import LogoutButton from "../logoutButton";
+import History from "@@/components/searchComponents/historyComponents/history";
+import LinkSettingContent from "@@/components/modalComnponents/modalContents/linkSettingContent";
+import SerachHistroyContent from "@@/components/modalComnponents/modalContents/serachHistoryContent";
+import LapsContent from "@@/components/modalComnponents/modalContents/lapsContent";
+import LogoutButton from "@@/components/buttons/logoutButton";
+import { supabase } from "@/lib/supabase";
+import packageJson from "@/package.json";
 
-interface Props {
+type Props = {
 	isDarkMode: boolean;
 	isNowTimeZone: string;
 	temperatureUnits: string;
@@ -32,7 +34,7 @@ interface Props {
 	setTempratureUnits: (temperatureUnits: string) => void;
 	setHistories: React.Dispatch<React.SetStateAction<HistoryType[]>>;
 	histories: HistoryType[];
-}
+};
 
 export default function HeaderMain({
 	isDarkMode,
@@ -76,9 +78,32 @@ export default function HeaderMain({
 		setIsDarkMode(!isDarkMode);
 	};
 
-	const searchHandler = (
+	const saveHistory = async (newHistory: HistoryType) => {
+		const { data: userData } = await supabase.auth.getUser();
+
+		console.log("user:", userData);
+
+		if (!userData.user) {
+			console.log("No user");
+			return;
+		}
+
+		const userId = userData.user.id;
+
+		const { data, error } = await supabase.from("histories").insert({
+			user_id: userId,
+			content: newHistory.content,
+			create_minutes: newHistory.create_minutes,
+			create_hours: newHistory.create_hours,
+		});
+
+		console.log("insert data:", data);
+		console.log("insert error:", error);
+	};
+
+	const searchHandler = async (
 		e: React.FormEvent<HTMLFormElement> | React.MouseEvent<HTMLButtonElement>,
-	): void => {
+	): Promise<void> => {
 		e.preventDefault();
 
 		if (searchText.trim().length > 0) {
@@ -98,6 +123,8 @@ export default function HeaderMain({
 
 			setHistories(updatedHistory);
 			localStorage.setItem("history", JSON.stringify(updatedHistory));
+
+			await saveHistory(newHistory);
 
 			setSearchText("");
 		}
@@ -170,8 +197,6 @@ export default function HeaderMain({
 				/>
 			)}
 
-			{/* モバイルメニュー */}
-
 			<div
 				className={`
           lg:hidden
@@ -194,7 +219,7 @@ export default function HeaderMain({
   h-14 md:h-16
   bg-white bg-opacity-50
   rounded-full shadow-lg
-w-56
+  w-56
   hover:ring-blue-500 ring-4
   transition-all hover:shadow-2xl hover:translate-y-2`}
 						id="inputSearch"
@@ -370,12 +395,34 @@ w-56
 						/>
 					</div>
 
-					<p
-						className={`absolute bottom-1 text-center text-xs font-semibold ${isDarkMode ? "text-white" : "text-gray-700"} py-2`}
-					>
-						{" "}
-						© {new Date().getFullYear()} Taiga Ito. All rights reserved.{" "}
-					</p>
+					<div className="absolute bottom-3 w-full flex flex-col items-center gap-1 select-none">
+						<div
+							className={`
+      px-3 py-1 rounded-full
+      backdrop-blur-md
+      border
+      text-xs font-medium
+      flex items-center gap-2
+      ${
+				isDarkMode
+					? "bg-white/10 border-white/20 text-white/80"
+					: "bg-black/5 border-black/10 text-gray-700"
+			}
+    `}
+						>
+							<span>© {new Date().getFullYear()} Taiga Ito</span>
+
+							<span
+								className={`
+        px-2 py-[2px] rounded-full
+        text-[10px] font-bold
+        ${isDarkMode ? "bg-white/20 text-white" : "bg-black/10 text-gray-800"}
+      `}
+							>
+								v{packageJson.version}
+							</span>
+						</div>
+					</div>
 				</div>
 			</div>
 
@@ -387,7 +434,7 @@ w-56
           ${isDarkMode ? "bg-black text-white" : "bg-white text-black"}
           bg-opacity-50
           rounded-md
-          p-1
+          p-2
         `}
 			>
 				<LogoutButton />
@@ -396,29 +443,53 @@ w-56
 					isDarkMode={isDarkMode}
 				/>
 
-				{!background.endsWith(".png") && (
+				{!background.endsWith(".png") && background !== "Random" ? (
 					<>
 						<BackgroundDesc isDarkMode={isDarkMode} />
-
-						<NavigatorPermisson
-							isDarkMode={isDarkMode}
-							navigatorPermission={navigatorPermission}
-							temperature={temperature}
-							temperatureUnits={temperatureUnits}
-							wheatherIcon={wheatherIcon}
-							humidity={humidity}
-						/>
 					</>
+				) : (
+					<p className="font-bold text-sm">Random</p>
+				)}
+
+				{navigatorPermission && (
+					<NavigatorPermisson
+						isDarkMode={isDarkMode}
+						navigatorPermission={navigatorPermission}
+						temperature={temperature}
+						temperatureUnits={temperatureUnits}
+						wheatherIcon={wheatherIcon}
+						humidity={humidity}
+					/>
 				)}
 
 				<NowTimeZone isDarkMode={isDarkMode} isNowTimeZone={isNowTimeZone} />
 
-				<p
-					className={`text-center ${isDarkMode ? "text-white" : "text-gray-700"} text-xs font-semibold py-2`}
+				<div
+					className={`
+      px-3 py-1 rounded-full
+      backdrop-blur-md
+      border
+      text-xs font-medium
+      flex items-center gap-2
+      ${
+				isDarkMode
+					? "bg-white/10 border-white/20 text-white/80"
+					: "bg-black/5 border-black/10 text-gray-700"
+			}
+    `}
 				>
-					{" "}
-					© {new Date().getFullYear()} Taiga Ito. All rights reserved.{" "}
-				</p>
+					<span>© {new Date().getFullYear()} Taiga Ito</span>
+
+					<span
+						className={`
+        px-2 py-[2px] rounded-full
+        text-[10px] font-bold
+        ${isDarkMode ? "bg-white/20 text-white" : "bg-black/10 text-gray-800"}
+      `}
+					>
+						v{packageJson.version}
+					</span>
+				</div>
 			</div>
 
 			<Modal isOpen={isGoodsOpen} setIsOpen={setIsGoodsOpen} title="Goods">
@@ -433,7 +504,6 @@ w-56
 				<SettingContent
 					temperatureUnits={temperatureUnits}
 					setTemperatureUnits={setTempratureUnits}
-					isSettingOpen={isSettingOpen}
 					setIsSettingOpen={setIsSettingOpen}
 				/>
 			</Modal>

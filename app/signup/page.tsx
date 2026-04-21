@@ -34,9 +34,7 @@ export default function SignupPage() {
 			data: { user },
 		} = await supabase.auth.getUser();
 
-		if (user) {
-			router.push("/");
-		}
+		if (user) router.push("/");
 	};
 
 	const handleSignup = async () => {
@@ -81,7 +79,6 @@ export default function SignupPage() {
 
 	return (
 		<div className="relative min-h-screen flex items-center justify-center">
-			{/* Background */}
 			<div
 				className="absolute inset-0"
 				style={{
@@ -91,11 +88,7 @@ export default function SignupPage() {
 					backgroundSize: "cover",
 				}}
 			/>
-
-			{/* Dark overlay */}
 			<div className="absolute inset-0 bg-black/40 backdrop-blur-sm" />
-
-			{/* Card */}
 			<div
 				className="
 				relative
@@ -110,7 +103,6 @@ export default function SignupPage() {
 				gap-5
 			"
 			>
-				{/* Title */}
 				<div className="text-center space-y-1">
 					<h1 className="text-3xl font-bold text-white">Create Account</h1>
 
@@ -133,7 +125,6 @@ export default function SignupPage() {
 					</div>
 				)}
 
-				{/* Username */}
 				<div className="relative">
 					<i
 						className="
@@ -169,7 +160,6 @@ export default function SignupPage() {
 					/>
 				</div>
 
-				{/* Email */}
 				<div className="relative">
 					<i
 						className="
@@ -205,7 +195,6 @@ export default function SignupPage() {
 					/>
 				</div>
 
-				{/* Password */}
 				<div className="relative">
 					<i
 						className="

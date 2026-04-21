@@ -12,6 +12,10 @@
 	cursor:
 		url("https://boyintyoko.github.io/clock-web/icons/cursor.png") 8 8,
 		auto !important;
+
+  -webkit-user-drag: none;
+  user-select: none;
+
 }
 
 body {

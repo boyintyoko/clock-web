@@ -1,19 +1,19 @@
 import { Dispatch, SetStateAction } from "react";
 import { useMediaQuery } from "react-responsive";
 
-interface IsChangeType {
+type Props = {
 	isChange: boolean;
 	setIsChange: Dispatch<SetStateAction<boolean>>;
 	isVisible: boolean;
 	setIsVisible: Dispatch<SetStateAction<boolean>>;
-}
+};
 
 export default function Mask({
 	isChange,
 	setIsChange,
 	isVisible,
 	setIsVisible,
-}: IsChangeType) {
+}: Props) {
 	const isMobile = useMediaQuery({
 		query: "(max-width: 440px)",
 	});

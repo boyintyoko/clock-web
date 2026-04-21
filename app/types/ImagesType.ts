@@ -1,4 +1,4 @@
-interface ImageType {
+type ImageType = {
 	id: string;
 	urls: {
 		full: string;
@@ -22,6 +22,6 @@ interface ImageType {
 			likes: string;
 		};
 	};
-}
+};
 
 export default ImageType;

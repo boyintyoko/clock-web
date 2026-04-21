@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import LoadingSecondHand from "./loadingSecondHand";
+import LoadingSecondHand from "@@/components/loading/loadingSecondHand";
 import { driver } from "driver.js";
 import "driver.js/dist/driver.css";
 import { supabase } from "@/lib/supabase";
@@ -9,10 +9,8 @@ import { supabase } from "@/lib/supabase";
 export default function LoadingScreen() {
 	const [isLoading, setIsLoading] = useState(true);
 
-	// 表示状態
 	const [visible, setVisible] = useState(true);
 
-	// transition有効化フラグ（←重要）
 	const [enableTransition, setEnableTransition] = useState(false);
 
 	const [username, setUsername] = useState("");
@@ -21,10 +19,8 @@ export default function LoadingScreen() {
 	useEffect(() => {
 		const init = async () => {
 			try {
-				// ⭐ 最初は即表示（transitionなし）
 				setVisible(true);
 
-				// ⭐ 次フレームでtransition有効化
 				requestAnimationFrame(() => {
 					setEnableTransition(true);
 				});
@@ -51,7 +47,6 @@ export default function LoadingScreen() {
 					}
 				}
 
-				// ⭐ ツアー
 				setTimeout(() => {
 					if (isFirstVisit) {
 						const driverObj = driver({
@@ -73,12 +68,9 @@ export default function LoadingScreen() {
 					}
 				}, 1500);
 
-				// ⭐ フェードアウト
 				setTimeout(() => {
 					setVisible(false);
 				}, 1500);
-
-				// ⭐ 完全削除
 				setTimeout(() => {
 					setIsLoading(false);
 				}, 2300);
@@ -137,7 +129,6 @@ export default function LoadingScreen() {
         shadow-[0_0_60px_rgba(255,255,255,0.08)]
         "
 			>
-				{/* Welcome */}
 				{username && (
 					<div
 						className={`
@@ -162,7 +153,6 @@ export default function LoadingScreen() {
 					</div>
 				)}
 
-				{/* 秒針 */}
 				<LoadingSecondHand />
 			</div>
 

@@ -7,7 +7,6 @@ export default function LapsContent() {
 	const [laps, setLaps] = useState<number[]>([]);
 	const [loading, setLoading] = useState(false);
 
-	// 🔥 laps 読み込み（Supabase）
 	useEffect(() => {
 		const loadLaps = async () => {
 			setLoading(true);
@@ -59,7 +58,6 @@ export default function LapsContent() {
 		return current - laps[index - 1];
 	};
 
-	// 🔥 Clear（Supabase更新）
 	const clearLaps = async () => {
 		setLaps([]);
 
@@ -79,10 +77,6 @@ export default function LapsContent() {
 			},
 		);
 	};
-
-	// =========================
-	// LOADING UI
-	// =========================
 	if (loading) {
 		return (
 			<div className="flex flex-col h-full w-full items-center justify-center text-black py-10">
@@ -94,7 +88,6 @@ export default function LapsContent() {
 
 	return (
 		<div className="flex flex-col h-full w-full text-black">
-			{/* Header */}
 			<div className="flex justify-between items-center mb-4">
 				<h2 className="text-xl font-bold">Laps ({laps.length})</h2>
 
@@ -113,7 +106,6 @@ export default function LapsContent() {
 				</button>
 			</div>
 
-			{/* List */}
 			<div
 				className="
           flex flex-col gap-2
@@ -145,7 +137,6 @@ export default function LapsContent() {
                 transition
               "
 						>
-							{/* Lap number */}
 							<div className="flex items-center gap-3">
 								<div
 									className="
@@ -164,7 +155,6 @@ export default function LapsContent() {
 								<span className="font-mono text-base">{format(lap)}</span>
 							</div>
 
-							{/* Diff */}
 							<span className="font-mono text-sm text-black/60">
 								+{format(diff)}
 							</span>

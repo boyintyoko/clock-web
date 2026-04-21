@@ -3,19 +3,19 @@
 import axios from "axios";
 import React, { useEffect, useState, useRef } from "react";
 import Image from "next/image";
-import ImageType from "@/app/types/ImagesType";
+import ImageType from "@@/types/ImagesType";
 import SingleColor from "./singleColor";
-import { useBackground } from "@/app/context/backgroundContext";
+import { useBackground } from "@@/context/backgroundContext";
 import Link from "next/link";
-import { useGoods } from "@/app/context/goodContext";
-import { useLanguage } from "@/app/context/languageContext";
+import { useGoods } from "@@/context/goodContext";
+import { useLanguage } from "@@/context/languageContext";
 import styled from "styled-components";
-import { useBackgroundDesc } from "@/app/context/backgroundDesc";
-import GoodsType from "@/app/types/goodsType";
+import { useBackgroundDesc } from "@@/context/backgroundDesc";
+import GoodsType from "@@/types/goodsType";
 import { useMediaQuery } from "react-responsive";
 import { supabase } from "@/lib/supabase";
 
-type ChangeImageSideProps = {
+type Props = {
 	isChange: boolean;
 	setIsChange: (isChange: boolean) => void;
 	isVisible: boolean;
@@ -57,7 +57,7 @@ export default function ChangeImageSide({
 	setIsChange,
 	isVisible,
 	setIsVisible,
-}: ChangeImageSideProps) {
+}: Props) {
 	const [images, setImages] = useState<ImageType[]>([]);
 	const [searchText, setSearchText] = useState<string>("");
 	const [searchError, setSearchError] = useState<string>("");

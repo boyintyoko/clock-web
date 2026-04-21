@@ -9,10 +9,10 @@ import {
 	useEffect,
 } from "react";
 
-interface GoodsContextType {
+type GoodsContextType = {
 	isNowGoods: GoodsType[];
 	setIsNowGoods: (isNowGoods: GoodsType[]) => void;
-}
+};
 
 const GoodsContext = createContext<GoodsContextType | undefined>(undefined);
 

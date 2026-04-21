@@ -1,12 +1,12 @@
 import Image from "next/image";
 
-interface Props {
+type Props = {
 	isOpen: boolean;
 	setIsOpen: (isOpen: boolean) => void;
 	isDarkMode: boolean;
 	blackImageUrl: string;
 	whiteImageUrl: string;
-}
+};
 
 export default function ModalButton({
 	isOpen,

@@ -1,14 +1,14 @@
 "use client";
 import { useEffect, useState } from "react";
-import { useLanguage } from "../context/languageContext";
-import { useTime } from "../context/timeContext";
-import { useTimeZone } from "../context/timeZoneContext";
+import { useLanguage } from "@@/context/languageContext";
+import { useTime } from "@@/context/timeContext";
+import { useTimeZone } from "@@/context/timeZoneContext";
 
-interface isDarkModeType {
+type Props = {
 	isDarkMode: boolean;
-}
+};
 
-export default function ElectronicClock({ isDarkMode }: isDarkModeType) {
+export default function ElectronicClock({ isDarkMode }: Props) {
 	const [hour, setHour] = useState<number>(0);
 	const [minute, setMinute] = useState<number>(0);
 	const [second, setSecond] = useState<number>(0);

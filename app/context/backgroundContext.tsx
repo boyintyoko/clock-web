@@ -10,10 +10,10 @@ import {
 
 import { supabase } from "@/lib/supabase";
 
-interface BackgroundContextType {
+type BackgroundContextType = {
 	background: string;
 	setBackground: (background: string) => void;
-}
+};
 
 const BackgroundContext = createContext<BackgroundContextType | undefined>(
 	undefined,
