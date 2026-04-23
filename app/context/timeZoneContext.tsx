@@ -26,36 +26,29 @@ export const TimeZoneProvider = ({ children }: { children: ReactNode }) => {
 				data: { session },
 			} = await supabase.auth.getSession();
 
-			if (session?.user) {
-				const { data } = await supabase
-					.from("settings")
-					.select("timezone")
-					.eq("user_id", session.user.id)
-					.maybeSingle();
+			if (!session?.user) return;
 
-				if (data?.timezone) {
-					setIsNowTimeZoneState(data.timezone);
+			const userId = session.user.id;
 
-					localStorage.setItem("timeZone", data.timezone);
+			const { data } = await supabase
+				.from("settings")
+				.select("timezone")
+				.eq("user_id", userId)
+				.maybeSingle();
 
-					console.log("Supabase timezone取得:", data.timezone);
-
-					return;
-				}
-			}
-
-			const localTz = localStorage.getItem("timeZone");
-
-			if (localTz) {
-				setIsNowTimeZoneState(localTz);
+			if (data?.timezone) {
+				setIsNowTimeZoneState(data.timezone);
 				return;
 			}
 
 			const detected = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
-			setIsNowTimeZoneState(detected);
+			await supabase
+				.from("settings")
+				.update({ timezone: detected })
+				.eq("user_id", userId);
 
-			localStorage.setItem("timeZone", detected);
+			setIsNowTimeZoneState(detected);
 		};
 
 		fetchTimeZone();
