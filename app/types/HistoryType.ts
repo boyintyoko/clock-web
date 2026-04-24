@@ -1,6 +1,6 @@
 type HistoryType = {
 	content: string;
-	id: string;
+	id: number;
 	create_minutes: number;
 	create_hours: number;
 };
