@@ -1,5 +1,5 @@
-import Image from "next/image";
 import Mask from "@@/components/modalComnponents/mask";
+import Image from "next/image";
 
 type Props = {
 	title: string;

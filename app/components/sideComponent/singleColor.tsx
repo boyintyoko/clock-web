@@ -1,11 +1,11 @@
 "use client";
 
-import Image from "next/image";
-import { useBackground } from "@@/context/backgroundContext";
-import { useEffect, useState } from "react";
-import ChooseColorContent from "@@/components/modalComnponents/modalContents/chooseColor";
 import Modal from "@@/components/modal/modal";
 import ModalButton from "@@/components/modalComnponents/modalButton";
+import ChooseColorContent from "@@/components/modalComnponents/modalContents/chooseColor";
+import { useBackground } from "@@/context/backgroundContext";
+import Image from "next/image";
+import { useEffect, useState } from "react";
 import colors from "@/data/colorData";
 import { supabase } from "@/lib/supabase";
 

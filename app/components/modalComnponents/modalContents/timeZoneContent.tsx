@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { useTimeZone } from "@@/context/timeZoneContext";
+import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
 
 export default function TimeZoneContent() {
@@ -37,17 +37,13 @@ export default function TimeZoneContent() {
 					.maybeSingle();
 
 				if (error) {
-					console.error("timezone取得失敗:", error);
-
 					return;
 				}
 
 				if (data?.timezone) {
 					setIsNowTimeZone(data.timezone);
-
-					console.log("timezone取得成功:", data.timezone);
 				} else {
-					setIsNowTimeZone("Asia/Tokyo");
+					setIsNowTimeZone("Europe/London");
 				}
 			} catch (err) {
 				console.error("timezone fetch error:", err);

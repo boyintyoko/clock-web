@@ -2,10 +2,10 @@
 
 import {
 	createContext,
+	type ReactNode,
 	useContext,
-	useState,
-	ReactNode,
 	useEffect,
+	useState,
 } from "react";
 
 import { supabase } from "@/lib/supabase";

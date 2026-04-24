@@ -1,14 +1,14 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import Image from "next/image";
-import Link from "next/link";
-import styled from "styled-components";
-import GoodsType from "@@/types/goodsType";
 import { useBackground } from "@@/context/backgroundContext";
+import { useBackgroundDesc } from "@@/context/backgroundDesc";
 import { useGoods } from "@@/context/goodContext";
 import { useLanguage } from "@@/context/languageContext";
-import { useBackgroundDesc } from "@@/context/backgroundDesc";
+import type GoodsType from "@@/types/goodsType";
+import Image from "next/image";
+import Link from "next/link";
+import { useEffect, useState } from "react";
+import styled from "styled-components";
 import { supabase } from "@/lib/supabase";
 
 type Props = {
