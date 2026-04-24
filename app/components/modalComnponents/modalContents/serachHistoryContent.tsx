@@ -26,7 +26,7 @@ export default function SearchHistoryContent({
 				return;
 			}
 
-			const updatedHistories = histories.filter((h) => h.id !== id);
+			const updatedHistories = histories.filter((h) => h.id !== id.toString());
 
 			setHistories(updatedHistories);
 
