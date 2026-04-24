@@ -1,28 +1,28 @@
 "use client";
 
-import axios from "axios";
-import { useEffect, useState } from "react";
-import ToggleSwitch from "@@/components/header/toggleSwitch";
+import ChangeImageButton from "@@/components/buttons/changeImageButton";
+import LogoutButton from "@@/components/buttons/logoutButton";
 import BackgroundDesc from "@@/components/header/backgroundDesc";
 import NavigatorPermisson from "@@/components/header/navigatorPermisson";
 import NowTimeZone from "@@/components/header/nowTimeZone";
-import ChangeImageButton from "@@/components/buttons/changeImageButton";
-import { useBackground } from "@@/context/backgroundContext";
-import styles from "@@/css/inputLabel.module.css";
-import HistoryType from "@@/types/HistoryType";
-import Image from "next/image";
+import ToggleSwitch from "@@/components/header/toggleSwitch";
 import Modal from "@@/components/modal/modal";
-import SettingContent from "@@/components/modalComnponents/modalContents/settingContent";
-import TimeZoneContent from "@@/components/modalComnponents/modalContents/timeZoneContent";
-import GoodsContent from "@@/components/modalComnponents/modalContents/goodsContent";
 import ModalButton from "@@/components/modalComnponents/modalButton";
-import Link from "next/link";
-import urlsData from "@/data/urlData";
-import History from "@@/components/searchComponents/historyComponents/history";
+import GoodsContent from "@@/components/modalComnponents/modalContents/goodsContent";
+import LapsContent from "@@/components/modalComnponents/modalContents/lapsContent";
 import LinkSettingContent from "@@/components/modalComnponents/modalContents/linkSettingContent";
 import SerachHistroyContent from "@@/components/modalComnponents/modalContents/serachHistoryContent";
-import LapsContent from "@@/components/modalComnponents/modalContents/lapsContent";
-import LogoutButton from "@@/components/buttons/logoutButton";
+import SettingContent from "@@/components/modalComnponents/modalContents/settingContent";
+import TimeZoneContent from "@@/components/modalComnponents/modalContents/timeZoneContent";
+import History from "@@/components/searchComponents/historyComponents/history";
+import { useBackground } from "@@/context/backgroundContext";
+import styles from "@@/css/inputLabel.module.css";
+import type HistoryType from "@@/types/HistoryType";
+import axios from "axios";
+import Image from "next/image";
+import Link from "next/link";
+import { useEffect, useState } from "react";
+import urlsData from "@/data/urlData";
 import { supabase } from "@/lib/supabase";
 import packageJson from "@/package.json";
 
@@ -109,12 +109,9 @@ export default function HeaderMain({
 		if (searchText.trim().length > 0) {
 			window.open(`https://www.google.com/search?q=${searchText}`);
 
-			const newId =
-				histories.length > 0 ? Math.max(...histories.map((h) => h.id)) + 1 : 0;
-
 			const newHistory: HistoryType = {
+				id: crypto.randomUUID(),
 				content: searchText,
-				id: newId,
 				create_minutes: new Date().getMinutes(),
 				create_hours: new Date().getHours(),
 			};
@@ -394,32 +391,106 @@ export default function HeaderMain({
 						/>
 					</div>
 
-					<div className="absolute bottom-3 w-full flex flex-col items-center gap-1 select-none">
+					<div
+						className="
+absolute bottom-4 left-1/2 -translate-x-1/2
+w-full flex flex-col items-center
+gap-3 select-none
+"
+					>
+						{/* © と version */}
+
 						<div
 							className={`
-      px-3 py-1 rounded-full
-      backdrop-blur-md
-      border
-      text-xs font-medium
-      flex items-center gap-2
-      ${
-				isDarkMode
-					? "bg-white/10 border-white/20 text-white/80"
-					: "bg-black/5 border-black/10 text-gray-700"
-			}
-    `}
+px-4 py-1.5
+rounded-full
+backdrop-blur-xl
+border
+text-xs font-medium
+flex items-center gap-2
+shadow-md
+transition-all
+
+${
+	isDarkMode
+		? "bg-white/10 border-white/20 text-white/80"
+		: "bg-black/5 border-black/10 text-gray-700"
+}
+`}
 						>
-							<span>© {new Date().getFullYear()} Taiga Ito</span>
+							<span className="tracking-wide">
+								© {new Date().getFullYear()} Taiga Ito
+							</span>
 
 							<span
 								className={`
-        px-2 py-[2px] rounded-full
-        text-[10px] font-bold
-        ${isDarkMode ? "bg-white/20 text-white" : "bg-black/10 text-gray-800"}
-      `}
+            px-2 py-[2px]
+            rounded-full
+            text-[10px]
+            font-bold
+            tracking-wider
+
+                  ${
+										isDarkMode
+											? "bg-white/20 text-white"
+											: "bg-black/10 text-gray-800"
+									}
+                  `}
 							>
 								v{packageJson.version}
 							</span>
+						</div>
+
+						{/* Links */}
+
+						<div
+							className={`
+                flex items-center gap-2
+                text-xs md:text-sm
+
+                px-4 py-2
+                rounded-full
+                backdrop-blur-xl
+                border
+                shadow-md
+
+                ${
+									isDarkMode
+										? "bg-white/10 border-white/20 text-white/80"
+										: "bg-black/5 border-black/10 text-gray-700"
+								}
+                `}
+						>
+							<Link
+								href="/privacy"
+								target="_blank"
+								rel="noopener noreferrer"
+								className="hover:underline transition"
+							>
+								Privacy ↗
+							</Link>
+
+							<span className="text-white/40">|</span>
+
+							<Link
+								href="/terms"
+								target="_blank"
+								rel="noopener noreferrer"
+								className="hover:underline transition"
+							>
+								Terms ↗
+							</Link>
+
+							<span className="text-white/40">|</span>
+
+							<Link
+								href="/contact"
+								target="_blank"
+								rel="noopener noreferrer"
+								className="hover:underline transition"
+							>
+								Contact ↗
+							</Link>
 						</div>
 					</div>
 				</div>
@@ -447,7 +518,7 @@ export default function HeaderMain({
 						<BackgroundDesc isDarkMode={isDarkMode} />
 					</>
 				) : (
-					<p className="font-bold text-sm">Random</p>
+					<p className="font-bold text-sm text-gray-700">Random</p>
 				)}
 
 				{navigatorPermission && (
@@ -488,6 +559,60 @@ export default function HeaderMain({
 					>
 						v{packageJson.version}
 					</span>
+				</div>
+
+				<div
+					className="
+      max-w-[95vw]
+      text-xs md:text-sm
+      text-gray-300
+      backdrop-blur-sm
+      bg-black/20
+      px-4 py-2
+      rounded-xl
+    "
+				>
+					<div
+						className="
+        flex flex-wrap
+        xl:flex-nowrap
+        justify-center
+        items-center
+        gap-x-4 gap-y-1
+        text-center
+      "
+					>
+						<Link
+							href="/privacy"
+							target="_blank"
+							rel="noopener noreferrer"
+							className="truncate max-w-[100px]"
+						>
+							Privacy Policy
+						</Link>
+
+						<span className="hidden xl:inline text-gray-500">|</span>
+
+						<Link
+							href="/terms"
+							target="_blank"
+							rel="noopener noreferrer"
+							className="truncate max-w-[120px]"
+						>
+							Terms of Service
+						</Link>
+
+						<span className="hidden xl:inline text-gray-500">|</span>
+
+						<Link
+							href="/contact"
+							target="_blank"
+							rel="noopener noreferrer"
+							className="truncate max-w-[80px]"
+						>
+							Contact
+						</Link>
+					</div>
 				</div>
 			</div>
 

@@ -2,14 +2,13 @@
 
 import {
 	createContext,
-	ReactNode,
+	type ReactNode,
+	useContext,
 	useEffect,
 	useState,
-	useContext,
 } from "react";
-
-import BackGroundDescType from "../types/backgroundDesc";
 import { supabase } from "@/lib/supabase";
+import type BackGroundDescType from "../types/backgroundDesc";
 
 type BackgroundDescContextType = {
 	backgroundDesc?: BackGroundDescType;

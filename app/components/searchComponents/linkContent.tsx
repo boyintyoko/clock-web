@@ -1,11 +1,11 @@
 "use client";
 
-import Link from "next/link";
-import Image from "next/image";
 import History from "@@/components/searchComponents/historyComponents/history";
+import Image from "next/image";
+import Link from "next/link";
 import { useEffect } from "react";
-import { supabase } from "@/lib/supabase";
 import urlData from "@/data/urlData";
+import { supabase } from "@/lib/supabase";
 
 type UrlItem = {
 	link: string;

@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import LoadingSecondHand from "@@/components/loading/loadingSecondHand";
+import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
 
 export default function LoadingScreen() {

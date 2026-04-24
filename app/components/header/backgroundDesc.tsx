@@ -1,7 +1,7 @@
-import Link from "next/link";
-import Image from "next/image";
-import { useBackgroundDesc } from "@@/context/backgroundDesc";
 import { useBackground } from "@@/context/backgroundContext";
+import { useBackgroundDesc } from "@@/context/backgroundDesc";
+import Image from "next/image";
+import Link from "next/link";
 
 type Props = {
 	isDarkMode: boolean;

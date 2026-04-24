@@ -1,5 +1,5 @@
-import { NextResponse } from "next/server";
 import axios from "axios";
+import { NextResponse } from "next/server";
 import type ImageType from "@/app/types/ImagesType";
 
 export async function GET(

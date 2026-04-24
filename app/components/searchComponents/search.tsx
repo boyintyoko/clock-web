@@ -1,12 +1,12 @@
 "use client";
 
-import SearchContent from "@@/components/searchComponents/searchContent";
-import LinkContent from "@@/components/searchComponents/linkContent";
-import Image from "next/image";
-import { useEffect } from "react";
-import HistoryType from "@@/types/HistoryType";
 import Modal from "@@/components/modalComnponents/main";
 import SerachHistroyContent from "@@/components/modalComnponents/modalContents/serachHistoryContent";
+import LinkContent from "@@/components/searchComponents/linkContent";
+import SearchContent from "@@/components/searchComponents/searchContent";
+import type HistoryType from "@@/types/HistoryType";
+import Image from "next/image";
+import { useEffect } from "react";
 import { supabase } from "@/lib/supabase";
 
 type UrlItem = {

@@ -1,8 +1,7 @@
 "use client";
 
-import { createContext, useContext, useState, ReactNode } from "react";
-
-import GoodsType from "@@/types/goodsType";
+import type GoodsType from "@@/types/goodsType";
+import { createContext, type ReactNode, useContext, useState } from "react";
 
 type GoodsContextType = {
 	isNowGoods: GoodsType[];
