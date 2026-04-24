@@ -47,18 +47,47 @@ export default function GoodsContent({ isGoodsOpen }: Props) {
 	const { isNowLanguage } = useLanguage();
 	const { setBackgroundDesc } = useBackgroundDesc();
 
-	const setImageBackground = (
+	const setImageBackground = async (
 		imageUrl: string,
 		name: string,
 		userImage: string,
 		userUrl: string,
 		userName: string,
 	) => {
-		setBackground(imageUrl);
-		setBackgroundDesc({ imageUrl, name, userImage, userUrl, userName });
-		localStorage.setItem("background", imageUrl);
-	};
+		try {
+			const {
+				data: { user },
+			} = await supabase.auth.getUser();
 
+			if (!user) return;
+
+			setBackground(imageUrl);
+
+			setBackgroundDesc({
+				imageUrl,
+				name,
+				userImage,
+				userUrl,
+				userName,
+			});
+
+			const { error } = await supabase.from("settings").upsert(
+				{
+					user_id: user.id,
+					background: imageUrl,
+				},
+				{
+					onConflict: "user_id",
+				},
+			);
+
+			if (error) {
+				console.error("background save error:", error);
+			}
+		} catch (err) {
+			console.error("setImageBackground error:", err);
+		}
+	};
 	useEffect(() => {
 		if (!isGoodsOpen) return;
 
@@ -163,7 +192,6 @@ export default function GoodsContent({ isGoodsOpen }: Props) {
                 hover:shadow-xl
               "
 						>
-							{/* user info */}
 							<Link
 								target="_blank"
 								href={item.userUrl}
@@ -198,7 +226,6 @@ export default function GoodsContent({ isGoodsOpen }: Props) {
 								</StyledP>
 							</Link>
 
-							{/* delete button */}
 							<button
 								onClick={() => goodDeleteHandle(item.imageUrl)}
 								className="
@@ -225,7 +252,6 @@ export default function GoodsContent({ isGoodsOpen }: Props) {
 								<i className="fa-solid fa-trash"></i>
 							</button>
 
-							{/* image */}
 							<div
 								onClick={() =>
 									setImageBackground(

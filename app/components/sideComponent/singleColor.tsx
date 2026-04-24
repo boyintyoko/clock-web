@@ -18,8 +18,11 @@ export default function SingleColor() {
 
 	const [isChooseColorOpen, setIsChoosColorOpen] = useState<boolean>(false);
 
+	/* =========================
+     background変更
+  ========================= */
+
 	const colorChangeHandler = async (color: string) => {
-		localStorage.setItem("background", color);
 		setBackground(color);
 		setIsNowBackground(color);
 
@@ -40,22 +43,40 @@ export default function SingleColor() {
 		);
 	};
 
-	const deleteMyColor = (index: number) => {
+	/* =========================
+     myColors削除
+  ========================= */
+
+	const deleteMyColor = async (index: number) => {
 		const updated = myColors.filter((_, i) => i !== index);
 
 		setMyColors(updated);
 
-		localStorage.setItem("myColors", JSON.stringify(updated));
-
 		if (myColors[index] === isNowBackground) {
-			localStorage.setItem(
-				"background",
-				"https://boyintyoko.github.io/clock-web/assets/initialValuePhoto.avif",
-			);
 			setBackground("");
 			setIsNowBackground("");
 		}
+
+		const {
+			data: { user },
+		} = await supabase.auth.getUser();
+
+		if (!user) return;
+
+		await supabase.from("settings").upsert(
+			{
+				user_id: user.id,
+				my_colors: updated,
+			},
+			{
+				onConflict: "user_id",
+			},
+		);
 	};
+
+	/* =========================
+     background状態同期
+  ========================= */
 
 	useEffect(() => {
 		if (!background) return;
@@ -67,25 +88,53 @@ export default function SingleColor() {
 		}
 	}, [background]);
 
-	useEffect(() => {
-		const url = localStorage.getItem("background");
-
-		if (url?.startsWith("https")) return;
-		if (!url) return;
-
-		setIsNowBackground(url);
-	}, []);
+	/* =========================
+     初期データ取得（重要）
+  ========================= */
 
 	useEffect(() => {
-		const saved = localStorage.getItem("myColors");
+		const getSettings = async () => {
+			const {
+				data: { user },
+				error,
+			} = await supabase.auth.getUser();
 
-		if (saved) {
-			setMyColors(JSON.parse(saved));
-		}
+			if (error || !user) return;
+
+			const { data } = await supabase
+				.from("settings")
+				.select("background, my_colors")
+				.eq("user_id", user.id)
+				.single();
+
+			if (!data) return;
+
+			/* background */
+
+			const url = data.background;
+
+			if (url?.startsWith("https")) {
+				setIsNowBackground(url);
+			} else if (url) {
+				setIsNowBackground(url);
+			}
+
+			/* myColors */
+
+			if (data.my_colors) {
+				setMyColors(data.my_colors);
+			}
+		};
+
+		getSettings();
 	}, []);
 
 	return (
 		<div className="flex flex-nowrap overflow-x-auto gap-3 border-b p-1 pt-2">
+			{/* =========================
+         固定カラー
+      ========================= */}
+
 			{colors.map((color, i) => (
 				<button
 					key={i}
@@ -117,6 +166,10 @@ export default function SingleColor() {
 					</div>
 				</button>
 			))}
+
+			{/* =========================
+         My Colors
+      ========================= */}
 
 			{myColors.map((color, i) => (
 				<div key={`my-${i}`} className="relative">
@@ -171,6 +224,10 @@ export default function SingleColor() {
 				</div>
 			))}
 
+			{/* =========================
+         Add Color Button
+      ========================= */}
+
 			<ModalButton
 				isOpen={isChooseColorOpen}
 				setIsOpen={setIsChoosColorOpen}
@@ -185,6 +242,7 @@ export default function SingleColor() {
 				title="Choose color"
 			>
 				<ChooseColorContent
+					myColors={myColors}
 					setMyColors={setMyColors}
 					isChooseColorOpen={isChooseColorOpen}
 					setIsChoosColorOpen={setIsChoosColorOpen}

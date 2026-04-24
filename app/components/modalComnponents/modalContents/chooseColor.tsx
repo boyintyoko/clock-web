@@ -1,14 +1,17 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { supabase } from "@/lib/supabase";
 
 type Props = {
+	myColors: string[];
 	setMyColors: React.Dispatch<React.SetStateAction<string[]>>;
 	setIsChoosColorOpen: React.Dispatch<React.SetStateAction<boolean>>;
 	isChooseColorOpen: boolean;
 };
 
 export default function ChooseColorContent({
+	myColors,
 	setMyColors,
 	setIsChoosColorOpen,
 	isChooseColorOpen,
@@ -26,28 +29,56 @@ export default function ChooseColorContent({
 		setColor(hsl);
 	}, [hue, saturation, lightness]);
 
-	const handleAddColor = () => {
-		setMyColors((prev) => {
-			if (prev.includes(color)) {
-				setMessage("既存のものがあります");
+	const saveToSupabase = async (colors: string[]) => {
+		const {
+			data: { user },
+		} = await supabase.auth.getUser();
 
-				setTimeout(() => {
-					setMessage("");
-				}, 3000);
+		if (!user) return;
 
-				return prev;
-			}
+		await supabase.from("settings").upsert(
+			{
+				user_id: user.id,
+				my_colors: colors,
+			},
+			{
+				onConflict: "user_id",
+			},
+		);
+	};
 
-			const updated = [...prev, color];
+	const handleAddColor = async () => {
+		/* 重複チェック */
 
-			localStorage.setItem("myColors", JSON.stringify(updated));
+		if (myColors.includes(color)) {
+			setMessage("既存のものがあります");
 
-			setMessage("");
+			setTimeout(() => {
+				setMessage("");
+			}, 3000);
 
-			setIsChoosColorOpen(!isChooseColorOpen);
+			return;
+		}
 
-			return updated;
-		});
+		if (myColors.length >= 20) {
+			setMessage("最大20個までです");
+
+			setTimeout(() => {
+				setMessage("");
+			}, 3000);
+
+			return;
+		}
+
+		const updated = [...myColors, color];
+
+		setMyColors(updated);
+
+		await saveToSupabase(updated);
+
+		setMessage("");
+
+		setIsChoosColorOpen(!isChooseColorOpen);
 	};
 
 	return (
@@ -98,8 +129,14 @@ export default function ChooseColorContent({
 					onChange={(e) => setLightness(Number(e.target.value))}
 				/>
 			</div>
+
 			<div className="flex items-center gap-2 border rounded-lg p-2 bg-neutral-50">
-				<div className="w-6 h-6 rounded" style={{ background: color }} />
+				<div
+					className="w-6 h-6 rounded"
+					style={{
+						background: color,
+					}}
+				/>
 
 				<input
 					value={color}

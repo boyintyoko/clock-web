@@ -61,22 +61,7 @@ export default function Home() {
 	const [histories, setHistories] = useState<HistoryType[]>([]);
 	const [imageUrl, setImageUrl] = useState<string>("");
 
-	useEffect(() => {
-		const saved = localStorage.getItem("isDarkMode");
-
-		if (!(saved === "true" || saved === "false")) {
-			localStorage.setItem("isDarkMode", "false");
-			setIsDarkMode(false);
-			return;
-		}
-
-		if (!saved) return;
-
-		setIsDarkMode(JSON.parse(saved));
-	}, []);
-
 	const changeDarkMode = async (value: boolean) => {
-		localStorage.setItem("isDarkMode", JSON.stringify(value));
 		setIsDarkMode(value);
 
 		const {

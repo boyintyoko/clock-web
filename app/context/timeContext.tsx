@@ -8,6 +8,8 @@ import {
 	useEffect,
 } from "react";
 
+import { supabase } from "@/lib/supabase";
+
 type TimeType = {
 	isNowTime: number | undefined;
 	setIsNowTime: (isNowTime: number) => void;
@@ -19,12 +21,33 @@ export const TimeProvider = ({ children }: { children: ReactNode }) => {
 	const [isNowTime, setIsNowTime] = useState<number>();
 
 	useEffect(() => {
-		const time = localStorage.getItem("time");
-		if (!(time === "24" || time === "12")) {
-			localStorage.setItem("time", "24");
-			return;
-		}
-		setIsNowTime(Number(time));
+		const getTimeFormat = async () => {
+			const {
+				data: { user },
+			} = await supabase.auth.getUser();
+
+			if (!user) return;
+
+			const { data, error } = await supabase
+				.from("settings")
+				.select("time_format")
+				.eq("user_id", user.id)
+				.single();
+
+			if (error || !data) {
+				await supabase.from("settings").insert({
+					user_id: user.id,
+					time_format: 24,
+				});
+
+				setIsNowTime(24);
+				return;
+			}
+
+			setIsNowTime(data.time_format);
+		};
+
+		getTimeFormat();
 	}, []);
 
 	return (

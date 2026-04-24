@@ -7,6 +7,7 @@ import {
 	ReactNode,
 	useEffect,
 } from "react";
+import { supabase } from "@/lib/supabase";
 
 type LanguageType = {
 	isNowLanguage: string;
@@ -18,19 +19,37 @@ const LanguageContext = createContext<LanguageType | undefined>(undefined);
 export const LanguageProvider = ({ children }: { children: ReactNode }) => {
 	const [isNowLanguage, setIsNowLanguage] = useState<string>("ja");
 
+	const getUserLanguage = async () => {
+		const {
+			data: { session },
+		} = await supabase.auth.getSession();
+
+		if (!session?.user) return;
+
+		const { data } = await supabase
+			.from("settings")
+			.select("language")
+			.eq("user_id", session.user.id)
+			.single();
+
+		return data?.language;
+	};
+
 	useEffect(() => {
-		const savedLanguage = localStorage.getItem("language");
-		const browserLanguage = navigator.language.split("-")[0];
-		const supportedLanguages = ["ja", "en", "it"];
+		const settinLanguage = async () => {
+			const savedLanguage = await getUserLanguage();
+			const browserLanguage = navigator.language.split("-")[0];
+			const supportedLanguages = ["ja", "en", "it"];
 
-		let language = savedLanguage || browserLanguage;
+			let language = savedLanguage || browserLanguage;
 
-		if (!supportedLanguages.includes(language)) {
-			language = "en";
-		}
+			if (!supportedLanguages.includes(language)) {
+				language = "en";
+			}
 
-		localStorage.setItem("language", language);
-		setIsNowLanguage(language);
+			setIsNowLanguage(language);
+		};
+		settinLanguage();
 	}, []);
 
 	return (

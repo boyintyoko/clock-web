@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import ChangeImageSide from "@@/components/sideComponent/changeImageSide";
 import Mask from "@@/components/sideComponent/mask";
 import { useMediaQuery } from "react-responsive";
@@ -23,20 +23,10 @@ export default function ChangeImageButton({ isDarkMode }: Props) {
 
 		setIsChange(next);
 
-		localStorage.setItem("isSideBarChang", JSON.stringify(next));
-
 		if (isMobile && next) {
 			setIsVisible(false);
 		}
 	};
-
-	useEffect(() => {
-		const saved = localStorage.getItem("isSideBarChang");
-
-		if (!saved) return;
-
-		setIsChange(JSON.parse(saved));
-	}, []);
 
 	return (
 		<div>

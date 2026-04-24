@@ -24,8 +24,6 @@ export const BackgroundProvider = ({ children }: { children: ReactNode }) => {
 
 	useEffect(() => {
 		const fetchBackground = async () => {
-			const localBg = localStorage.getItem("background");
-
 			const {
 				data: { user },
 			} = await supabase.auth.getUser();
@@ -39,14 +37,8 @@ export const BackgroundProvider = ({ children }: { children: ReactNode }) => {
 
 				if (!error && data?.background) {
 					setBackground(data.background);
-
-					localStorage.setItem("background", data.background);
 					return;
 				}
-			}
-
-			if (localBg) {
-				setBackground(localBg);
 			}
 		};
 

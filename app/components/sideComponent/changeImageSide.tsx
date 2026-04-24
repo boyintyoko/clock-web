@@ -59,25 +59,21 @@ export default function ChangeImageSide({
 	setIsVisible,
 }: Props) {
 	const [images, setImages] = useState<ImageType[]>([]);
-	const [searchText, setSearchText] = useState<string>("");
-	const [searchError, setSearchError] = useState<string>("");
+	const [searchText, setSearchText] = useState("");
+	const [searchError, setSearchError] = useState("");
 
-	const getInitialGoods: GoodsType[] =
-		typeof window !== "undefined"
-			? (JSON.parse(localStorage.getItem("goods") || "[]") as GoodsType[])
-			: [];
-
-	const [hearts, setHearts] = useState<GoodsType[]>(getInitialGoods);
+	const [hearts, setHearts] = useState<GoodsType[]>([]);
 	const [loading, setLoading] = useState(false);
 	const [count, setCount] = useState(10);
-	const [scrollGoTopButton, setScrollGoTopButton] = useState<boolean>(false);
+	const [scrollGoTopButton, setScrollGoTopButton] = useState(false);
+
 	const loaderRef = useRef<HTMLDivElement | null>(null);
+	const sideBarScrollWidth = useRef<HTMLDivElement>(null);
 
 	const { setBackground, background } = useBackground();
 	const { isNowGoods } = useGoods();
 	const { isNowLanguage } = useLanguage();
 	const { setBackgroundDesc } = useBackgroundDesc();
-	const sideBarScrollWidth = useRef<HTMLDivElement>(null);
 
 	const isMobile = useMediaQuery({
 		query: "(max-width: 440px)",
@@ -96,37 +92,33 @@ export default function ChangeImageSide({
 		};
 
 		el.addEventListener("scroll", handleScroll);
-		return () => el.removeEventListener("scroll", handleScroll);
+
+		return () => {
+			el.removeEventListener("scroll", handleScroll);
+		};
 	}, []);
-
-	useEffect(() => {
-		const el = sideBarScrollWidth.current;
-		if (!el) return;
-
-		if (!isChange) {
-			setScrollGoTopButton(false);
-		} else if (isChange && el.scrollTop >= 100) {
-			setScrollGoTopButton(true);
-		}
-	}, [isChange]);
 
 	useEffect(() => {
 		const fetchData = async () => {
 			setLoading(true);
+
 			try {
 				const res = await axios.get<ImageType[]>(`/api/unsplash/${count}`);
-				setImages((prevImages) => [...prevImages, ...res.data]);
+
+				setImages((prev) => [...prev, ...res.data]);
 			} catch (err) {
 				console.error(err);
 			} finally {
 				setLoading(false);
 			}
 		};
+
 		fetchData();
 	}, [count]);
 
 	useEffect(() => {
 		const currentLoader = loaderRef.current;
+
 		const observer = new IntersectionObserver(
 			(entries) => {
 				if (entries[0].isIntersecting && !loading) {
@@ -143,9 +135,7 @@ export default function ChangeImageSide({
 		};
 	}, [loading]);
 
-	const imageChangeHandler = async (
-		params: ImageChangeParams = {},
-	): Promise<void> => {
+	const imageChangeHandler = async (params: ImageChangeParams = {}) => {
 		const {
 			imageUrl,
 			name,
@@ -164,8 +154,15 @@ export default function ChangeImageSide({
 
 			if (!isNormal) {
 				setBackground("Random");
+				setBackgroundDesc({
+					imageUrl: "",
+					name: "",
+					userImage: "",
+					userUrl: "",
+					userName: "",
+				});
 
-				const { error } = await supabase.from("settings").upsert(
+				await supabase.from("settings").upsert(
 					{
 						user_id: user.id,
 						background: "Random",
@@ -175,27 +172,10 @@ export default function ChangeImageSide({
 					},
 				);
 
-				if (error) {
-					console.error("Random upsert error:", error);
-				} else {
-					console.log("Random saved successfully");
-				}
-
 				return;
 			}
 
 			if (imageUrl && name && userImage && userUrl && userName) {
-				localStorage.setItem(
-					"backgroundDescription",
-					JSON.stringify({
-						imageUrl,
-						name,
-						userImage,
-						userUrl,
-						userName,
-					}),
-				);
-
 				setBackgroundDesc({
 					imageUrl,
 					name,
@@ -206,7 +186,7 @@ export default function ChangeImageSide({
 
 				setBackground(imageUrl);
 
-				const { error } = await supabase.from("settings").upsert(
+				await supabase.from("settings").upsert(
 					{
 						user_id: user.id,
 						background: imageUrl,
@@ -215,34 +195,35 @@ export default function ChangeImageSide({
 						onConflict: "user_id",
 					},
 				);
-
-				if (error) {
-					console.error("Normal upsert error:", error);
-				} else {
-					console.log("Image saved successfully");
-				}
 			}
 		} catch (err) {
-			console.error("imageChangeHandler error:", err);
+			console.error("imageChange error:", err);
 		}
 	};
 
 	const searchSubmitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
+
 		setImages([]);
+
 		try {
 			const response = await axios.get(
 				`${process.env.NEXT_PUBLIC_UNSPLASH_BASE_URL}?query=${searchText}&client_id=${process.env.NEXT_PUBLIC_UNSPLASH_API_END_KEY}`,
 			);
+
 			if (response.data.results.length === 0) {
 				setSearchError("No results found.");
+
 				return;
 			}
+
 			setImages(response.data.results);
+
 			setSearchError("");
 		} catch (err) {
 			console.error(err);
-			setSearchError("An error occurred. Please try again.");
+
+			setSearchError("Search error.");
 		}
 	};
 
@@ -276,10 +257,6 @@ export default function ChangeImageSide({
 		loadGoods();
 	}, []);
 
-	useEffect(() => {
-		localStorage.setItem("goods", JSON.stringify(hearts));
-	}, [hearts]);
-
 	const goodClickHandler = async (
 		imageUrl: string,
 		userUrl: string,
@@ -287,44 +264,53 @@ export default function ChangeImageSide({
 		userName: string,
 		userImageUrl: string,
 	) => {
-		const {
-			data: { user },
-		} = await supabase.auth.getUser();
+		try {
+			const {
+				data: { user },
+			} = await supabase.auth.getUser();
 
-		if (!user) return;
+			if (!user) return;
 
-		const exists = hearts.some((item) => item.imageUrl === imageUrl);
+			const exists = hearts.some((item) => item.imageUrl === imageUrl);
 
-		if (exists) {
-			await supabase
-				.from("goods")
-				.delete()
-				.eq("user_id", user.id)
-				.eq("image_url", imageUrl);
+			if (exists) {
+				await supabase
+					.from("goods")
+					.delete()
+					.eq("user_id", user.id)
+					.eq("image_url", imageUrl);
 
-			setHearts((prevGoods) =>
-				prevGoods.filter((item) => item.imageUrl !== imageUrl),
-			);
-		} else {
-			await supabase.from("goods").insert({
-				user_id: user.id,
-				image_url: imageUrl,
-				user_url: userUrl,
-				name: name,
-				user_name: userName,
-				user_image_url: userImageUrl,
-			});
+				setHearts((prev) => prev.filter((item) => item.imageUrl !== imageUrl));
+			} else {
+				await supabase.from("goods").insert({
+					user_id: user.id,
+					image_url: imageUrl,
+					user_url: userUrl,
+					name,
+					user_name: userName,
+					user_image_url: userImageUrl,
+				});
 
-			setHearts((prevGoods) => [
-				...prevGoods,
-				{ imageUrl, userUrl, name, userName, userImageUrl },
-			]);
+				setHearts((prev) => [
+					...prev,
+					{
+						imageUrl,
+						userUrl,
+						name,
+						userName,
+						userImageUrl,
+					},
+				]);
+			}
+		} catch (err) {
+			console.error("goodClick error:", err);
 		}
 	};
+
 	const changeSideBar = () => {
 		setIsChange(!isChange);
+
 		if (isMobile) setIsVisible(!isVisible);
-		localStorage.setItem("isSideBarChang", JSON.stringify(!isChange));
 	};
 
 	return (
