@@ -1,7 +1,7 @@
 "use client";
 
 import { useLanguage } from "@@/context/languageContext";
-import type HistoryType from "@@/types/HistoryType";
+import HistoryType from "@@/types/HistoryType";
 import { supabase } from "@/lib/supabase";
 
 type Props = {
