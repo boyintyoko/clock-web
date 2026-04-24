@@ -1,19 +1,20 @@
 "use client";
 
-import axios from "axios";
-import React, { useEffect, useState, useRef } from "react";
-import Image from "next/image";
-import ImageType from "@@/types/ImagesType";
-import SingleColor from "./singleColor";
 import { useBackground } from "@@/context/backgroundContext";
-import Link from "next/link";
+import { useBackgroundDesc } from "@@/context/backgroundDesc";
 import { useGoods } from "@@/context/goodContext";
 import { useLanguage } from "@@/context/languageContext";
-import styled from "styled-components";
-import { useBackgroundDesc } from "@@/context/backgroundDesc";
-import GoodsType from "@@/types/goodsType";
+import type GoodsType from "@@/types/goodsType";
+import type ImageType from "@@/types/ImagesType";
+import axios from "axios";
+import Image from "next/image";
+import Link from "next/link";
+import type React from "react";
+import { useEffect, useRef, useState } from "react";
 import { useMediaQuery } from "react-responsive";
+import styled from "styled-components";
 import { supabase } from "@/lib/supabase";
+import SingleColor from "./singleColor";
 
 type Props = {
 	isChange: boolean;

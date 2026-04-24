@@ -1,8 +1,8 @@
 "use client";
 
-import { useState } from "react";
 import ChangeImageSide from "@@/components/sideComponent/changeImageSide";
 import Mask from "@@/components/sideComponent/mask";
+import { useState } from "react";
 import { useMediaQuery } from "react-responsive";
 
 type Props = {

@@ -1,9 +1,9 @@
-import Modal from "./main";
-import SettingContent from "@@/components/modalComnponents/modalContents/settingContent";
-import TimeZoneContent from "@@/components/modalComnponents/modalContents/timeZoneContent";
 import GoodsContent from "@@/components/modalComnponents/modalContents/goodsContent";
 import LinkSettingContent from "@@/components/modalComnponents/modalContents/linkSettingContent";
-import UrlItem from "@/app/types/UrlItems";
+import SettingContent from "@@/components/modalComnponents/modalContents/settingContent";
+import TimeZoneContent from "@@/components/modalComnponents/modalContents/timeZoneContent";
+import type UrlItem from "@/app/types/UrlItems";
+import Modal from "./main";
 
 type Props = {
 	isSettingOpen: boolean;

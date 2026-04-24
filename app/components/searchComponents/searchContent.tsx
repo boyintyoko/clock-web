@@ -1,9 +1,10 @@
 "use client";
 
-import Image from "next/image";
-import React, { useEffect, useState } from "react";
-import HistoryType from "@/app/types/HistoryType";
 import styles from "@@/css/inputLabel.module.css";
+import Image from "next/image";
+import type React from "react";
+import { useEffect, useState } from "react";
+import type HistoryType from "@/app/types/HistoryType";
 import { supabase } from "@/lib/supabase";
 
 type Props = {

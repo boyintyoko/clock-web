@@ -1,27 +1,27 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useBackground } from "@@/context/backgroundContext";
-import ElectronicClock from "@@/components/clock/electronicClock";
-import Loading from "@@/components/loading/loading";
-import styled from "styled-components";
-import colors from "@/data/colorData";
-import colorsRGB from "@/data/colorRGBData";
+import AuthGuard from "@@/components/AuthGuard";
 import Clock from "@@/components/clock/clock";
-import { useTimeZone } from "@@/context/timeZoneContext";
-import HistoryType from "@/app/types/HistoryType";
+import ElectronicClock from "@@/components/clock/electronicClock";
 import HeaderMain from "@@/components/header/main";
-import ModalButton from "@@/components/modalComnponents/modalButton";
-import Search from "@@/components/searchComponents/search";
+import Loading from "@@/components/loading/loading";
 import Modal from "@@/components/modal/modal";
+import ModalButton from "@@/components/modalComnponents/modalButton";
+import GoodsContent from "@@/components/modalComnponents/modalContents/goodsContent";
+import LapsContent from "@@/components/modalComnponents/modalContents/lapsContent";
+import LinkSettingContent from "@@/components/modalComnponents/modalContents/linkSettingContent";
 import SettingContent from "@@/components/modalComnponents/modalContents/settingContent";
 import TimeZoneContent from "@@/components/modalComnponents/modalContents/timeZoneContent";
-import GoodsContent from "@@/components/modalComnponents/modalContents/goodsContent";
-import LinkSettingContent from "@@/components/modalComnponents/modalContents/linkSettingContent";
-import LapsContent from "@@/components/modalComnponents/modalContents/lapsContent";
-import AuthGuard from "@@/components/AuthGuard";
-import { supabase } from "@/lib/supabase";
+import Search from "@@/components/searchComponents/search";
+import { useBackground } from "@@/context/backgroundContext";
+import { useTimeZone } from "@@/context/timeZoneContext";
 import axios from "axios";
+import { useEffect, useState } from "react";
+import styled from "styled-components";
+import type HistoryType from "@/app/types/HistoryType";
+import colors from "@/data/colorData";
+import colorsRGB from "@/data/colorRGBData";
+import { supabase } from "@/lib/supabase";
 
 type MainSelectionProps = {
 	$background: string;

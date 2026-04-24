@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useEffect } from "react";
+import type React from "react";
+import { useEffect } from "react";
 import { useLanguage } from "@/app/context/languageContext";
 import { useTime } from "@/app/context/timeContext";
 import { supabase } from "@/lib/supabase";

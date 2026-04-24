@@ -1,9 +1,9 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import SecondHand from "@@/components/clock/secondHand";
-import MinuteHand from "@@/components/clock/minuteHand";
 import HourHand from "@@/components/clock/hourHand";
+import MinuteHand from "@@/components/clock/minuteHand";
+import SecondHand from "@@/components/clock/secondHand";
+import { useEffect, useRef, useState } from "react";
 import { supabase } from "@/lib/supabase";
 
 type Props = {
