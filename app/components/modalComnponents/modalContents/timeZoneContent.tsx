@@ -6,49 +6,51 @@ import { supabase } from "@/lib/supabase";
 
 export default function TimeZoneContent() {
 	const [supportTimeZone, setSupportTimeZone] = useState<string[]>([]);
+
 	const [search, setSearch] = useState("");
 
 	const { isNowTimeZone, setIsNowTimeZone } = useTimeZone();
 
 	useEffect(() => {
 		const timeZones = Intl.supportedValuesOf("timeZone");
+
 		setSupportTimeZone(timeZones);
 	}, []);
 
 	useEffect(() => {
 		const fetchTimeZone = async () => {
-			const localTz = localStorage.getItem("timeZone");
+			try {
+				const {
+					data: { user },
+				} = await supabase.auth.getUser();
 
-			const {
-				data: { session },
-			} = await supabase.auth.getSession();
+				if (!user) {
+					setIsNowTimeZone("Europe/London");
 
-			if (session?.user) {
+					return;
+				}
+
 				const { data, error } = await supabase
 					.from("settings")
 					.select("timezone")
-					.eq("user_id", session.user.id)
+					.eq("user_id", user.id)
 					.maybeSingle();
 
 				if (error) {
 					console.error("timezone取得失敗:", error);
+
+					return;
 				}
 
 				if (data?.timezone) {
 					setIsNowTimeZone(data.timezone);
 
-					localStorage.setItem("timeZone", data.timezone);
-
 					console.log("timezone取得成功:", data.timezone);
-
-					return;
+				} else {
+					setIsNowTimeZone("Asia/Tokyo");
 				}
-			}
-
-			if (localTz) {
-				setIsNowTimeZone(localTz);
-			} else {
-				setIsNowTimeZone("Asia/Tokyo");
+			} catch (err) {
+				console.error("timezone fetch error:", err);
 			}
 		};
 
@@ -58,15 +60,15 @@ export default function TimeZoneContent() {
 	const changeTimeZone = async (tz: string) => {
 		if (tz === isNowTimeZone) return;
 
-		localStorage.setItem("timeZone", tz);
+		try {
+			setIsNowTimeZone(tz);
 
-		setIsNowTimeZone(tz);
+			const {
+				data: { user },
+			} = await supabase.auth.getUser();
 
-		const {
-			data: { user },
-		} = await supabase.auth.getUser();
+			if (!user) return;
 
-		if (user) {
 			const { error } = await supabase.from("settings").upsert(
 				{
 					user_id: user.id,
@@ -82,10 +84,16 @@ export default function TimeZoneContent() {
 			} else {
 				console.log("timezone保存成功");
 			}
-		}
 
-		window.location.reload();
+			/* リロード */
+
+			window.location.reload();
+		} catch (err) {
+			console.error("timezone change error:", err);
+		}
 	};
+
+	/* ---------------- filter ---------------- */
 
 	const filteredTimeZones = supportTimeZone.filter((tz) =>
 		tz.toLowerCase().includes(search.toLowerCase()),
@@ -93,6 +101,8 @@ export default function TimeZoneContent() {
 
 	return (
 		<div className="fade-in-up max-w-xl mx-auto space-y-4">
+			{/* search */}
+
 			<div
 				className="
 					p-3
@@ -124,6 +134,8 @@ export default function TimeZoneContent() {
 					"
 				/>
 			</div>
+
+			{/* list */}
 
 			<div
 				className="

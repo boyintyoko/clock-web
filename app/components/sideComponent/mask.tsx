@@ -21,7 +21,6 @@ export default function Mask({
 	const changeSideBar = () => {
 		setIsChange(!isChange);
 		if (isMobile) setIsVisible(!isVisible);
-		localStorage.setItem("isSideBarChang", JSON.stringify(!isChange));
 	};
 	return (
 		<div

@@ -62,7 +62,6 @@ export default function Home() {
 	const [imageUrl, setImageUrl] = useState<string>("");
 
 	const changeDarkMode = async (value: boolean) => {
-		localStorage.setItem("isDarkMode", JSON.stringify(value));
 		setIsDarkMode(value);
 
 		const {

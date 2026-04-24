@@ -122,7 +122,6 @@ export default function HeaderMain({
 			const updatedHistory = [...histories, newHistory];
 
 			setHistories(updatedHistory);
-			localStorage.setItem("history", JSON.stringify(updatedHistory));
 
 			await saveHistory(newHistory);
 

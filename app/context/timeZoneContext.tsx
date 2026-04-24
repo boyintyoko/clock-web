@@ -57,8 +57,6 @@ export const TimeZoneProvider = ({ children }: { children: ReactNode }) => {
 	const setIsNowTimeZone = async (tz: string) => {
 		setIsNowTimeZoneState(tz);
 
-		localStorage.setItem("timeZone", tz);
-
 		const {
 			data: { user },
 		} = await supabase.auth.getUser();
