@@ -109,8 +109,11 @@ export default function HeaderMain({
 		if (searchText.trim().length > 0) {
 			window.open(`https://www.google.com/search?q=${searchText}`);
 
+			const newId =
+				histories.length > 0 ? Math.max(...histories.map((h) => h.id)) + 1 : 1;
+
 			const newHistory: HistoryType = {
-				id: crypto.randomUUID(),
+				id: newId,
 				content: searchText,
 				create_minutes: new Date().getMinutes(),
 				create_hours: new Date().getHours(),
