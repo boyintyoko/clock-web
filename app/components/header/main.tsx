@@ -353,10 +353,17 @@ export default function HeaderMain({
 							humidity={humidity}
 						/>
 					</div>
-
-					{!background.endsWith(".png") && (
+					{background === "Random" ? (
+						<p
+							className={`font-bold text-sm ${
+								!isDarkMode ? "text-gray-700" : "text-white"
+							}`}
+						>
+							Random
+						</p>
+					) : !background.endsWith(".png") ? (
 						<BackgroundDesc isDarkMode={isDarkMode} />
-					)}
+					) : null}
 
 					<NowTimeZone isDarkMode={isDarkMode} isNowTimeZone={isNowTimeZone} />
 
@@ -401,8 +408,6 @@ w-full flex flex-col items-center
 gap-3 select-none
 "
 					>
-						{/* © と version */}
-
 						<div
 							className={`
 px-4 py-1.5
@@ -516,13 +521,17 @@ ${
 					isDarkMode={isDarkMode}
 				/>
 
-				{!background.endsWith(".png") && background !== "Random" ? (
-					<>
-						<BackgroundDesc isDarkMode={isDarkMode} />
-					</>
-				) : (
-					<p className="font-bold text-sm text-gray-700">Random</p>
-				)}
+				{background === "Random" ? (
+					<p
+						className={`font-bold text-sm ${
+							!isDarkMode ? "text-gray-700" : "text-white"
+						}`}
+					>
+						Random
+					</p>
+				) : !background.endsWith(".png") ? (
+					<BackgroundDesc isDarkMode={isDarkMode} />
+				) : null}
 
 				{navigatorPermission && (
 					<NavigatorPermisson
@@ -591,7 +600,7 @@ ${
 							rel="noopener noreferrer"
 							className="truncate max-w-[100px]"
 						>
-							Privacy Policy
+							Privacy Policy ↗
 						</Link>
 
 						<span className="hidden xl:inline text-gray-500">|</span>
@@ -602,7 +611,7 @@ ${
 							rel="noopener noreferrer"
 							className="truncate max-w-[120px]"
 						>
-							Terms of Service
+							Terms of Service ↗
 						</Link>
 
 						<span className="hidden xl:inline text-gray-500">|</span>
@@ -613,7 +622,7 @@ ${
 							rel="noopener noreferrer"
 							className="truncate max-w-[80px]"
 						>
-							Contact
+							Contact ↗
 						</Link>
 					</div>
 				</div>
