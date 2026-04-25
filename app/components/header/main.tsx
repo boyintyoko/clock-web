@@ -276,7 +276,7 @@ export default function HeaderMain({
 						>
 							<Image
 								src={
-									isDarkMode
+									!isDarkMode
 										? "https://boyintyoko.github.io/clock-web/icons/searchIcons/blackSeacrh.png"
 										: "https://boyintyoko.github.io/clock-web/icons/searchIcons/whiteSearch.png"
 								}
@@ -343,15 +343,6 @@ export default function HeaderMain({
 
 							<LogoutButton isDarkMode={isDarkMode} />
 						</div>
-
-						<NavigatorPermisson
-							isDarkMode={isDarkMode}
-							navigatorPermission={navigatorPermission}
-							temperature={temperature}
-							temperatureUnits={temperatureUnits}
-							wheatherIcon={wheatherIcon}
-							humidity={humidity}
-						/>
 					</div>
 					{background === "Random" ? (
 						<p
@@ -365,7 +356,20 @@ export default function HeaderMain({
 						<BackgroundDesc isDarkMode={isDarkMode} />
 					) : null}
 
-					<NowTimeZone isDarkMode={isDarkMode} isNowTimeZone={isNowTimeZone} />
+					<div className="flex items-center gap-2">
+						<NowTimeZone
+							isDarkMode={isDarkMode}
+							isNowTimeZone={isNowTimeZone}
+						/>
+						<NavigatorPermisson
+							isDarkMode={isDarkMode}
+							navigatorPermission={navigatorPermission}
+							temperature={temperature}
+							temperatureUnits={temperatureUnits}
+							wheatherIcon={wheatherIcon}
+							humidity={humidity}
+						/>
+					</div>
 
 					<div className="flex gap-2">
 						<ModalButton
