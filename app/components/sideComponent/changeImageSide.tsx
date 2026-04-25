@@ -314,6 +314,46 @@ export default function ChangeImageSide({
 		if (isMobile) setIsVisible(!isVisible);
 	};
 
+	const handleByThePremium = async () => {
+		const {
+			data: { user },
+		} = await supabase.auth.getUser();
+
+		if (!user) {
+			return;
+		}
+
+		const res = await axios.post("/api/checkout/subscription", {
+			priceId: "price_1TPiV6FxZOM1YYzW6I0b2P8O",
+			userId: user.id,
+		});
+
+		const data = res.data;
+
+		if (data.url) {
+			window.location.href = data.url;
+		}
+	};
+
+	const handleByThePremiumPlus = async () => {
+		const {
+			data: { user },
+		} = await supabase.auth.getUser();
+
+		if (!user) {
+			return;
+		}
+
+		const res = await axios.post("/api/checkout/payment", {
+			priceId: "price_1TPiZxFxZOM1YYzWdmsyA0cX",
+			userId: user.id,
+		});
+
+		if (res.data.url) {
+			window.location.href = res.data.url;
+		}
+	};
+
 	return (
 		<div
 			className={`
@@ -402,6 +442,7 @@ export default function ChangeImageSide({
       transition-all duration-200
       active:scale-[0.98]
     "
+						onClick={() => handleByThePremium()}
 					>
 						<span className="text-lg font-semibold text-white">Premium</span>
 					</button>
@@ -426,6 +467,7 @@ export default function ChangeImageSide({
 
       shadow-lg shadow-purple-500/20
     "
+						onClick={() => handleByThePremiumPlus()}
 					>
 						<span className="text-lg font-bold text-white">Premium+</span>
 					</button>
