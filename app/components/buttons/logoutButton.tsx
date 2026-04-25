@@ -3,7 +3,11 @@
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
 
-export default function LogoutButton() {
+type Props = {
+	isDarkMode: boolean;
+};
+
+export default function LogoutButton({ isDarkMode }: Props) {
 	const router = useRouter();
 
 	const handleLogout = async () => {
@@ -14,7 +18,7 @@ export default function LogoutButton() {
 	return (
 		<button
 			onClick={handleLogout}
-			className="
+			className={`
 				flex items-center gap-2
 				px-5 py-2.5
 				bg-red-500/90
@@ -26,7 +30,8 @@ export default function LogoutButton() {
 				active:scale-95
 				transition-all
 				select-none
-			"
+        ${!isDarkMode ? "text-gray-700" : "text-white"}
+    `}
 		>
 			<i className="fa-solid fa-right-from-bracket"></i>
 			Logout
