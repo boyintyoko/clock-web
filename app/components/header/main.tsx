@@ -341,7 +341,7 @@ export default function HeaderMain({
 								isDarkMode={isDarkMode}
 							/>
 
-							<LogoutButton />
+							<LogoutButton isDarkMode={isDarkMode} />
 						</div>
 
 						<NavigatorPermisson
@@ -515,7 +515,7 @@ ${
           p-2
         `}
 			>
-				<LogoutButton />
+				<LogoutButton isDarkMode={isDarkMode} />
 				<ToggleSwitch
 					handleSwitchChange={handleSwitchChange}
 					isDarkMode={isDarkMode}
