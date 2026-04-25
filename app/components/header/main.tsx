@@ -338,7 +338,7 @@ export default function HeaderMain({
 								isDarkMode={isDarkMode}
 							/>
 
-							<LogoutButton />
+							<LogoutButton isDarkMode={isDarkMode} />
 						</div>
 
 						<NavigatorPermisson
@@ -350,10 +350,17 @@ export default function HeaderMain({
 							humidity={humidity}
 						/>
 					</div>
-
-					{!background.endsWith(".png") && (
+					{background === "Random" ? (
+						<p
+							className={`font-bold text-sm ${
+								!isDarkMode ? "text-gray-700" : "text-white"
+							}`}
+						>
+							Random
+						</p>
+					) : !background.endsWith(".png") ? (
 						<BackgroundDesc isDarkMode={isDarkMode} />
-					)}
+					) : null}
 
 					<NowTimeZone isDarkMode={isDarkMode} isNowTimeZone={isNowTimeZone} />
 
@@ -507,19 +514,23 @@ ${
           p-2
         `}
 			>
-				<LogoutButton />
+				<LogoutButton isDarkMode={isDarkMode} />
 				<ToggleSwitch
 					handleSwitchChange={handleSwitchChange}
 					isDarkMode={isDarkMode}
 				/>
 
-				{!background.endsWith(".png") && background !== "Random" ? (
-					<>
-						<BackgroundDesc isDarkMode={isDarkMode} />
-					</>
-				) : (
-					<p className="font-bold text-sm text-gray-700">Random</p>
-				)}
+				{background === "Random" ? (
+					<p
+						className={`font-bold text-sm ${
+							!isDarkMode ? "text-gray-700" : "text-white"
+						}`}
+					>
+						Random
+					</p>
+				) : !background.endsWith(".png") ? (
+					<BackgroundDesc isDarkMode={isDarkMode} />
+				) : null}
 
 				{navigatorPermission && (
 					<NavigatorPermisson
