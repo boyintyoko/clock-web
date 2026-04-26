@@ -74,6 +74,58 @@ export default function HeaderMain({
 
 	const { background } = useBackground();
 
+	const [subscriptionEnd, setSubscriptionEnd] = useState<string | null>(null);
+	useState<string | null>(null);
+	const [isLifetime, setIsLifetime] = useState<boolean>(false);
+
+	useEffect(() => {
+		const loadPremium = async () => {
+			const {
+				data: { session },
+			} = await supabase.auth.getSession();
+
+			if (!session) return;
+
+			const { data, error } = await supabase
+				.from("profiles")
+				.select("subscription_end, is_lifetime")
+				.eq("email", session.user.email);
+
+			console.log("premium data:", data);
+			console.log("error:", error);
+
+			if (!data || data.length === 0) return;
+
+			setSubscriptionEnd(data[0].subscription_end);
+			setIsLifetime(data[0].is_lifetime);
+		};
+
+		loadPremium();
+	}, []);
+
+	const getPremiumLabel = () => {
+		if (isLifetime) {
+			return "Premium+ Lifetime";
+		}
+
+		if (!subscriptionEnd) {
+			return "Free Plan";
+		}
+
+		const now = new Date();
+		const end = new Date(subscriptionEnd);
+
+		const diffTime = end.getTime() - now.getTime();
+
+		const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+		if (diffDays <= 0) {
+			return "Expired";
+		}
+
+		return `Premium ${diffDays} days left`;
+	};
+
 	const handleSwitchChange = () => {
 		setIsDarkMode(!isDarkMode);
 	};
@@ -604,7 +656,7 @@ ${
 							rel="noopener noreferrer"
 							className="truncate max-w-[100px]"
 						>
-							Privacy Policy ↗
+							Privacy
 						</Link>
 
 						<span className="hidden xl:inline text-gray-500">|</span>
@@ -629,6 +681,37 @@ ${
 							Contact ↗
 						</Link>
 					</div>
+				</div>
+			</div>
+
+			<div className="absolute right-0 top-20 max-lg:top-2">
+				<div
+					className={`
+      flex items-center gap-2
+      px-5 py-2
+      rounded-full
+      text-sm
+      font-bold
+      backdrop-blur-md
+      shadow-xl
+      border
+      transition-all
+      duration-300
+
+      ${
+				isLifetime
+					? "bg-gradient-to-r from-yellow-400 via-yellow-500 to-yellow-600 text-black border-yellow-300 shadow-yellow-500/40"
+					: subscriptionEnd
+						? "bg-gradient-to-r from-blue-500 to-blue-600 text-white border-blue-300 shadow-blue-500/40"
+						: "bg-gray-500/60 text-white border-gray-400 shadow-black/30"
+			}
+    `}
+				>
+					<span className="text-base">
+						{isLifetime ? "👑" : subscriptionEnd ? "⭐" : "🆓"}
+					</span>
+
+					<span>{getPremiumLabel()}</span>
 				</div>
 			</div>
 
