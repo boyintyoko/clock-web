@@ -113,6 +113,8 @@ export default function RootLayout({
 				/>
 
 				<meta name="apple-mobile-web-app-title" content="Image Clock" />
+
+				<meta name="google-adsense-account" content="ca-pub-2975765036916124" />
 			</head>
 
 			<body
