@@ -82,26 +82,20 @@ export default function SearchContent({
 		if (searchText.trim().length > 0) {
 			window.open(`https://www.google.com/search?q=${searchText}`);
 
-			const newId =
-				histories.length > 0 ? Math.max(...histories.map((h) => h.id)) + 1 : 0;
-
 			const newHistory: HistoryType = {
 				content: searchText,
-				id: newId,
+				id: crypto.randomUUID(),
 				create_minutes: new Date().getMinutes(),
 				create_hours: new Date().getHours(),
 			};
 
-			const updatedHistory = [...histories, newHistory];
-
-			setHistories(updatedHistory);
+			setHistories([...histories, newHistory]);
 
 			await saveHistory(newHistory);
 
 			setSearchText("");
 		}
 	};
-
 	return (
 		<div
 			className={`flex items-center absolute ${
