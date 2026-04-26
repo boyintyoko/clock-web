@@ -15,7 +15,7 @@ export default function SearchHistoryContent({
 }: Props) {
 	const { isNowLanguage } = useLanguage();
 
-	const historyDelete = async (id: number) => {
+	const historyDelete = async (id: string) => {
 		console.log("delete id:", id);
 
 		try {
