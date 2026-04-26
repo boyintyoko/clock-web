@@ -27,7 +27,6 @@ export default function Success() {
 		getPhoto();
 	}, []);
 
-	// 🎯 決済後処理（最重要）
 	useEffect(() => {
 		const getSessionAndUpdateUser = async () => {
 			if (!sessionId) return;
