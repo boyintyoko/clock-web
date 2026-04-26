@@ -36,7 +36,7 @@ type UrlItem = {
 
 const MainSelection = styled.div<MainSelectionProps>`
   ::selection {
-   background: ${(props) =>
+    background: ${(props) =>
 			colors.includes(props.$background)
 				? "#fff"
 				: colorsRGB[props.$background.replace(".png", "")]};
@@ -46,20 +46,49 @@ const MainSelection = styled.div<MainSelectionProps>`
 `;
 
 export default function Home() {
-	const [isDarkMode, setIsDarkMode] = useState<boolean>(false);
-	const [isSettingOpen, setIsSettingOpen] = useState<boolean>(false);
-	const [isLapsOpen, setIsLapsOpen] = useState<boolean>(false);
-	const [isGoodsOpen, setIsGoodsOpen] = useState<boolean>(false);
-	const [isTimeZoneOpen, setIsTimeZoneOpen] = useState<boolean>(false);
-	const [isHistoriesOpen, setIsHistoriesOpen] = useState<boolean>(false);
+	const [isDarkMode, setIsDarkMode] = useState(false);
+	const [isSettingOpen, setIsSettingOpen] = useState(false);
+	const [isLapsOpen, setIsLapsOpen] = useState(false);
+	const [isGoodsOpen, setIsGoodsOpen] = useState(false);
+	const [isTimeZoneOpen, setIsTimeZoneOpen] = useState(false);
+	const [isHistoriesOpen, setIsHistoriesOpen] = useState(false);
 	const { background } = useBackground();
 	const { isNowTimeZone } = useTimeZone();
-	const [temperatureUnits, setTempratureUnits] = useState<string>("F");
-	const [isLinkSettingOpen, setIsLinkSettingOpen] = useState<boolean>(false);
+	const [temperatureUnits, setTempratureUnits] = useState("F");
+	const [isLinkSettingOpen, setIsLinkSettingOpen] = useState(false);
 	const [urls, setUrls] = useState<UrlItem[]>([]);
-	const [isSearch, setIsSearch] = useState<boolean>(false);
+	const [isSearch, setIsSearch] = useState(false);
 	const [histories, setHistories] = useState<HistoryType[]>([]);
-	const [imageUrl, setImageUrl] = useState<string>("");
+	const [imageUrl, setImageUrl] = useState("");
+
+	// ================= COOKIE =================
+	const [cookieVisible, setCookieVisible] = useState(false);
+	const [cookieConsent, setCookieConsent] = useState<
+		"accepted" | "rejected" | null
+	>(null);
+
+	useEffect(() => {
+		const saved = localStorage.getItem("cookie-consent");
+		if (saved === "accepted" || saved === "rejected") {
+			setCookieConsent(saved);
+		} else {
+			setCookieVisible(true);
+		}
+	}, []);
+
+	const handleAccept = () => {
+		localStorage.setItem("cookie-consent", "accepted");
+		setCookieConsent("accepted");
+		setCookieVisible(false);
+	};
+
+	const handleReject = () => {
+		localStorage.setItem("cookie-consent", "rejected");
+		setCookieConsent("rejected");
+		setCookieVisible(false);
+	};
+
+	// ==========================================
 
 	const changeDarkMode = async (value: boolean) => {
 		setIsDarkMode(value);
@@ -75,66 +104,37 @@ export default function Home() {
 				user_id: user.id,
 				dark_mode: value,
 			},
-			{
-				onConflict: "user_id",
-			},
+			{ onConflict: "user_id" },
 		);
 	};
 
 	useEffect(() => {
 		const getPhoto = async () => {
 			const res = await axios.get("/api/unsplash/photo");
-			const data = res.data;
-			setImageUrl(data.imageUrl);
+			setImageUrl(res.data.imageUrl);
 		};
 		getPhoto();
 	}, []);
 
-	const checkImage = (userBackgroundImage: string) => {
+	const checkImage = (img: string) => {
 		const defaultImage = `url(${imageUrl})`;
 
-		if (!userBackgroundImage) {
-			return defaultImage;
+		if (!img) return defaultImage;
+		if (img.startsWith("hsl")) return undefined;
+		if (img.startsWith("https")) return `url(${img})`;
+
+		const name = img.replace(".png", "");
+
+		if (colors.includes(name)) {
+			return `url(https://github.com/boyintyoko/boyintyoko.github.io/blob/main/clock-web/icons/colors/${img}?raw=true)`;
 		}
 
-		if (userBackgroundImage.startsWith("hsl")) {
-			return undefined;
-		}
-
-		if (userBackgroundImage.startsWith("https")) {
-			return `url(${userBackgroundImage})`;
-		}
-
-		const nameWithoutExt = userBackgroundImage.replace(".png", "");
-
-		if (colors.includes(nameWithoutExt)) {
-			return `url(https://github.com/boyintyoko/boyintyoko.github.io/blob/main/clock-web/icons/colors/${userBackgroundImage}?raw=true)`;
-		}
-
-		if (userBackgroundImage === "Random") {
-			return `url(${imageUrl})`;
-		}
+		if (img === "Random") return `url(${imageUrl})`;
 
 		return defaultImage;
 	};
 
-	useEffect(() => {
-		const loadDarkMode = async () => {
-			const {
-				data: { session },
-			} = await supabase.auth.getSession();
-
-			if (!session?.user) return;
-
-			await supabase
-				.from("settings")
-				.select("dark_mode")
-				.eq("user_id", session.user.id)
-				.single();
-		};
-
-		loadDarkMode();
-	}, []);
+	const showCookie = cookieVisible && !cookieConsent;
 
 	return (
 		<AuthGuard>
@@ -143,14 +143,12 @@ export default function Home() {
 					className="flex flex-col justify-center items-center min-h-[100dvh] w-full"
 					style={{
 						backgroundImage: checkImage(background),
-
 						backgroundColor:
 							background.startsWith("hsl") ||
 							background.startsWith("rgb") ||
 							background.startsWith("#")
 								? background
 								: undefined,
-
 						backgroundPosition: "center",
 						backgroundRepeat: "no-repeat",
 						backgroundSize: "cover",
@@ -170,6 +168,7 @@ export default function Home() {
 					<ElectronicClock isDarkMode={isDarkMode} />
 					<Clock isDarkMode={isDarkMode} />
 				</div>
+
 				<div className="absolute bottom-4 right-4 flex space-x-4 z-10 max-lg:hidden">
 					<ModalButton
 						isOpen={isGoodsOpen}
@@ -177,24 +176,21 @@ export default function Home() {
 						isDarkMode={isDarkMode}
 						blackImageUrl="https://boyintyoko.github.io/clock-web/icons/heartIcons/heartBlack.svg"
 						whiteImageUrl="https://boyintyoko.github.io/clock-web/icons/heartIcons/heartWhite.svg"
-					/>
-
+					/>{" "}
 					<ModalButton
 						isOpen={isSettingOpen}
 						setIsOpen={setIsSettingOpen}
 						isDarkMode={isDarkMode}
 						blackImageUrl="https://boyintyoko.github.io/clock-web/icons/settingIcons/settingBlack.svg"
 						whiteImageUrl="https://boyintyoko.github.io/clock-web/icons/settingIcons/settingWhite.svg"
-					/>
-
+					/>{" "}
 					<ModalButton
 						isOpen={isTimeZoneOpen}
 						setIsOpen={setIsTimeZoneOpen}
 						isDarkMode={isDarkMode}
 						blackImageUrl="https://boyintyoko.github.io/clock-web/icons/timeZoneIcons/timeZoneBlack.svg"
 						whiteImageUrl="https://boyintyoko.github.io/clock-web/icons/timeZoneIcons/timeZoneWhite.svg"
-					/>
-
+					/>{" "}
 					<ModalButton
 						isOpen={isLapsOpen}
 						setIsOpen={setIsLapsOpen}
@@ -220,42 +216,73 @@ export default function Home() {
 					/>
 				</div>
 
-				<Modal isOpen={isGoodsOpen} setIsOpen={setIsGoodsOpen} title="Goods">
-					<GoodsContent isGoodsOpen={isGoodsOpen} />
-				</Modal>
+				{showCookie && (
+					<div
+						className={`
+      fixed bottom-6 left-10 z-50 w-[92%] max-w-md
+      bg-white/90 backdrop-blur-md border border-gray-200 shadow-xl
+      rounded-2xl px-5 py-4 flex items-center justify-between gap-4
 
-				<Modal
-					isOpen={isSettingOpen}
-					setIsOpen={setIsSettingOpen}
-					title="Setting"
-				>
-					<SettingContent
-						temperatureUnits={temperatureUnits}
-						setTemperatureUnits={setTempratureUnits}
-						setIsSettingOpen={setIsSettingOpen}
-					/>
-				</Modal>
+      transform transition-all duration-500 ease-in-out
+      translate-x-0 opacity-100
+    `}
+					>
+						<p className="text-sm text-gray-700">This website uses cookies.</p>
 
-				<Modal
-					isOpen={isTimeZoneOpen}
-					setIsOpen={setIsTimeZoneOpen}
-					title="Time Zone"
-				>
-					<TimeZoneContent />
-				</Modal>
+						<div className="flex gap-2">
+							<button
+								onClick={handleReject}
+								className="px-3 py-2 text-sm text-gray-600 hover:text-black transition"
+							>
+								Reject
+							</button>
 
-				<Modal
-					isOpen={isLinkSettingOpen}
-					setIsOpen={setIsLinkSettingOpen}
-					title="Link setting"
-				>
-					<LinkSettingContent urls={urls} setUrls={setUrls} />
-				</Modal>
-
-				<Modal isOpen={isLapsOpen} setIsOpen={setIsLapsOpen} title="Laps">
-					<LapsContent />
-				</Modal>
+							<button
+								onClick={handleAccept}
+								className="px-4 py-2 rounded-xl bg-black text-white text-sm hover:bg-gray-800 transition"
+							>
+								Accept
+							</button>
+						</div>
+					</div>
+				)}
 			</MainSelection>
+
+			<Modal isOpen={isGoodsOpen} setIsOpen={setIsGoodsOpen} title="Goods">
+				<GoodsContent isGoodsOpen={isGoodsOpen} />
+			</Modal>
+
+			<Modal
+				isOpen={isSettingOpen}
+				setIsOpen={setIsSettingOpen}
+				title="Setting"
+			>
+				<SettingContent
+					temperatureUnits={temperatureUnits}
+					setTemperatureUnits={setTempratureUnits}
+					setIsSettingOpen={setIsSettingOpen}
+				/>
+			</Modal>
+
+			<Modal
+				isOpen={isTimeZoneOpen}
+				setIsOpen={setIsTimeZoneOpen}
+				title="Time Zone"
+			>
+				<TimeZoneContent />
+			</Modal>
+
+			<Modal
+				isOpen={isLinkSettingOpen}
+				setIsOpen={setIsLinkSettingOpen}
+				title="Link setting"
+			>
+				<LinkSettingContent urls={urls} setUrls={setUrls} />
+			</Modal>
+
+			<Modal isOpen={isLapsOpen} setIsOpen={setIsLapsOpen} title="Laps">
+				<LapsContent />
+			</Modal>
 		</AuthGuard>
 	);
 }
