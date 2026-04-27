@@ -5,6 +5,7 @@ import { useEffect } from "react";
 import { useLanguage } from "@/app/context/languageContext";
 import { useTime } from "@/app/context/timeContext";
 import { supabase } from "@/lib/supabase";
+import Link from "next/link";
 
 type Props = {
 	setIsSettingOpen: (isOpen: boolean) => void;
@@ -18,7 +19,7 @@ export default function SettingContent({
 	setTemperatureUnits,
 }: Props) {
 	const { setIsNowLanguage, isNowLanguage } = useLanguage();
-	const { setIsNowTime, isNowTime } = useTime();
+	const { setIsNowTime } = useTime();
 
 	const handleLanguageChange = async (
 		e: React.ChangeEvent<HTMLSelectElement>,
@@ -44,32 +45,6 @@ export default function SettingContent({
 		);
 
 		if (error) console.error("language error:", error);
-	};
-
-	const handleFormatChange = async (
-		e: React.ChangeEvent<HTMLSelectElement>,
-	) => {
-		const selectedFormat = Number(e.target.value);
-
-		setIsNowTime(selectedFormat);
-
-		const {
-			data: { user },
-		} = await supabase.auth.getUser();
-
-		if (!user) return;
-
-		const { error } = await supabase.from("settings").upsert(
-			{
-				user_id: user.id,
-				time_format: selectedFormat,
-			},
-			{
-				onConflict: "user_id",
-			},
-		);
-
-		if (error) console.error("time error:", error);
 	};
 
 	const handleTemperatureChange = async (
@@ -98,7 +73,6 @@ export default function SettingContent({
 		if (error) console.error("temperature error:", error);
 	};
 
-	// 🔥 初回ロード（Supabase → state）
 	useEffect(() => {
 		const fetchSettings = async () => {
 			const {
@@ -181,21 +155,60 @@ export default function SettingContent({
 			<div className="p-4 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 shadow-md">
 				<label className="block font-semibold text-lg mb-3">
 					{isNowLanguage === "en"
-						? "Time format"
+						? "Additional plans"
 						: isNowLanguage === "it"
-							? "Formato dell'orologio"
-							: "時間形式"}
+							? "Piani aggiuntivi"
+							: "追加プラン"}
 				</label>
 
-				<select
-					onChange={handleFormatChange}
-					value={isNowTime}
-					className="w-full rounded-xl border border-gray-400/40 bg-white/20 p-2"
-				>
-					<option value="24">24-hour format</option>
+				<div className="flex gap-3 w-full justify-center">
+					<Link
+						href="/premium"
+						className="
+      flex-1 h-12
+      bg-gray-800/80
+      backdrop-blur-md
+      border border-white/10
+      rounded-xl
 
-					<option value="12">12-hour format (AM/PM)</option>
-				</select>
+      flex flex-col items-center justify-center
+
+      hover:bg-gray-700/80
+      hover:border-white/20
+      hover:scale-[1.02]
+
+      transition-all duration-200
+      active:scale-[0.98]
+    "
+					>
+						<span className="text-lg font-semibold text-white">Premium</span>
+					</Link>
+
+					<Link
+						href="/premium"
+						className="
+      flex-1 h-12
+      bg-gradient-to-br
+      from-indigo-500
+      to-purple-600
+
+      border border-white/20
+      rounded-xl
+
+      flex flex-col items-center justify-center
+
+      hover:scale-[1.02]
+      hover:brightness-110
+
+      transition-all duration-200
+      active:scale-[0.98]
+
+      shadow-lg shadow-purple-500/20
+    "
+					>
+						<span className="text-lg font-semibold text-white">Premium+</span>
+					</Link>
+				</div>
 			</div>
 
 			<div className="p-4 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 shadow-md">

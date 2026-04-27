@@ -74,6 +74,41 @@ export default function HeaderMain({
 
 	const { background } = useBackground();
 
+	const buttons = [
+		{
+			isOpen: isGoodsOpen,
+			setIsOpen: setIsGoodsOpen,
+			whiteImageUrl:
+				"https://boyintyoko.github.io/clock-web/icons/heartIcons/heartBlack.svg",
+			blackImageUrl:
+				"https://boyintyoko.github.io/clock-web/icons/heartIcons/heartWhite.svg",
+		},
+		{
+			isOpen: isSettingOpen,
+			setIsOpen: setIsSettingOpen,
+			whiteImageUrl:
+				"https://boyintyoko.github.io/clock-web/icons/settingIcons/settingBlack.svg",
+			blackImageUrl:
+				"https://boyintyoko.github.io/clock-web/icons/settingIcons/settingWhite.svg",
+		},
+		{
+			isOpen: isTimeZoneOpen,
+			setIsOpen: setIsTimeZoneOpen,
+			whiteImageUrl:
+				"https://boyintyoko.github.io/clock-web/icons/timeZoneIcons/timeZoneBlack.svg",
+			blackImageUrl:
+				"https://boyintyoko.github.io/clock-web/icons/timeZoneIcons/timeZoneWhite.svg",
+		},
+		{
+			isOpen: isLapsOpen,
+			setIsOpen: setIsLapsOpen,
+			whiteImageUrl:
+				"https://raw.githubusercontent.com/boyintyoko/boyintyoko.github.io/1d309029b0cdbcc1fac719489923a8570a038ad0/clock-web/icons/lapsIcons/lapsBlack.svg",
+			blackImageUrl:
+				"https://raw.githubusercontent.com/boyintyoko/boyintyoko.github.io/1d309029b0cdbcc1fac719489923a8570a038ad0/clock-web/icons/lapsIcons/lapsWhite.svg",
+		},
+	];
+
 	const [subscriptionEnd, setSubscriptionEnd] = useState<string | null>(null);
 	useState<string | null>(null);
 	const [isLifetime, setIsLifetime] = useState<boolean>(false);
@@ -266,6 +301,34 @@ export default function HeaderMain({
 			>
 				<div className="flex flex-col gap-6 mt-5">
 					<div
+						className={`
+      flex items-center gap-2
+      px-5 py-2
+      rounded-full
+      text-sm
+      font-bold
+      backdrop-blur-md
+      shadow-xl
+      border
+      transition-all
+      duration-300
+
+      ${
+				isLifetime
+					? "bg-gradient-to-r from-yellow-400 via-yellow-500 to-yellow-600 text-black border-yellow-300 shadow-yellow-500/40"
+					: subscriptionEnd
+						? "bg-gradient-to-r from-blue-500 to-blue-600 text-white border-blue-300 shadow-blue-500/40"
+						: "bg-gray-500/60 text-white border-gray-400 shadow-black/30"
+			}
+    `}
+					>
+						<span className="text-base">
+							{isLifetime ? "👑" : subscriptionEnd ? "⭐" : "🆓"}
+						</span>
+
+						<span>{getPremiumLabel()}</span>
+					</div>
+					<div
 						className={`flex items-center
   h-14 md:h-16
   bg-white bg-opacity-50
@@ -423,38 +486,17 @@ export default function HeaderMain({
 						/>
 					</div>
 
-					<div className="flex gap-2">
-						<ModalButton
-							isOpen={isGoodsOpen}
-							setIsOpen={setIsGoodsOpen}
-							isDarkMode={isDarkMode}
-							whiteImageUrl="https://boyintyoko.github.io/clock-web/icons/heartIcons/heartBlack.svg"
-							blackImageUrl="https://boyintyoko.github.io/clock-web/icons/heartIcons/heartWhite.svg"
-						/>
-
-						<ModalButton
-							isOpen={isSettingOpen}
-							setIsOpen={setIsSettingOpen}
-							isDarkMode={isDarkMode}
-							whiteImageUrl="https://boyintyoko.github.io/clock-web/icons/settingIcons/settingBlack.svg"
-							blackImageUrl="https://boyintyoko.github.io/clock-web/icons/settingIcons/settingWhite.svg"
-						/>
-
-						<ModalButton
-							isOpen={isTimeZoneOpen}
-							setIsOpen={setIsTimeZoneOpen}
-							isDarkMode={isDarkMode}
-							whiteImageUrl="https://boyintyoko.github.io/clock-web/icons/timeZoneIcons/timeZoneBlack.svg"
-							blackImageUrl="https://boyintyoko.github.io/clock-web/icons/timeZoneIcons/timeZoneWhite.svg"
-						/>
-
-						<ModalButton
-							isOpen={isLapsOpen}
-							setIsOpen={setIsLapsOpen}
-							isDarkMode={isDarkMode}
-							whiteImageUrl="https://raw.githubusercontent.com/boyintyoko/boyintyoko.github.io/1d309029b0cdbcc1fac719489923a8570a038ad0/clock-web/icons/lapsIcons/lapsBlack.svg"
-							blackImageUrl="https://raw.githubusercontent.com/boyintyoko/boyintyoko.github.io/1d309029b0cdbcc1fac719489923a8570a038ad0/clock-web/icons/lapsIcons/lapsWhite.svg"
-						/>
+					<div className="flex gap-[1px]">
+						{buttons.map((btn, i) => (
+							<ModalButton
+								key={i}
+								isOpen={btn.isOpen}
+								setIsOpen={btn.setIsOpen}
+								isDarkMode={isDarkMode}
+								whiteImageUrl={btn.whiteImageUrl}
+								blackImageUrl={btn.blackImageUrl}
+							/>
+						))}
 					</div>
 
 					<div
@@ -684,7 +726,7 @@ ${
 				</div>
 			</div>
 
-			<div className="absolute right-0 top-20 max-lg:top-2">
+			<div className="absolute right-0 top-20 max-lg:hidden">
 				<div
 					className={`
       flex items-center gap-2
