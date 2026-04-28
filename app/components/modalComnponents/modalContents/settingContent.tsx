@@ -181,6 +181,63 @@ export default function SettingContent({
 			<div className="p-4 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 shadow-md">
 				<label className="block font-semibold text-lg mb-3">
 					{isNowLanguage === "en"
+						? "Additional plans"
+						: isNowLanguage === "it"
+							? "Piani aggiuntivi"
+							: "追加プラン"}
+				</label>
+
+				<div className="flex gap-3 w-full justify-center">
+					<button
+						className="
+      flex-1 h-14
+      bg-gray-800/80
+      backdrop-blur-md
+      border border-white/10
+      rounded-xl
+
+      flex flex-col items-center justify-center
+
+      hover:bg-gray-700/80
+      hover:border-white/20
+      hover:scale-[1.02]
+
+      transition-all duration-200
+      active:scale-[0.98]
+    "
+					>
+						<span className="text-lg font-semibold text-white">Premium</span>
+					</button>
+
+					<button
+						className="
+      flex-1 h-14
+      bg-gradient-to-br
+      from-indigo-500
+      to-purple-600
+
+      border border-white/20
+      rounded-xl
+
+      flex flex-col items-center justify-center
+
+      hover:scale-[1.02]
+      hover:brightness-110
+
+      transition-all duration-200
+      active:scale-[0.98]
+
+      shadow-lg shadow-purple-500/20
+    "
+					>
+						<span className="text-lg font-bold text-white">Premium+</span>
+					</button>
+				</div>
+			</div>
+
+			<div className="p-4 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 shadow-md">
+				<label className="block font-semibold text-lg mb-3">
+					{isNowLanguage === "en"
 						? "Time format"
 						: isNowLanguage === "it"
 							? "Formato dell'orologio"
