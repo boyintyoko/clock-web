@@ -5,6 +5,7 @@ import { useEffect } from "react";
 import { useLanguage } from "@/app/context/languageContext";
 import { useTime } from "@/app/context/timeContext";
 import { supabase } from "@/lib/supabase";
+import Link from "next/link";
 
 type Props = {
 	setIsSettingOpen: (isOpen: boolean) => void;
@@ -188,50 +189,30 @@ export default function SettingContent({
 				</label>
 
 				<div className="flex gap-3 w-full justify-center">
-					<button
+					<Link
+						href="/premium"
 						className="
-      flex-1 h-14
-      bg-gray-800/80
-      backdrop-blur-md
-      border border-white/10
-      rounded-xl
+    flex-1 h-14
+    bg-gradient-to-br
+    from-indigo-500
+    to-purple-600
 
-      flex flex-col items-center justify-center
+    border border-white/20
+    rounded-xl
 
-      hover:bg-gray-700/80
-      hover:border-white/20
-      hover:scale-[1.02]
+    flex flex-col items-center justify-center
 
-      transition-all duration-200
-      active:scale-[0.98]
-    "
+    hover:scale-[1.02]
+    hover:brightness-110
+
+    transition-all duration-200
+    active:scale-[0.98]
+
+    shadow-lg shadow-purple-500/20
+  "
 					>
-						<span className="text-lg font-semibold text-white">Premium</span>
-					</button>
-
-					<button
-						className="
-      flex-1 h-14
-      bg-gradient-to-br
-      from-indigo-500
-      to-purple-600
-
-      border border-white/20
-      rounded-xl
-
-      flex flex-col items-center justify-center
-
-      hover:scale-[1.02]
-      hover:brightness-110
-
-      transition-all duration-200
-      active:scale-[0.98]
-
-      shadow-lg shadow-purple-500/20
-    "
-					>
-						<span className="text-lg font-bold text-white">Premium+</span>
-					</button>
+						<span className="text-lg font-bold text-white">Premium</span>
+					</Link>
 				</div>
 			</div>
 

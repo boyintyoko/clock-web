@@ -192,313 +192,301 @@ export default function HeaderMain({
 					onClick={() => setMenuOpen(false)}
 				/>
 			)}
-
 			<div
 				className={`
-          lg:hidden
-          fixed top-0 right-0
-          h-full
-          flex flex-col
-          justify-between
-          p-6
-          backdrop-blur-md
-          ${isDarkMode ? "bg-gray-900 text-white" : "bg-white text-gray-900"}
-          shadow-2xl
-          transform transition-transform
-          ${menuOpen ? "translate-x-0" : "translate-x-full"}
-          z-50
-        `}
+    lg:hidden
+    fixed top-0 right-0
+    h-full w-[320px]
+
+    flex flex-col
+    gap-5
+
+    p-5
+
+    ${isDarkMode ? "bg-gray-900/90 text-white" : "bg-white text-gray-900"}
+
+    shadow-2xl
+    transform transition-transform duration-300
+    ${menuOpen ? "translate-x-0" : "translate-x-full"}
+
+    z-50
+  `}
 			>
-				<div className="flex flex-col gap-6 mt-5">
-					<div
-						className={`flex items-center
-  h-14 md:h-16
-  bg-white bg-opacity-50
-  rounded-full shadow-lg
-  w-56
-  hover:ring-blue-500 ring-4
-  transition-all hover:shadow-2xl hover:translate-y-2`}
-						id="inputSearch"
+				{/* ================= Search ================= */}
+
+				<div
+					className={`
+      flex items-center
+      h-12
+      px-3
+
+      rounded-xl
+      border
+
+      ${
+				isDarkMode ? "bg-white/5 border-white/10" : "bg-black/5 border-black/10"
+			}
+
+      shadow-md
+      focus-within:ring-2
+      focus-within:ring-blue-500
+    `}
+				>
+					<form
+						onSubmit={(e) => searchHandler(e)}
+						className="flex flex-1 items-center"
 					>
-						<div className={`${styles.input} relative flex-1 h-full`}>
-							<form onSubmit={(e) => searchHandler(e)}>
-								<input
-									type="text"
-									placeholder=" "
-									value={searchText}
-									onChange={(e) => setSearchText(e.target.value)}
-									className="
-          peer
-          h-16 w-full
-          pl-4 pr-8
-          rounded-l-full
-          text-gray-700
-          bg-transparent
-          placeholder-transparent
-          focus:outline-none
-          font-bold
-        "
-								/>
-
-								<p
-									className="
-          absolute left-4 top-1/2
-          -translate-y-1/2
-          text-gray-500
-          transition-all duration-200
-          peer-focus:-top-5
-            pointer-events-none
-          peer-focus:text-blue-500
-          peer-placeholder-shown:top-1/2
-          peer-placeholder-shown:text-base
-          peer-placeholder-shown:text-gray-500
-          font-bold
-        "
-								>
-									Search...
-								</p>
-							</form>
-						</div>
-
-						<button
+						<input
+							type="text"
+							placeholder="Search..."
+							value={searchText}
+							onChange={(e) => setSearchText(e.target.value)}
 							className="
-      flex justify-center items-center
-      bg-blue-500
-      h-full
-      w-12 md:w-16
-      rounded-r-full
-      hover:bg-blue-600
-    "
-							onClick={searchHandler}
+          flex-1
+          bg-transparent
+          outline-none
+          text-sm
+          font-medium
+          placeholder:text-gray-400
+        "
+						/>
+					</form>
+
+					<button
+						onClick={searchHandler}
+						className="
+        flex items-center justify-center
+
+        w-9 h-9
+        rounded-xl
+
+        bg-blue-500
+        hover:bg-blue-600
+
+        transition
+      "
+					>
+						<Image
+							src={
+								!isDarkMode
+									? "https://boyintyoko.github.io/clock-web/icons/searchIcons/blackSeacrh.png"
+									: "https://boyintyoko.github.io/clock-web/icons/searchIcons/whiteSearch.png"
+							}
+							alt="search"
+							width={18}
+							height={18}
+						/>
+					</button>
+				</div>
+
+				<div
+					className={`
+      flex items-center gap-3
+      p-3
+
+      rounded-2xl
+      border
+
+      ${
+				isDarkMode ? "bg-white/5 border-white/10" : "bg-black/5 border-black/10"
+			}
+
+      shadow-md
+    `}
+				>
+					{urls.map((url, id) => (
+						<Link
+							key={id}
+							href={url.url}
+							target="_blank"
+							className="
+          flex items-center justify-center
+
+          w-10 h-10
+          rounded-xl
+
+          bg-blue-500
+          hover:bg-blue-600
+
+          transition
+          hover:scale-105
+        "
 						>
 							<Image
-								src={
-									isDarkMode
-										? "https://boyintyoko.github.io/clock-web/icons/searchIcons/blackSeacrh.png"
-										: "https://boyintyoko.github.io/clock-web/icons/searchIcons/whiteSearch.png"
-								}
-								alt="search icon"
-								height={28}
-								width={28}
-								loading="lazy"
+								src={url.link}
+								alt={url.alt}
+								width={18}
+								height={18}
+								className={isDarkMode ? "" : "invert"}
 							/>
-						</button>
-					</div>
+						</Link>
+					))}
 
-					<div>
-						<div
-							className={`flex items-center gap-2 relative
-    h-16 w-52 transition-all`}
-						>
-							<button
-								onClick={() => setIsLinkSettingOpen(!isLinkSettingOpen)}
-								className="absolute -top-1 -right-4"
-							>
-								<Image
-									src="https://boyintyoko.github.io/clock-web/icons/settingIcons/settingWhite.svg"
-									alt="Setting Icon"
-									height={20}
-									width={20}
-									loading="lazy"
-									className={isDarkMode ? "" : "invert"}
-								/>
-							</button>
+					<History
+						isDarkMode={isDarkMode}
+						isHistoriesOpen={isHistoriesOpen}
+						setIsHistoriesOpen={setIsHistoriesOpen}
+						isSideBar={true}
+					/>
+				</div>
 
-							{urls.map((url, id) => (
-								<Link
-									key={id}
-									href={url.url}
-									rel="noopener noreferrer"
-									target="_blank"
-									className="flex items-center justify-center w-9 h-9 rounded-full bg-blue-500 hover:bg-blue-600 transition-all"
-								>
-									<Image
-										src={url.link}
-										alt={url.alt}
-										height={20}
-										width={20}
-										loading="lazy"
-										className={isDarkMode ? "" : "invert"}
-									/>
-								</Link>
-							))}
-							<History
-								isDarkMode={isDarkMode}
-								isHistoriesOpen={isHistoriesOpen}
-								setIsHistoriesOpen={setIsHistoriesOpen}
-								isSideBar={true}
-							/>
-						</div>
-					</div>
+				<div
+					className={`
+      flex gap-3
+      p-4
 
-					<div className="flex justify-between">
-						<div className="flex gap-10">
-							<ToggleSwitch
-								handleSwitchChange={handleSwitchChange}
-								isDarkMode={isDarkMode}
-							/>
+      rounded-2xl
+      border
 
-							<LogoutButton isDarkMode={isDarkMode} />
-						</div>
+      ${
+				isDarkMode ? "bg-white/5 border-white/10" : "bg-black/5 border-black/10"
+			}
 
-						<NavigatorPermisson
-							isDarkMode={isDarkMode}
-							navigatorPermission={navigatorPermission}
-							temperature={temperature}
-							temperatureUnits={temperatureUnits}
-							wheatherIcon={wheatherIcon}
-							humidity={humidity}
-						/>
-					</div>
+      shadow-md
+    `}
+				>
+					<ToggleSwitch
+						handleSwitchChange={handleSwitchChange}
+						isDarkMode={isDarkMode}
+					/>
+
+					<NavigatorPermisson
+						isDarkMode={isDarkMode}
+						navigatorPermission={navigatorPermission}
+						temperature={temperature}
+						temperatureUnits={temperatureUnits}
+						wheatherIcon={wheatherIcon}
+						humidity={humidity}
+					/>
+				</div>
+
+				<div
+					className={`p-4 flex flex-col justify-center items-start gap-2
+
+                rounded-2xl
+      border
+
+      ${
+				isDarkMode ? "bg-white/5 border-white/10" : "bg-black/5 border-black/10"
+			}
+
+      shadow-md`}
+				>
 					{background === "Random" ? (
 						<p
-							className={`font-bold text-sm ${
-								!isDarkMode ? "text-gray-700" : "text-white"
+							className={`text-sm ${
+								isDarkMode ? "text-white/70" : "text-gray-600"
 							}`}
 						>
 							Random
 						</p>
 					) : !background.endsWith(".png") ? (
-						<BackgroundDesc isDarkMode={isDarkMode} />
+						<>
+							<BackgroundDesc isDarkMode={isDarkMode} />
+							<span className="block h-[1px] w-full bg-gray-200 rounded-full"></span>
+						</>
 					) : null}
 
 					<NowTimeZone isDarkMode={isDarkMode} isNowTimeZone={isNowTimeZone} />
+				</div>
 
-					<div className="flex gap-2">
-						<ModalButton
-							isOpen={isGoodsOpen}
-							setIsOpen={setIsGoodsOpen}
-							isDarkMode={isDarkMode}
-							whiteImageUrl="https://boyintyoko.github.io/clock-web/icons/heartIcons/heartBlack.svg"
-							blackImageUrl="https://boyintyoko.github.io/clock-web/icons/heartIcons/heartWhite.svg"
-						/>
+				<div
+					className={`
+      grid grid-cols-4 gap-3
+      p-3
 
-						<ModalButton
-							isOpen={isSettingOpen}
-							setIsOpen={setIsSettingOpen}
-							isDarkMode={isDarkMode}
-							whiteImageUrl="https://boyintyoko.github.io/clock-web/icons/settingIcons/settingBlack.svg"
-							blackImageUrl="https://boyintyoko.github.io/clock-web/icons/settingIcons/settingWhite.svg"
-						/>
+      rounded-2xl
+      border
 
-						<ModalButton
-							isOpen={isTimeZoneOpen}
-							setIsOpen={setIsTimeZoneOpen}
-							isDarkMode={isDarkMode}
-							whiteImageUrl="https://boyintyoko.github.io/clock-web/icons/timeZoneIcons/timeZoneBlack.svg"
-							blackImageUrl="https://boyintyoko.github.io/clock-web/icons/timeZoneIcons/timeZoneWhite.svg"
-						/>
+      ${
+				isDarkMode ? "bg-white/5 border-white/10" : "bg-black/5 border-black/10"
+			}
 
-						<ModalButton
-							isOpen={isLapsOpen}
-							setIsOpen={setIsLapsOpen}
-							isDarkMode={isDarkMode}
-							whiteImageUrl="https://raw.githubusercontent.com/boyintyoko/boyintyoko.github.io/1d309029b0cdbcc1fac719489923a8570a038ad0/clock-web/icons/lapsIcons/lapsBlack.svg"
-							blackImageUrl="https://raw.githubusercontent.com/boyintyoko/boyintyoko.github.io/1d309029b0cdbcc1fac719489923a8570a038ad0/clock-web/icons/lapsIcons/lapsWhite.svg"
-						/>
+      shadow-md
+    `}
+				>
+					<ModalButton
+						isOpen={isGoodsOpen}
+						setIsOpen={setIsGoodsOpen}
+						isDarkMode={isDarkMode}
+						whiteImageUrl="https://boyintyoko.github.io/clock-web/icons/heartIcons/heartBlack.svg"
+						blackImageUrl="https://boyintyoko.github.io/clock-web/icons/heartIcons/heartWhite.svg"
+					/>
+
+					<ModalButton
+						isOpen={isSettingOpen}
+						setIsOpen={setIsSettingOpen}
+						isDarkMode={isDarkMode}
+						whiteImageUrl="https://boyintyoko.github.io/clock-web/icons/settingIcons/settingBlack.svg"
+						blackImageUrl="https://boyintyoko.github.io/clock-web/icons/settingIcons/settingWhite.svg"
+					/>
+
+					<ModalButton
+						isOpen={isTimeZoneOpen}
+						setIsOpen={setIsTimeZoneOpen}
+						isDarkMode={isDarkMode}
+						whiteImageUrl="https://boyintyoko.github.io/clock-web/icons/timeZoneIcons/timeZoneBlack.svg"
+						blackImageUrl="https://boyintyoko.github.io/clock-web/icons/timeZoneIcons/timeZoneWhite.svg"
+					/>
+
+					<ModalButton
+						isOpen={isLapsOpen}
+						setIsOpen={setIsLapsOpen}
+						isDarkMode={isDarkMode}
+						whiteImageUrl="https://raw.githubusercontent.com/boyintyoko/boyintyoko.github.io/1d309029b0cdbcc1fac719489923a8570a038ad0/clock-web/icons/lapsIcons/lapsBlack.svg"
+						blackImageUrl="https://raw.githubusercontent.com/boyintyoko/boyintyoko.github.io/1d309029b0cdbcc1fac719489923a8570a038ad0/clock-web/icons/lapsIcons/lapsWhite.svg"
+					/>
+				</div>
+
+				<div>
+					<LogoutButton isDarkMode={isDarkMode} />
+				</div>
+
+				<div className="mt-auto flex flex-col items-center gap-2">
+					<div
+						className={`
+        px-4 py-2
+        rounded-full
+        text-xs
+
+        border
+
+        ${
+					isDarkMode
+						? "bg-white/10 border-white/20 text-white/80"
+						: "bg-black/5 border-black/10 text-gray-700"
+				}
+      `}
+					>
+						© {new Date().getFullYear()} Taiga Ito
+						<span className="ml-2 font-bold">v{packageJson.version}</span>
 					</div>
 
 					<div
-						className="
-absolute bottom-4 left-1/2 -translate-x-1/2
-w-full flex flex-col items-center
-gap-3 select-none
-"
+						className={`
+        flex items-center gap-2
+        text-xs
+
+        px-4 py-2
+        rounded-full
+        border
+
+        ${
+					isDarkMode
+						? "bg-white/10 border-white/20 text-white/80"
+						: "bg-black/5 border-black/10 text-gray-700"
+				}
+      `}
 					>
-						{/* © と version */}
+						<Link href="/privacy">Privacy ↗</Link>
 
-						<div
-							className={`
-px-4 py-1.5
-rounded-full
-backdrop-blur-xl
-border
-text-xs font-medium
-flex items-center gap-2
-shadow-md
-transition-all
+						<span>|</span>
 
-${
-	isDarkMode
-		? "bg-white/10 border-white/20 text-white/80"
-		: "bg-black/5 border-black/10 text-gray-700"
-}
-`}
-						>
-							<span className="tracking-wide">
-								© {new Date().getFullYear()} Taiga Ito
-							</span>
+						<Link href="/terms">Terms ↗</Link>
 
-							<span
-								className={`
-            px-2 py-[2px]
-            rounded-full
-            text-[10px]
-            font-bold
-            tracking-wider
+						<span>|</span>
 
-                  ${
-										isDarkMode
-											? "bg-white/20 text-white"
-											: "bg-black/10 text-gray-800"
-									}
-                  `}
-							>
-								v{packageJson.version}
-							</span>
-						</div>
-
-						{/* Links */}
-
-						<div
-							className={`
-                flex items-center gap-2
-                text-xs md:text-sm
-
-                px-4 py-2
-                rounded-full
-                backdrop-blur-xl
-                border
-                shadow-md
-
-                ${
-									isDarkMode
-										? "bg-white/10 border-white/20 text-white/80"
-										: "bg-black/5 border-black/10 text-gray-700"
-								}
-                `}
-						>
-							<Link
-								href="/privacy"
-								target="_blank"
-								rel="noopener noreferrer"
-								className="hover:underline transition"
-							>
-								Privacy ↗
-							</Link>
-
-							<span className="text-white/40">|</span>
-
-							<Link
-								href="/terms"
-								target="_blank"
-								rel="noopener noreferrer"
-								className="hover:underline transition"
-							>
-								Terms ↗
-							</Link>
-
-							<span className="text-white/40">|</span>
-
-							<Link
-								href="/contact"
-								target="_blank"
-								rel="noopener noreferrer"
-								className="hover:underline transition"
-							>
-								Contact ↗
-							</Link>
-						</div>
+						<Link href="/contact">Contact ↗</Link>
 					</div>
 				</div>
 			</div>
