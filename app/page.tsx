@@ -1,6 +1,5 @@
 "use client";
 
-import AuthGuard from "@@/components/AuthGuard";
 import Clock from "@@/components/clock/clock";
 import ElectronicClock from "@@/components/clock/electronicClock";
 import HeaderMain from "@@/components/header/main";
@@ -61,7 +60,6 @@ export default function Home() {
 	const [histories, setHistories] = useState<HistoryType[]>([]);
 	const [imageUrl, setImageUrl] = useState("");
 
-	// ================= COOKIE =================
 	const [cookieVisible, setCookieVisible] = useState(false);
 	const [cookieConsent, setCookieConsent] = useState<
 		"accepted" | "rejected" | null
@@ -87,8 +85,6 @@ export default function Home() {
 		setCookieConsent("rejected");
 		setCookieVisible(false);
 	};
-
-	// ==========================================
 
 	const changeDarkMode = async (value: boolean) => {
 		setIsDarkMode(value);
@@ -137,88 +133,87 @@ export default function Home() {
 	const showCookie = cookieVisible && !cookieConsent;
 
 	return (
-		<AuthGuard>
-			<MainSelection $background={background}>
+		<MainSelection $background={background}>
+			<div
+				className="flex flex-col justify-center items-center min-h-[100dvh] w-full"
+				style={{
+					backgroundImage: checkImage(background),
+					backgroundColor:
+						background.startsWith("hsl") ||
+						background.startsWith("rgb") ||
+						background.startsWith("#")
+							? background
+							: undefined,
+					backgroundPosition: "center",
+					backgroundRepeat: "no-repeat",
+					backgroundSize: "cover",
+				}}
+			>
+				<HeaderMain
+					isDarkMode={isDarkMode}
+					isNowTimeZone={isNowTimeZone}
+					setIsDarkMode={changeDarkMode}
+					temperatureUnits={temperatureUnits}
+					setTempratureUnits={setTempratureUnits}
+					setHistories={setHistories}
+					histories={histories}
+				/>
+
+				<Loading />
+				<ElectronicClock isDarkMode={isDarkMode} />
+				<Clock isDarkMode={isDarkMode} />
+			</div>
+
+			<div className="absolute bottom-4 right-4 flex space-x-4 z-10 max-lg:hidden">
+				<ModalButton
+					isOpen={isGoodsOpen}
+					setIsOpen={setIsGoodsOpen}
+					isDarkMode={isDarkMode}
+					blackImageUrl="https://boyintyoko.github.io/clock-web/icons/heartIcons/heartBlack.svg"
+					whiteImageUrl="https://boyintyoko.github.io/clock-web/icons/heartIcons/heartWhite.svg"
+				/>{" "}
+				<ModalButton
+					isOpen={isSettingOpen}
+					setIsOpen={setIsSettingOpen}
+					isDarkMode={isDarkMode}
+					blackImageUrl="https://boyintyoko.github.io/clock-web/icons/settingIcons/settingBlack.svg"
+					whiteImageUrl="https://boyintyoko.github.io/clock-web/icons/settingIcons/settingWhite.svg"
+				/>{" "}
+				<ModalButton
+					isOpen={isTimeZoneOpen}
+					setIsOpen={setIsTimeZoneOpen}
+					isDarkMode={isDarkMode}
+					blackImageUrl="https://boyintyoko.github.io/clock-web/icons/timeZoneIcons/timeZoneBlack.svg"
+					whiteImageUrl="https://boyintyoko.github.io/clock-web/icons/timeZoneIcons/timeZoneWhite.svg"
+				/>{" "}
+				<ModalButton
+					isOpen={isLapsOpen}
+					setIsOpen={setIsLapsOpen}
+					isDarkMode={isDarkMode}
+					blackImageUrl="https://raw.githubusercontent.com/boyintyoko/boyintyoko.github.io/1d309029b0cdbcc1fac719489923a8570a038ad0/clock-web/icons/lapsIcons/lapsBlack.svg"
+					whiteImageUrl="https://raw.githubusercontent.com/boyintyoko/boyintyoko.github.io/1d309029b0cdbcc1fac719489923a8570a038ad0/clock-web/icons/lapsIcons/lapsWhite.svg"
+				/>
+			</div>
+
+			<div className="max-lg:hidden">
+				<Search
+					isDarkMode={isDarkMode}
+					isHistoriesOpen={isHistoriesOpen}
+					setIsHistoriesOpen={setIsHistoriesOpen}
+					setIsLinkSettingOpen={setIsLinkSettingOpen}
+					isLinkSettingOpen={isLinkSettingOpen}
+					urls={urls}
+					setUrls={setUrls}
+					isSearch={isSearch}
+					setIsSearch={setIsSearch}
+					histories={histories}
+					setHistories={setHistories}
+				/>
+			</div>
+
+			{showCookie && (
 				<div
-					className="flex flex-col justify-center items-center min-h-[100dvh] w-full"
-					style={{
-						backgroundImage: checkImage(background),
-						backgroundColor:
-							background.startsWith("hsl") ||
-							background.startsWith("rgb") ||
-							background.startsWith("#")
-								? background
-								: undefined,
-						backgroundPosition: "center",
-						backgroundRepeat: "no-repeat",
-						backgroundSize: "cover",
-					}}
-				>
-					<HeaderMain
-						isDarkMode={isDarkMode}
-						isNowTimeZone={isNowTimeZone}
-						setIsDarkMode={changeDarkMode}
-						temperatureUnits={temperatureUnits}
-						setTempratureUnits={setTempratureUnits}
-						setHistories={setHistories}
-						histories={histories}
-					/>
-
-					<Loading />
-					<ElectronicClock isDarkMode={isDarkMode} />
-					<Clock isDarkMode={isDarkMode} />
-				</div>
-
-				<div className="absolute bottom-4 right-4 flex space-x-4 z-10 max-lg:hidden">
-					<ModalButton
-						isOpen={isGoodsOpen}
-						setIsOpen={setIsGoodsOpen}
-						isDarkMode={isDarkMode}
-						blackImageUrl="https://boyintyoko.github.io/clock-web/icons/heartIcons/heartBlack.svg"
-						whiteImageUrl="https://boyintyoko.github.io/clock-web/icons/heartIcons/heartWhite.svg"
-					/>{" "}
-					<ModalButton
-						isOpen={isSettingOpen}
-						setIsOpen={setIsSettingOpen}
-						isDarkMode={isDarkMode}
-						blackImageUrl="https://boyintyoko.github.io/clock-web/icons/settingIcons/settingBlack.svg"
-						whiteImageUrl="https://boyintyoko.github.io/clock-web/icons/settingIcons/settingWhite.svg"
-					/>{" "}
-					<ModalButton
-						isOpen={isTimeZoneOpen}
-						setIsOpen={setIsTimeZoneOpen}
-						isDarkMode={isDarkMode}
-						blackImageUrl="https://boyintyoko.github.io/clock-web/icons/timeZoneIcons/timeZoneBlack.svg"
-						whiteImageUrl="https://boyintyoko.github.io/clock-web/icons/timeZoneIcons/timeZoneWhite.svg"
-					/>{" "}
-					<ModalButton
-						isOpen={isLapsOpen}
-						setIsOpen={setIsLapsOpen}
-						isDarkMode={isDarkMode}
-						blackImageUrl="https://raw.githubusercontent.com/boyintyoko/boyintyoko.github.io/1d309029b0cdbcc1fac719489923a8570a038ad0/clock-web/icons/lapsIcons/lapsBlack.svg"
-						whiteImageUrl="https://raw.githubusercontent.com/boyintyoko/boyintyoko.github.io/1d309029b0cdbcc1fac719489923a8570a038ad0/clock-web/icons/lapsIcons/lapsWhite.svg"
-					/>
-				</div>
-
-				<div className="max-lg:hidden">
-					<Search
-						isDarkMode={isDarkMode}
-						isHistoriesOpen={isHistoriesOpen}
-						setIsHistoriesOpen={setIsHistoriesOpen}
-						setIsLinkSettingOpen={setIsLinkSettingOpen}
-						isLinkSettingOpen={isLinkSettingOpen}
-						urls={urls}
-						setUrls={setUrls}
-						isSearch={isSearch}
-						setIsSearch={setIsSearch}
-						histories={histories}
-						setHistories={setHistories}
-					/>
-				</div>
-
-				{showCookie && (
-					<div
-						className={`
+					className={`
       fixed bottom-6 left-10 z-50 w-[92%] max-w-md
       bg-white/90 backdrop-blur-md border border-gray-200 shadow-xl
       rounded-2xl px-5 py-4 flex items-center justify-between gap-4
@@ -226,28 +221,26 @@ export default function Home() {
       transform transition-all duration-500 ease-in-out
       translate-x-0 opacity-100
     `}
-					>
-						<p className="text-sm text-gray-700">This website uses cookies.</p>
+				>
+					<p className="text-sm text-gray-700">This website uses cookies.</p>
 
-						<div className="flex gap-2">
-							<button
-								onClick={handleReject}
-								className="px-3 py-2 text-sm text-gray-600 hover:text-black transition"
-							>
-								Reject
-							</button>
+					<div className="flex gap-2">
+						<button
+							onClick={handleReject}
+							className="px-3 py-2 text-sm text-gray-600 hover:text-black transition"
+						>
+							Reject
+						</button>
 
-							<button
-								onClick={handleAccept}
-								className="px-4 py-2 rounded-xl bg-black text-white text-sm hover:bg-gray-800 transition"
-							>
-								Accept
-							</button>
-						</div>
+						<button
+							onClick={handleAccept}
+							className="px-4 py-2 rounded-xl bg-black text-white text-sm hover:bg-gray-800 transition"
+						>
+							Accept
+						</button>
 					</div>
-				)}
-			</MainSelection>
-
+				</div>
+			)}
 			<Modal isOpen={isGoodsOpen} setIsOpen={setIsGoodsOpen} title="Goods">
 				<GoodsContent isGoodsOpen={isGoodsOpen} />
 			</Modal>
@@ -283,6 +276,6 @@ export default function Home() {
 			<Modal isOpen={isLapsOpen} setIsOpen={setIsLapsOpen} title="Laps">
 				<LapsContent />
 			</Modal>
-		</AuthGuard>
+		</MainSelection>
 	);
 }

@@ -21,7 +21,6 @@ export default function SuccessPage() {
 
 	return (
 		<div className="relative min-h-screen flex items-center justify-center overflow-hidden">
-			{/* 背景 */}
 			<div
 				className="absolute inset-0 scale-105"
 				style={{

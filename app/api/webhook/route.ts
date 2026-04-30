@@ -3,11 +3,7 @@ import { supabase } from "@/lib/supabase";
 
 function getStripe() {
 	const key = process.env.STRIPE_SECRET_KEY;
-
-	if (!key) {
-		throw new Error("Missing STRIPE_SECRET_KEY");
-	}
-
+	if (!key) throw new Error("Missing STRIPE_SECRET_KEY");
 	return new Stripe(key);
 }
 
@@ -53,11 +49,12 @@ export async function POST(req: Request) {
 				await supabase
 					.from("profiles")
 					.update({
-						is_premium: true,
-						is_lifetime: false,
+						plan: "premium",
 						subscription_status: subscription.status,
-						subscription_end: periodEnd ? new Date(periodEnd * 1000) : null,
+						subscription_end: new Date(periodEnd * 1000),
+
 						stripe_customer_id: session.customer as string,
+						stripe_subscription_id: subscription.id,
 					})
 					.eq("id", userId);
 			}
@@ -66,15 +63,17 @@ export async function POST(req: Request) {
 				await supabase
 					.from("profiles")
 					.update({
-						is_premium: true,
-						is_lifetime: true,
+						plan: "premium_plus",
 						subscription_status: null,
 						subscription_end: null,
+
 						stripe_customer_id: session.customer as string,
+						stripe_subscription_id: null,
 					})
 					.eq("id", userId);
 			}
 		}
+
 		if (event.type === "invoice.payment_succeeded") {
 			const invoice = event.data.object as any;
 
@@ -97,12 +96,24 @@ export async function POST(req: Request) {
 				.from("profiles")
 				.update({
 					subscription_status: subscription.status,
-					subscription_end: periodEnd ? new Date(periodEnd * 1000) : null,
+					subscription_end: new Date(periodEnd * 1000),
 				})
 				.eq("stripe_customer_id", customerId);
 		}
+
+		if (event.type === "customer.subscription.deleted") {
+			const sub = event.data.object as Stripe.Subscription;
+
+			await supabase
+				.from("profiles")
+				.update({
+					plan: "free",
+					subscription_status: "canceled",
+					subscription_end: null,
+				})
+				.eq("stripe_subscription_id", sub.id);
+		}
 	} catch (err) {
-		console.error("🔥 webhook error:", err);
 		return new Response("Webhook failed", { status: 500 });
 	}
 

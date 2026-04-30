@@ -16,7 +16,6 @@ import SettingContent from "@@/components/modalComnponents/modalContents/setting
 import TimeZoneContent from "@@/components/modalComnponents/modalContents/timeZoneContent";
 import History from "@@/components/searchComponents/historyComponents/history";
 import { useBackground } from "@@/context/backgroundContext";
-import styles from "@@/css/inputLabel.module.css";
 import type HistoryType from "@@/types/HistoryType";
 import axios from "axios";
 import Image from "next/image";
@@ -73,6 +72,32 @@ export default function HeaderMain({
 	const [isLapsOpen, setIsLapsOpen] = useState(false);
 
 	const { background } = useBackground();
+
+	const [plan, setPlan] = useState("free");
+	const [subscriptionEnd, setSubscriptionEnd] = useState<string | null>(null);
+
+	useEffect(() => {
+		const fetchPlan = async () => {
+			const {
+				data: { user },
+			} = await supabase.auth.getUser();
+
+			if (!user) return;
+
+			const { data } = await supabase
+				.from("profiles")
+				.select("plan, subscription_end")
+				.eq("id", user.id)
+				.single();
+
+			if (data) {
+				setPlan(data.plan ?? "free");
+				setSubscriptionEnd(data.subscription_end);
+			}
+		};
+
+		fetchPlan();
+	}, []);
 
 	const handleSwitchChange = () => {
 		setIsDarkMode(!isDarkMode);
@@ -212,8 +237,6 @@ export default function HeaderMain({
     z-50
   `}
 			>
-				{/* ================= Search ================= */}
-
 				<div
 					className={`
       flex items-center
@@ -436,6 +459,37 @@ export default function HeaderMain({
 						whiteImageUrl="https://raw.githubusercontent.com/boyintyoko/boyintyoko.github.io/1d309029b0cdbcc1fac719489923a8570a038ad0/clock-web/icons/lapsIcons/lapsBlack.svg"
 						blackImageUrl="https://raw.githubusercontent.com/boyintyoko/boyintyoko.github.io/1d309029b0cdbcc1fac719489923a8570a038ad0/clock-web/icons/lapsIcons/lapsWhite.svg"
 					/>
+				</div>
+
+				<div className="bg-black/40 backdrop-blur-md border border-white/20 rounded-2xl px-4 py-3 shadow-lg flex gap-2">
+					<div className="flex items-center gap-2">
+						<span className="text-xs text-gray-300">Plan:</span>
+						<span
+							className={`text-sm font-semibold px-2 py-0.5 rounded-full
+        ${
+					plan === "premium_plus"
+						? "bg-purple-500/20 text-purple-300"
+						: plan === "premium"
+							? "bg-yellow-500/20 text-yellow-300"
+							: "bg-gray-500/20 text-gray-300"
+				}`}
+						>
+							{plan === "premium_plus"
+								? "Premium+"
+								: plan === "premium"
+									? "Premium"
+									: "Free"}
+						</span>
+					</div>
+
+					{subscriptionEnd && (
+						<p className="text-xs text-gray-400 mt-2">
+							Expires:{" "}
+							<span className="text-white">
+								{new Date(subscriptionEnd).toLocaleDateString()}
+							</span>
+						</p>
+					)}
 				</div>
 
 				<div>
@@ -661,6 +715,39 @@ export default function HeaderMain({
 			<Modal isOpen={isLapsOpen} setIsOpen={setIsLapsOpen} title="Laps">
 				<LapsContent />
 			</Modal>
+
+			<div className="absolute top-20 right-2 max-lg:hidden">
+				<div className="bg-black/40 backdrop-blur-md border border-white/20 rounded-2xl px-4 py-3 shadow-lg flex gap-2">
+					<div className="flex items-center gap-2">
+						<span className="text-xs text-gray-300">Plan:</span>
+						<span
+							className={`text-sm font-semibold px-2 py-0.5 rounded-full
+        ${
+					plan === "premium_plus"
+						? "bg-purple-500/20 text-purple-300"
+						: plan === "premium"
+							? "bg-yellow-500/20 text-yellow-300"
+							: "bg-gray-500/20 text-gray-300"
+				}`}
+						>
+							{plan === "premium_plus"
+								? "Premium+"
+								: plan === "premium"
+									? "Premium"
+									: "Free"}
+						</span>
+					</div>
+
+					{subscriptionEnd && (
+						<p className="text-xs text-gray-400 mt-2">
+							Expires:{" "}
+							<span className="text-white">
+								{new Date(subscriptionEnd).toLocaleDateString()}
+							</span>
+						</p>
+					)}
+				</div>
+			</div>
 		</div>
 	);
 }
