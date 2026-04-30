@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 
 export default function SuccessPage() {
-	const [session, setSession] = useState<any>(null);
 	const [imageUrl, setImageUrl] = useState("");
 
 	useEffect(() => {
@@ -75,14 +74,6 @@ export default function SuccessPage() {
 						<br />
 						Premium機能が有効になりました。
 					</p>
-
-					{/* session情報表示（デバッグ兼確認用） */}
-					{session && (
-						<div className="w-full text-xs text-gray-500 break-all bg-gray-100 p-3 rounded-lg">
-							<p>mode: {session.mode}</p>
-							<p>email: {session.customer_email}</p>
-						</div>
-					)}
 
 					<a
 						href="/"
