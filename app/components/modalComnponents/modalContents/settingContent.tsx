@@ -278,6 +278,15 @@ export default function SettingContent({
 					Clear memories
 				</button>
 			</div>
+
+			<div className="pt-2">
+				<button
+					onClick={clearMemories}
+					className="w-full rounded-xl border border-red-400 text-red-400 p-3 font-semibold hover:bg-red-400 hover:text-white"
+				>
+					Cancellation
+				</button>
+			</div>
 		</div>
 	);
 }

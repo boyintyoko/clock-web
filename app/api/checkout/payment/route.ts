@@ -1,6 +1,14 @@
 import Stripe from "stripe";
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
+function getStripe() {
+	const key = process.env.STRIPE_SECRET_KEY;
+
+	if (!key) {
+		throw new Error("Missing STRIPE_SECRET_KEY");
+	}
+
+	return new Stripe(key);
+}
 
 export async function POST(req: Request) {
 	try {
@@ -9,6 +17,8 @@ export async function POST(req: Request) {
 		if (!userId || !priceId) {
 			return new Response("Missing params", { status: 400 });
 		}
+
+		const stripe = getStripe();
 
 		const session = await stripe.checkout.sessions.create({
 			mode: "payment",
