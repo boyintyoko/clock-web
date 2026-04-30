@@ -1,9 +1,19 @@
 import Stripe from "stripe";
 import { supabase } from "@/lib/supabase";
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
+function getStripe() {
+	const key = process.env.STRIPE_SECRET_KEY;
+
+	if (!key) {
+		throw new Error("Missing STRIPE_SECRET_KEY");
+	}
+
+	return new Stripe(key);
+}
 
 export async function POST(req: Request) {
+	const stripe = getStripe();
+
 	const body = await req.text();
 	const sig = req.headers.get("stripe-signature");
 
@@ -20,7 +30,6 @@ export async function POST(req: Request) {
 			process.env.STRIPE_WEBHOOK_SECRET!,
 		);
 	} catch (err) {
-		console.error("❌ signature error:", err);
 		return new Response("Webhook Error", { status: 400 });
 	}
 
@@ -34,21 +43,12 @@ export async function POST(req: Request) {
 			}
 
 			if (session.mode === "subscription") {
-				const subscriptionId = session.subscription as string | null;
+				const subscriptionId = session.subscription as string;
 
-				if (!subscriptionId) {
-					return new Response("No subscriptionId", { status: 400 });
-				}
+				const subscription =
+					await stripe.subscriptions.retrieve(subscriptionId);
 
-				const subscription = (await stripe.subscriptions.retrieve(
-					subscriptionId,
-				)) as any;
-
-				const periodEnd =
-					subscription.current_period_end ??
-					subscription.items?.data?.[0]?.current_period_end;
-
-				console.log("periodEnd:", periodEnd);
+				const periodEnd = subscription.items?.data?.[0]?.current_period_end;
 
 				await supabase
 					.from("profiles")
@@ -75,27 +75,23 @@ export async function POST(req: Request) {
 					.eq("id", userId);
 			}
 		}
-
 		if (event.type === "invoice.payment_succeeded") {
 			const invoice = event.data.object as any;
+
 			const subscriptionId =
 				typeof invoice.subscription === "string"
 					? invoice.subscription
 					: invoice.subscription?.id;
+
 			const customerId = invoice.customer as string | null;
 
 			if (!subscriptionId || !customerId) {
-				console.error("❌ Missing subscription or customer");
 				return new Response("Missing data", { status: 400 });
 			}
 
-			const subscription = (await stripe.subscriptions.retrieve(
-				subscriptionId,
-			)) as any;
+			const subscription = await stripe.subscriptions.retrieve(subscriptionId);
 
-			const periodEnd =
-				subscription.current_period_end ??
-				subscription.items?.data?.[0]?.current_period_end;
+			const periodEnd = subscription.items?.data?.[0]?.current_period_end;
 
 			await supabase
 				.from("profiles")
