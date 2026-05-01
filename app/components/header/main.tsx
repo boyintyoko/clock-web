@@ -641,7 +641,7 @@ export default function HeaderMain({
 							rel="noopener noreferrer"
 							className="truncate max-w-[100px]"
 						>
-							Privacy Policy
+							Privacy Policy ↗
 						</Link>
 
 						<span className="hidden xl:inline text-gray-500">|</span>
@@ -652,7 +652,7 @@ export default function HeaderMain({
 							rel="noopener noreferrer"
 							className="truncate max-w-[120px]"
 						>
-							Terms of Service
+							Terms of Service ↗
 						</Link>
 
 						<span className="hidden xl:inline text-gray-500">|</span>
@@ -663,7 +663,7 @@ export default function HeaderMain({
 							rel="noopener noreferrer"
 							className="truncate max-w-[80px]"
 						>
-							Contact
+							Contact ↗
 						</Link>
 					</div>
 				</div>
