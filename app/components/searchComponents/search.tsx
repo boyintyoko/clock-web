@@ -129,7 +129,7 @@ export default function Search({
 	};
 
 	return (
-		<div>
+		<div className="max-2xl:hidden">
 			<div className="absolute bottom-2 left-2 z-10">
 				<SearchContent
 					isSearch={isSearch}

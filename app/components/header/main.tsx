@@ -184,7 +184,7 @@ export default function HeaderMain({
 			<button
 				onClick={() => setMenuOpen(!menuOpen)}
 				className="
-          lg:hidden
+          2xl:hidden
           fixed right-2 bottom-2
           hover:bottom-1
           transition-all
@@ -219,7 +219,7 @@ export default function HeaderMain({
 			)}
 			<div
 				className={`
-    lg:hidden
+    2xl:hidden
     fixed top-0 right-0
     h-full w-[320px]
 
@@ -547,7 +547,7 @@ export default function HeaderMain({
 
 			<div
 				className={`
-          max-lg:hidden
+          max-2xl:hidden
           flex flex-row-reverse gap-5 items-center
           absolute top-2 right-2 z-10 hover:top-3 transition-all
           ${isDarkMode ? "bg-black text-white" : "bg-white text-black"}
@@ -716,7 +716,7 @@ export default function HeaderMain({
 				<LapsContent />
 			</Modal>
 
-			<div className="absolute top-20 right-2 max-lg:hidden">
+			<div className="absolute top-20 right-2 max-2xl:hidden">
 				<div className="bg-black/40 backdrop-blur-md border border-white/20 rounded-2xl px-4 py-3 shadow-lg flex gap-2">
 					<div className="flex items-center gap-2">
 						<span className="text-xs text-gray-300">Plan:</span>

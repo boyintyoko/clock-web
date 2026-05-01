@@ -164,7 +164,7 @@ export default function Home() {
 				<Clock isDarkMode={isDarkMode} />
 			</div>
 
-			<div className="absolute bottom-4 right-4 flex space-x-4 z-10 max-lg:hidden">
+			<div className="absolute bottom-4 right-4 flex space-x-4 z-10 max-2xl:hidden">
 				<ModalButton
 					isOpen={isGoodsOpen}
 					setIsOpen={setIsGoodsOpen}
