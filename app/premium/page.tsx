@@ -105,8 +105,8 @@ export default function PremiumPage() {
 					<p className="text-sm mb-4 opacity-80">$1 / month</p>
 
 					<ul className="text-sm space-y-2 mb-6 text-left">
-						<li>✔ Custom Pomodoro time</li>
-						<li>✔ High-quality backgrounds</li>
+						<li>✔ Timer function</li>
+						<li>✔ All future features included</li>
 						<li>&nbsp;</li>
 					</ul>
 

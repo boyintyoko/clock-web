@@ -18,11 +18,12 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
 
 			if (!isMounted) return;
 
-			setLoading(false);
-
 			if (!user) {
 				router.replace("/login");
+				return;
 			}
+
+			setLoading(false);
 		};
 
 		checkUser();
@@ -33,7 +34,14 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
 	}, [router]);
 
 	if (loading) {
-		return <div>Loading...</div>;
+		return (
+			<div className="h-screen w-full flex items-center justify-center bg-black/5 backdrop-blur-sm">
+				<div className="flex flex-col items-center gap-3">
+					<div className="h-10 w-10 rounded-full border-4 border-gray-300 border-t-black animate-spin" />
+					<p className="text-sm text-gray-600 tracking-wide">Loading...</p>
+				</div>
+			</div>
+		);
 	}
 
 	return <>{children}</>;

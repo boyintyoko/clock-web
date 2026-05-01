@@ -110,8 +110,9 @@ export async function POST(req: Request) {
 					plan: "free",
 					subscription_status: "canceled",
 					subscription_end: null,
+					stripe_subscription_id: null,
 				})
-				.eq("stripe_subscription_id", sub.id);
+				.eq("stripe_customer_id", sub.customer);
 		}
 	} catch (err) {
 		return new Response("Webhook failed", { status: 500 });

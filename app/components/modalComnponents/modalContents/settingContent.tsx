@@ -1,11 +1,12 @@
 "use client";
 
 import type React from "react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useLanguage } from "@/app/context/languageContext";
 import { useTime } from "@/app/context/timeContext";
 import { supabase } from "@/lib/supabase";
 import Link from "next/link";
+import axios from "axios";
 
 type Props = {
 	setIsSettingOpen: (isOpen: boolean) => void;
@@ -20,6 +21,46 @@ export default function SettingContent({
 }: Props) {
 	const { setIsNowLanguage, isNowLanguage } = useLanguage();
 	const { setIsNowTime, isNowTime } = useTime();
+
+	const [plan, setPlan] = useState<"free" | "premium" | "premium_plus" | null>(
+		null,
+	);
+
+	useEffect(() => {
+		const loadUserPlan = async () => {
+			const {
+				data: { user },
+			} = await supabase.auth.getUser();
+
+			if (!user) return;
+
+			const { data } = await supabase
+				.from("profiles")
+				.select("plan")
+				.eq("id", user.id)
+				.single();
+
+			if (data) {
+				setPlan(data.plan);
+			}
+		};
+
+		loadUserPlan();
+	}, []);
+
+	const handleCancelSubscription = async () => {
+		const {
+			data: { user },
+		} = await supabase.auth.getUser();
+
+		if (!user) return;
+
+		await axios.post("/api/checkout/subscription/cancel", {
+			userId: user.id,
+		});
+
+		window.location.reload();
+	};
 
 	const handleLanguageChange = async (
 		e: React.ChangeEvent<HTMLSelectElement>,
@@ -279,14 +320,16 @@ export default function SettingContent({
 				</button>
 			</div>
 
-			<div className="pt-2">
-				<button
-					onClick={clearMemories}
-					className="w-full rounded-xl border border-red-400 text-red-400 p-3 font-semibold hover:bg-red-400 hover:text-white"
-				>
-					Cancellation
-				</button>
-			</div>
+			{plan === "premium" && (
+				<div className="pt-2">
+					<button
+						onClick={handleCancelSubscription}
+						className="w-full rounded-xl border border-red-400 text-red-400 p-3 font-semibold hover:bg-red-400 hover:text-white"
+					>
+						Cancellation premium
+					</button>
+				</div>
+			)}
 		</div>
 	);
 }
