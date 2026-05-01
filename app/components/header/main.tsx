@@ -381,6 +381,16 @@ export default function HeaderMain({
 						wheatherIcon={wheatherIcon}
 						humidity={humidity}
 					/>
+					<button onClick={() => setIsLinkSettingOpen(!isLinkSettingOpen)}>
+						<Image
+							src="https://boyintyoko.github.io/clock-web/icons/settingIcons/settingWhite.svg"
+							alt="Setting Icon"
+							height={20}
+							width={20}
+							loading="lazy"
+							className={!isDarkMode ? "invert" : ""}
+						/>
+					</button>
 				</div>
 
 				<div
