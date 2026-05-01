@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import AuthGuard from "@@/components/AuthGuard";
+import AuthGuard from "./components/AuthGuard";
 
 import { Analytics } from "@vercel/analytics/react";
 import Providers from "./providers";
