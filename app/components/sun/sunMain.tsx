@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useCallback, useState } from "react";
 import axios from "axios";
 import { supabase } from "@/lib/supabase";
 
@@ -14,7 +14,8 @@ type Props = {
 };
 
 export default function SunMain({ plan }: Props) {
-	if (plan === "free") return;
+	// プランがfreeなら何も表示しない
+	if (plan === "free") return null;
 
 	const [sun, setSun] = useState<SunData | null>(null);
 	const [loading, setLoading] = useState(true);
@@ -29,62 +30,89 @@ export default function SunMain({ plan }: Props) {
 	const cardRef = useRef<HTMLDivElement>(null);
 	const saveTimer = useRef<NodeJS.Timeout | null>(null);
 
-	const saveState = (
-		newPos: { x: number; y: number },
-		lockedValue: boolean,
-		currentUserId: string | null,
-	) => {
-		if (!currentUserId) return; // ユーザーIDがないなら保存しない
+	// ======================
+	// 安全な座標を計算する関数 (はみ出し防止)
+	// ======================
+	const getClampedPosition = useCallback((x: number, y: number) => {
+		if (!cardRef.current) return { x, y };
 
-		if (saveTimer.current) clearTimeout(saveTimer.current);
+		const rect = cardRef.current.getBoundingClientRect();
+		// 画面中央からの可動限界距離を計算 (画面がカードより小さい場合は0にする)
+		const limitX = Math.max(0, (window.innerWidth - rect.width) / 2);
+		const limitY = Math.max(0, (window.innerHeight - rect.height) / 2);
 
-		saveTimer.current = setTimeout(async () => {
-			try {
-				await supabase.from("sun_widget_state").upsert({
-					user_id: currentUserId,
-					x: newPos.x,
-					y: newPos.y,
-					locked: lockedValue,
-					updated_at: new Date().toISOString(),
-				});
-			} catch (e) {
-				console.error("Save failed", e);
-			}
-		}, 500);
-	};
+		return {
+			x: Math.max(-limitX, Math.min(x, limitX)),
+			y: Math.max(-limitY, Math.min(y, limitY)),
+		};
+	}, []);
 
+	// ======================
+	// 状態保存
+	// ======================
+	const saveState = useCallback(
+		(
+			newPos: { x: number; y: number },
+			lockedValue: boolean,
+			currentUserId: string | null,
+		) => {
+			if (!currentUserId) return;
+
+			if (saveTimer.current) clearTimeout(saveTimer.current);
+
+			saveTimer.current = setTimeout(async () => {
+				try {
+					await supabase.from("sun_widget_state").upsert({
+						user_id: currentUserId,
+						x: newPos.x,
+						y: newPos.y,
+						locked: lockedValue,
+						updated_at: new Date().toISOString(),
+					});
+				} catch (e) {
+					console.error("Save failed", e);
+				}
+			}, 500);
+		},
+		[],
+	);
+
+	// ======================
+	// 初期ロード
+	// ======================
 	useEffect(() => {
 		const init = async () => {
-			// 1. ログインユーザーの取得
 			const {
 				data: { user },
 			} = await supabase.auth.getUser();
 
 			if (user) {
 				setUserId(user.id);
-
-				// 2. そのユーザーの設定をロード
 				const { data: stateData } = await supabase
 					.from("sun_widget_state")
 					.select("*")
-					.eq("user_id", user.id) // user_id で検索
+					.eq("user_id", user.id)
 					.single();
 
 				if (stateData) {
-					setPos({ x: stateData.x, y: stateData.y });
+					// 保存された位置を読み込んだ後、現在の画面サイズに合わせて補正
+					const initialPos = getClampedPosition(stateData.x, stateData.y);
+					setPos(initialPos);
 					setLocked(stateData.locked);
 				}
 			}
 
-			// 3. APIで日の出・日の入り取得
 			try {
 				const position = await new Promise<GeolocationPosition>(
 					(resolve, reject) =>
 						navigator.geolocation.getCurrentPosition(resolve, reject),
 				);
-				const { latitude, longitude } = position.coords;
 				const res = await axios.get("https://api.sunrise-sunset.org/json", {
-					params: { lat: latitude, lng: longitude, formatted: 0 },
+					params: {
+						lat: position.coords.latitude,
+						lng: position.coords.longitude,
+						formatted: 0,
+					},
 				});
 				setSun({
 					sunrise: res.data.results.sunrise,
@@ -97,44 +125,48 @@ export default function SunMain({ plan }: Props) {
 			}
 		};
 		init();
-	}, []);
+	}, [getClampedPosition]);
 
 	// ======================
-	// ドラッグ処理
+	// ドラッグ処理 & リサイズ監視
 	// ======================
 	useEffect(() => {
 		const handleMouseMove = (e: MouseEvent) => {
-			if (!dragging.current || locked || !cardRef.current) return;
+			if (!dragging.current || locked) return;
 
-			const rect = cardRef.current.getBoundingClientRect();
-			const limitX = (window.innerWidth - rect.width) / 2;
-			const limitY = (window.innerHeight - rect.height) / 2;
+			const newX = e.clientX - offset.current.x;
+			const newY = e.clientY - offset.current.y;
 
-			const newX = Math.max(
-				-limitX,
-				Math.min(e.clientX - offset.current.x, limitX),
-			);
-			const newY = Math.max(
-				-limitY,
-				Math.min(e.clientY - offset.current.y, limitY),
-			);
-
-			const newPos = { x: newX, y: newY };
-			setPos(newPos);
-			saveState(newPos, locked, userId); // userId を渡す
+			const clamped = getClampedPosition(newX, newY);
+			setPos(clamped);
+			saveState(clamped, locked, userId);
 		};
 
 		const handleMouseUp = () => {
 			dragging.current = false;
 		};
 
+		const handleResize = () => {
+			setPos((prev) => {
+				const clamped = getClampedPosition(prev.x, prev.y);
+				// リサイズではみ出た場合は保存もし直す
+				if (clamped.x !== prev.x || clamped.y !== prev.y) {
+					saveState(clamped, locked, userId);
+				}
+				return clamped;
+			});
+		};
+
 		window.addEventListener("mousemove", handleMouseMove);
 		window.addEventListener("mouseup", handleMouseUp);
+		window.addEventListener("resize", handleResize);
+
 		return () => {
 			window.removeEventListener("mousemove", handleMouseMove);
 			window.removeEventListener("mouseup", handleMouseUp);
+			window.removeEventListener("resize", handleResize);
 		};
-	}, [locked, userId]); // userId も依存に含める
+	}, [locked, userId, getClampedPosition, saveState]);
 
 	const handleMouseDown = (e: React.MouseEvent) => {
 		if (locked) return;
@@ -145,15 +177,7 @@ export default function SunMain({ plan }: Props) {
 		};
 	};
 
-	// UIは変わらないので省略（前回のものを使用）
-	if (loading)
-		return (
-			<div className="absolute inset-0 flex items-center justify-center z-50">
-				<div className="px-6 py-3 rounded-xl bg-black/40 backdrop-blur-md text-white">
-					📍 Loading...
-				</div>
-			</div>
-		);
+	if (loading) return null; // または読み込み中UI
 	if (error || !sun) return null;
 
 	return (
