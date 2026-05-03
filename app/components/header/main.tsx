@@ -40,26 +40,6 @@ type SunData = {
 	sunset: string;
 };
 
-type WindData = {
-	latitude: number;
-	longitude: number;
-	generationtime_ms: number;
-	utc_offset_seconds: number;
-	timezone: string;
-	timezone_abbreviation: string;
-	elevation: number;
-	current: {
-		time: string;
-		interval: number;
-		wind_speed_10m: number;
-	};
-	current_units: {
-		time: string;
-		interval: string;
-		wind_speed_10m: string;
-	};
-};
-
 export default function HeaderMain({
 	isDarkMode,
 	isNowTimeZone,
@@ -102,21 +82,6 @@ export default function HeaderMain({
 	const [subscriptionEnd, setSubscriptionEnd] = useState<string | null>(null);
 
 	const [data, setData] = useState<SunData | null>(null);
-	const [wind, setWind] = useState<WindData | null>(null);
-
-	useEffect(() => {
-		navigator.geolocation.getCurrentPosition(async (pos) => {
-			const { latitude, longitude } = pos.coords;
-
-			const res = await fetch(
-				`https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current=wind_speed_10m`,
-			);
-
-			const data = await res.json();
-
-			setWind(data);
-		});
-	}, []);
 
 	useEffect(() => {
 		if (!navigator.geolocation) {
@@ -554,26 +519,32 @@ export default function HeaderMain({
 				{plan !== "free" && (
 					<div
 						className={`
-    grid grid-cols-3 gap-4
-    p-5
+    grid grid-cols-2 divide-x
     rounded-2xl
     border
-    shadow-lg
+    shadow-md
     backdrop-blur-md
-    transition-all
+    transition-all duration-300
+    overflow-hidden
 
-    ${isDarkMode ? "bg-white/5 border-white/10" : "bg-black/5 border-black/10"}
+    ${
+			isDarkMode
+				? "bg-white/5 border-white/10 divide-white/10"
+				: "bg-black/5 border-black/10 divide-black/10"
+		}
+
+    hover:scale-[1.01] hover:shadow-lg
   `}
 					>
 						{/* Sunrise */}
-						<div className="flex flex-col gap-1">
+						<div className="flex flex-col items-center justify-center py-4 gap-1">
 							<p
-								className={`text-xs ${isDarkMode ? "text-white/60" : "text-black/60"}`}
+								className={`text-xs tracking-wide ${isDarkMode ? "text-white/60" : "text-black/60"}`}
 							>
 								🌅 Sunrise
 							</p>
 							<p
-								className={`text-lg font-semibold ${isDarkMode ? "text-white" : "text-black"}`}
+								className={`text-2xl font-semibold ${isDarkMode ? "text-white" : "text-black"}`}
 							>
 								{data?.sunrise
 									? new Date(data.sunrise).toLocaleTimeString("ja-JP", {
@@ -585,14 +556,14 @@ export default function HeaderMain({
 						</div>
 
 						{/* Sunset */}
-						<div className="flex flex-col gap-1">
+						<div className="flex flex-col items-center justify-center py-4 gap-1">
 							<p
-								className={`text-xs ${isDarkMode ? "text-white/60" : "text-black/60"}`}
+								className={`text-xs tracking-wide ${isDarkMode ? "text-white/60" : "text-black/60"}`}
 							>
 								🌇 Sunset
 							</p>
 							<p
-								className={`text-lg font-semibold ${isDarkMode ? "text-white" : "text-black"}`}
+								className={`text-2xl font-semibold ${isDarkMode ? "text-white" : "text-black"}`}
 							>
 								{data?.sunset
 									? new Date(data.sunset).toLocaleTimeString("ja-JP", {
@@ -600,23 +571,6 @@ export default function HeaderMain({
 											minute: "2-digit",
 										})
 									: "--:--"}
-							</p>
-						</div>
-
-						<div className="flex flex-col gap-1">
-							<p
-								className={`text-xs ${isDarkMode ? "text-white/60" : "text-black/60"}`}
-							>
-								🌬 Wind
-							</p>
-							<p
-								className={`text-lg font-semibold text-sm ${isDarkMode ? "text-white" : "text-black"}`}
-							>
-								{wind?.current?.wind_speed_10m !== undefined
-									? `${wind.current.wind_speed_10m} ${
-											wind.current_units?.wind_speed_10m ?? "m/s"
-										}`
-									: "--"}
 							</p>
 						</div>
 					</div>
@@ -885,27 +839,32 @@ export default function HeaderMain({
 			<div className="absolute top-20 right-2 max-2xl:hidden w-[260px] space-y-3">
 				<div
 					className="
-      bg-black/40
-      backdrop-blur-xl
-      border border-white/10
-      rounded-2xl
-      px-4 py-3
-      shadow-lg
-    "
+    rounded-2xl
+    border border-white/10
+    bg-white/5
+    backdrop-blur-md
+
+    px-4 py-3
+    transition-all duration-300
+
+    hover:bg-white/10
+  "
 				>
 					<div className="flex items-center justify-between">
-						<span className="text-xs text-gray-400">Plan</span>
+						<span className="text-xs text-white/40">Plan</span>
 
 						<span
-							className={`text-xs font-semibold px-2 py-1 rounded-full
-          ${
-						plan === "premium_plus"
-							? "bg-purple-500/20 text-purple-300"
-							: plan === "premium"
-								? "bg-yellow-500/20 text-yellow-300"
-								: "bg-gray-500/20 text-gray-300"
-					}
-        `}
+							className={`
+        text-xs font-medium px-2 py-0.5 rounded-full
+
+        ${
+					plan === "premium_plus"
+						? "text-purple-300 bg-purple-500/10"
+						: plan === "premium"
+							? "text-yellow-300 bg-yellow-500/10"
+							: "text-gray-300 bg-gray-500/10"
+				}
+      `}
 						>
 							{plan === "premium_plus"
 								? "Premium+"
@@ -916,9 +875,10 @@ export default function HeaderMain({
 					</div>
 
 					{subscriptionEnd && (
-						<div className="mt-2 text-xs text-gray-400">
-							Expires{" "}
-							<span className="text-white font-medium">
+						<div className="mt-2 flex items-center justify-between">
+							<span className="text-xs text-white/30">Expires</span>
+
+							<span className="text-xs text-white/80">
 								{new Date(subscriptionEnd).toLocaleDateString("ja-JP")}
 							</span>
 						</div>
@@ -928,50 +888,58 @@ export default function HeaderMain({
 				{plan !== "free" && (
 					<div
 						className={`
-    bg-black/40
-    backdrop-blur-xl
-    border border-white/10
+    grid grid-cols-2 divide-x
     rounded-2xl
-    p-4
-    shadow-lg
-    space-y-4
+    border
+    shadow-md
+    backdrop-blur-md
+    transition-all duration-300
+    overflow-hidden
+
+    ${
+			isDarkMode
+				? "bg-white/5 border-white/10 divide-white/10"
+				: "bg-black/5 border-black/10 divide-black/10"
+		}
+
+    hover:scale-[1.01] hover:shadow-lg
   `}
 					>
-						<p className="text-xs text-gray-400">Environment</p>
+						<div className="flex flex-col items-center justify-center py-4 gap-1">
+							<p
+								className={`text-xs tracking-wide ${!isDarkMode ? "text-white/60" : "text-black/60"}`}
+							>
+								🌅 Sunrise
+							</p>
+							<p
+								className={`text-2xl font-semibold ${!isDarkMode ? "text-white" : "text-black"}`}
+							>
+								{data?.sunrise
+									? new Date(data.sunrise).toLocaleTimeString("ja-JP", {
+											hour: "2-digit",
+											minute: "2-digit",
+										})
+									: "--:--"}
+							</p>
+						</div>
 
-						<div className="grid grid-cols-3 gap-4">
-							<div className="space-y-1">
-								<p className="text-xs text-gray-400">🌅 Sunrise</p>
-								<p className="text-sm font-semibold text-white">
-									{data?.sunrise
-										? new Date(data.sunrise).toLocaleTimeString("ja-JP", {
-												hour: "2-digit",
-												minute: "2-digit",
-											})
-										: "--:--"}
-								</p>
-							</div>
-
-							<div className="space-y-1">
-								<p className="text-xs text-gray-400">🌇 Sunset</p>
-								<p className="text-sm font-semibold text-white">
-									{data?.sunset
-										? new Date(data.sunset).toLocaleTimeString("ja-JP", {
-												hour: "2-digit",
-												minute: "2-digit",
-											})
-										: "--:--"}
-								</p>
-							</div>
-
-							<div className="space-y-1">
-								<p className="text-xs text-gray-400">🌬 Wind</p>
-								<p className="text-sm font-semibold text-white">
-									{wind?.current?.wind_speed_10m !== undefined
-										? `${wind.current.wind_speed_10m} ${wind.current_units?.wind_speed_10m ?? "m/s"}`
-										: "--"}
-								</p>
-							</div>
+						{/* Sunset */}
+						<div className="flex flex-col items-center justify-center py-4 gap-1">
+							<p
+								className={`text-xs tracking-wide ${!isDarkMode ? "text-white/60" : "text-black/60"}`}
+							>
+								🌇 Sunset
+							</p>
+							<p
+								className={`text-2xl font-semibold ${!isDarkMode ? "text-white" : "text-black"}`}
+							>
+								{data?.sunset
+									? new Date(data.sunset).toLocaleTimeString("ja-JP", {
+											hour: "2-digit",
+											minute: "2-digit",
+										})
+									: "--:--"}
+							</p>
 						</div>
 					</div>
 				)}
