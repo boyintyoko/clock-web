@@ -35,6 +35,11 @@ type Props = {
 	histories: HistoryType[];
 };
 
+type SunData = {
+	sunrise: string;
+	sunset: string;
+};
+
 export default function HeaderMain({
 	isDarkMode,
 	isNowTimeZone,
@@ -75,6 +80,44 @@ export default function HeaderMain({
 
 	const [plan, setPlan] = useState("free");
 	const [subscriptionEnd, setSubscriptionEnd] = useState<string | null>(null);
+
+	const [data, setData] = useState<SunData | null>(null);
+	const [loading, setLoading] = useState(true);
+
+	useEffect(() => {
+		if (!navigator.geolocation) {
+			setLoading(false);
+			return;
+		}
+
+		navigator.geolocation.getCurrentPosition(
+			async (pos) => {
+				try {
+					const { latitude, longitude } = pos.coords;
+
+					const res = await fetch(
+						`https://api.sunrise-sunset.org/json?lat=${latitude}&lng=${longitude}&formatted=0&tzid=Asia/Tokyo`,
+					);
+
+					if (!res.ok) throw new Error("API error");
+
+					const json = await res.json();
+
+					setData({
+						sunrise: json.results.sunrise,
+						sunset: json.results.sunset,
+					});
+				} catch (e) {
+					console.log(e);
+				} finally {
+					setLoading(false);
+				}
+			},
+			() => {
+				setLoading(false);
+			},
+		);
+	}, []);
 
 	useEffect(() => {
 		console.log(background);
@@ -482,6 +525,57 @@ export default function HeaderMain({
 					/>
 				</div>
 
+				{plan !== "free" && (
+					<div
+						className={`
+    grid grid-cols-2 gap-4
+    p-4
+
+    rounded-2xl
+    border
+
+    ${isDarkMode ? "bg-white/5 border-white/10" : "bg-black/5 border-black/10"}
+
+    shadow-lg backdrop-blur-md
+  `}
+					>
+						<div className="flex flex-col gap-1">
+							<p
+								className={`text-xs ${isDarkMode ? "text-white/60" : "text-black/60"}`}
+							>
+								🌅 Sunrise
+							</p>
+							<p
+								className={`text-lg font-semibold ${isDarkMode ? "text-white" : "text-black"}`}
+							>
+								{data?.sunrise
+									? new Date(data.sunrise).toLocaleTimeString("ja-JP", {
+											hour: "2-digit",
+											minute: "2-digit",
+										})
+									: "--:--"}
+							</p>
+						</div>
+
+						<div className="flex flex-col gap-1">
+							<p
+								className={`text-xs ${isDarkMode ? "text-white/60" : "text-black/60"}`}
+							>
+								🌇 Sunset
+							</p>
+							<p
+								className={`text-lg font-semibold ${isDarkMode ? "text-white" : "text-black"}`}
+							>
+								{data?.sunset
+									? new Date(data.sunset).toLocaleTimeString("ja-JP", {
+											hour: "2-digit",
+											minute: "2-digit",
+										})
+									: "--:--"}
+							</p>
+						</div>
+					</div>
+				)}
 				<div className="bg-black/40 backdrop-blur-md border border-white/20 rounded-2xl px-4 py-3 shadow-lg flex gap-2">
 					<div className="flex items-center gap-2">
 						<span className="text-xs text-gray-300">Plan:</span>
@@ -743,19 +837,30 @@ export default function HeaderMain({
 				<LapsContent />
 			</Modal>
 
-			<div className="absolute top-20 right-2 max-2xl:hidden">
-				<div className="bg-black/40 backdrop-blur-md border border-white/20 rounded-2xl px-4 py-3 shadow-lg flex gap-2">
-					<div className="flex items-center gap-2">
-						<span className="text-xs text-gray-300">Plan:</span>
+			<div className="absolute top-20 right-2 max-2xl:hidden w-[260px] space-y-3">
+				<div
+					className="
+      bg-black/40
+      backdrop-blur-xl
+      border border-white/10
+      rounded-2xl
+      px-4 py-3
+      shadow-lg
+    "
+				>
+					<div className="flex items-center justify-between">
+						<span className="text-xs text-gray-400">Plan</span>
+
 						<span
-							className={`text-sm font-semibold px-2 py-0.5 rounded-full
-        ${
-					plan === "premium_plus"
-						? "bg-purple-500/20 text-purple-300"
-						: plan === "premium"
-							? "bg-yellow-500/20 text-yellow-300"
-							: "bg-gray-500/20 text-gray-300"
-				}`}
+							className={`text-xs font-semibold px-2 py-1 rounded-full
+          ${
+						plan === "premium_plus"
+							? "bg-purple-500/20 text-purple-300"
+							: plan === "premium"
+								? "bg-yellow-500/20 text-yellow-300"
+								: "bg-gray-500/20 text-gray-300"
+					}
+        `}
 						>
 							{plan === "premium_plus"
 								? "Premium+"
@@ -766,14 +871,58 @@ export default function HeaderMain({
 					</div>
 
 					{subscriptionEnd && (
-						<p className="text-xs text-gray-400 mt-2">
-							Expires:{" "}
-							<span className="text-white">
-								{new Date(subscriptionEnd).toLocaleDateString()}
+						<div className="mt-2 text-xs text-gray-400">
+							Expires{" "}
+							<span className="text-white font-medium">
+								{new Date(subscriptionEnd).toLocaleDateString("ja-JP")}
 							</span>
-						</p>
+						</div>
 					)}
 				</div>
+
+				{plan !== "free" && (
+					<div
+						className={`
+      bg-black/40
+      backdrop-blur-xl
+      border border-white/10
+      rounded-2xl
+      p-4
+      shadow-lg
+      space-y-4
+    `}
+					>
+						<p className="text-xs text-gray-400">Environment</p>
+
+						<div className="grid grid-cols-2 gap-4">
+							{/* Sunrise */}
+							<div className="space-y-1">
+								<p className="text-xs text-gray-400">🌅 Sunrise</p>
+								<p className="text-sm font-semibold text-white">
+									{data?.sunrise
+										? new Date(data.sunrise).toLocaleTimeString("ja-JP", {
+												hour: "2-digit",
+												minute: "2-digit",
+											})
+										: "--:--"}
+								</p>
+							</div>
+
+							{/* Sunset */}
+							<div className="space-y-1">
+								<p className="text-xs text-gray-400">🌇 Sunset</p>
+								<p className="text-sm font-semibold text-white">
+									{data?.sunset
+										? new Date(data.sunset).toLocaleTimeString("ja-JP", {
+												hour: "2-digit",
+												minute: "2-digit",
+											})
+										: "--:--"}
+								</p>
+							</div>
+						</div>
+					</div>
+				)}
 			</div>
 		</div>
 	);

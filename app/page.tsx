@@ -21,7 +21,6 @@ import type HistoryType from "@/app/types/HistoryType";
 import colors from "@/data/colorData";
 import colorsRGB from "@/data/colorRGBData";
 import { supabase } from "@/lib/supabase";
-import SunMain from "@@/components/sun/sunMain";
 
 type MainSelectionProps = {
 	$background: string;
@@ -65,25 +64,6 @@ export default function Home() {
 	const [cookieConsent, setCookieConsent] = useState<
 		"accepted" | "rejected" | null
 	>(null);
-
-	const [profile, setProfile] = useState<any>(null);
-
-	useEffect(() => {
-		const fetchProfile = async () => {
-			const {
-				data: { user },
-			} = await supabase.auth.getUser();
-			if (user) {
-				const { data } = await supabase
-					.from("profiles")
-					.select("*")
-					.eq("id", user.id)
-					.single();
-				setProfile(data);
-			}
-		};
-		fetchProfile();
-	}, []);
 
 	useEffect(() => {
 		const fetch = async () => {
@@ -317,7 +297,6 @@ export default function Home() {
 			<Modal isOpen={isLapsOpen} setIsOpen={setIsLapsOpen} title="Laps">
 				<LapsContent />
 			</Modal>
-			{profile && profile.plan !== "free" && <SunMain plan={profile.plan} />}
 		</MainSelection>
 	);
 }
