@@ -77,6 +77,10 @@ export default function HeaderMain({
 	const [subscriptionEnd, setSubscriptionEnd] = useState<string | null>(null);
 
 	useEffect(() => {
+		console.log(background);
+	}, [background]);
+
+	useEffect(() => {
 		const fetchPlan = async () => {
 			const {
 				data: { user },
@@ -405,7 +409,7 @@ export default function HeaderMain({
 
       shadow-md`}
 				>
-					{background === "Random" ? (
+					{background === "Random" || background === "null" ? (
 						<p
 							className={`text-sm ${
 								isDarkMode ? "text-white/70" : "text-gray-600"
@@ -414,11 +418,18 @@ export default function HeaderMain({
 							Random
 						</p>
 					) : !background.endsWith(".png") ? (
-						<>
-							<BackgroundDesc isDarkMode={isDarkMode} />
-							<span className="block h-[1px] w-full bg-gray-200 rounded-full"></span>
-						</>
-					) : null}
+						<BackgroundDesc isDarkMode={isDarkMode} />
+					) : (
+						<p
+							className={`text-sm ${
+								isDarkMode ? "text-white/70" : "text-gray-600"
+							}`}
+						>
+							{background.split(".")[0]}
+						</p>
+					)}
+
+					<span className="block h-[1px] w-full bg-gray-200 rounded-full"></span>
 
 					<NowTimeZone isDarkMode={isDarkMode} isNowTimeZone={isNowTimeZone} />
 				</div>
@@ -572,26 +583,22 @@ export default function HeaderMain({
 					isDarkMode={isDarkMode}
 				/>
 
-				{background === "Random" ? (
+				{background === "Random" || background === "null" ? (
 					<p
-						className={`font-bold text-sm ${
-							!isDarkMode ? "text-gray-700" : "text-white"
-						}`}
+						className={`font-bold text-sm ${!isDarkMode ? "text-gray-700" : "text-white"}`}
 					>
 						Random
 					</p>
 				) : !background.endsWith(".png") ? (
 					<BackgroundDesc isDarkMode={isDarkMode} />
 				) : (
-					background === "null" && (
-						<p
-							className={`font-bold text-sm ${
-								!isDarkMode ? "text-gray-700" : "text-white"
-							}`}
-						>
-							Random
-						</p>
-					)
+					<p
+						className={`font-bold text-sm ${
+							isDarkMode ? "text-white" : "text-gray-600"
+						}`}
+					>
+						{background.split(".")[0]}
+					</p>
 				)}
 
 				{navigatorPermission && (
