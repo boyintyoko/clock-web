@@ -582,7 +582,17 @@ export default function HeaderMain({
 					</p>
 				) : !background.endsWith(".png") ? (
 					<BackgroundDesc isDarkMode={isDarkMode} />
-				) : null}
+				) : (
+					background === "null" && (
+						<p
+							className={`font-bold text-sm ${
+								!isDarkMode ? "text-gray-700" : "text-white"
+							}`}
+						>
+							Random
+						</p>
+					)
+				)}
 
 				{navigatorPermission && (
 					<NavigatorPermisson

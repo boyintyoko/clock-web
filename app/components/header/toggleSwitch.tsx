@@ -1,3 +1,6 @@
+import { useEffect, useRef } from "react";
+import { supabase } from "@/lib/supabase";
+
 type Props = {
 	handleSwitchChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 	isDarkMode: boolean;
@@ -7,6 +10,29 @@ export default function ToggleSwitch({
 	handleSwitchChange,
 	isDarkMode,
 }: Props) {
+	const isFirstRender = useRef(true);
+
+	useEffect(() => {
+		if (isFirstRender.current) {
+			isFirstRender.current = false;
+			return;
+		}
+
+		const save = async () => {
+			const { data: userData } = await supabase.auth.getUser();
+			const user = userData.user;
+
+			if (!user) return;
+
+			await supabase.from("settings").upsert({
+				user_id: user.id,
+				dark_mode: !isDarkMode,
+			});
+		};
+
+		save();
+	}, [isDarkMode]);
+
 	return (
 		<label
 			htmlFor="switch"

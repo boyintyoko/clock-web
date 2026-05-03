@@ -66,6 +66,27 @@ export default function Home() {
 	>(null);
 
 	useEffect(() => {
+		const fetch = async () => {
+			const { data: userData } = await supabase.auth.getUser();
+			const user = userData.user;
+
+			if (!user) return;
+
+			const { data } = await supabase
+				.from("settings")
+				.select("dark_mode")
+				.eq("user_id", user.id)
+				.single();
+
+			if (data) {
+				setIsDarkMode(data.dark_mode);
+			}
+		};
+
+		fetch();
+	}, []);
+
+	useEffect(() => {
 		const saved = localStorage.getItem("cookie-consent");
 		if (saved === "accepted" || saved === "rejected") {
 			setCookieConsent(saved);

@@ -233,7 +233,9 @@ export default function ClockApp({ isDarkMode }: Props) {
 					<HourHand isDarkMode={isDarkMode} />
 				</div>
 
-				<div className="absolute inset-0 flex flex-col items-center justify-center rounded-full rotate-y-180 backface-hidden bg-white/5 backdrop-blur-xl border border-white/20 shadow-2xl px-8">
+				<div
+					className={` ${isDarkMode ? "text-black" : "text-white"} absolute inset-0 flex flex-col items-center justify-center rounded-full rotate-y-180 backface-hidden bg-white/5 backdrop-blur-xl border border-white/20 shadow-2xl px-8`}
+				>
 					{plan !== "free" && (
 						<>
 							<button

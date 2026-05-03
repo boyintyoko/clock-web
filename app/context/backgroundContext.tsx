@@ -35,6 +35,11 @@ export const BackgroundProvider = ({ children }: { children: ReactNode }) => {
 					.eq("user_id", user.id)
 					.single();
 
+				if (!error && data?.background === null) {
+					setBackground("null");
+					return;
+				}
+
 				if (!error && data?.background) {
 					setBackground(data.background);
 					return;
