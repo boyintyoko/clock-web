@@ -40,6 +40,26 @@ type SunData = {
 	sunset: string;
 };
 
+type WindData = {
+	latitude: number;
+	longitude: number;
+	generationtime_ms: number;
+	utc_offset_seconds: number;
+	timezone: string;
+	timezone_abbreviation: string;
+	elevation: number;
+	current: {
+		time: string;
+		interval: number;
+		wind_speed_10m: number;
+	};
+	current_units: {
+		time: string;
+		interval: string;
+		wind_speed_10m: string;
+	};
+};
+
 export default function HeaderMain({
 	isDarkMode,
 	isNowTimeZone,
@@ -82,41 +102,47 @@ export default function HeaderMain({
 	const [subscriptionEnd, setSubscriptionEnd] = useState<string | null>(null);
 
 	const [data, setData] = useState<SunData | null>(null);
-	const [loading, setLoading] = useState(true);
+	const [wind, setWind] = useState<WindData | null>(null);
+
+	useEffect(() => {
+		navigator.geolocation.getCurrentPosition(async (pos) => {
+			const { latitude, longitude } = pos.coords;
+
+			const res = await fetch(
+				`https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current=wind_speed_10m`,
+			);
+
+			const data = await res.json();
+
+			setWind(data);
+		});
+	}, []);
 
 	useEffect(() => {
 		if (!navigator.geolocation) {
-			setLoading(false);
 			return;
 		}
 
-		navigator.geolocation.getCurrentPosition(
-			async (pos) => {
-				try {
-					const { latitude, longitude } = pos.coords;
+		navigator.geolocation.getCurrentPosition(async (pos) => {
+			try {
+				const { latitude, longitude } = pos.coords;
 
-					const res = await fetch(
-						`https://api.sunrise-sunset.org/json?lat=${latitude}&lng=${longitude}&formatted=0&tzid=Asia/Tokyo`,
-					);
+				const res = await fetch(
+					`https://api.sunrise-sunset.org/json?lat=${latitude}&lng=${longitude}&formatted=0&tzid=Asia/Tokyo`,
+				);
 
-					if (!res.ok) throw new Error("API error");
+				if (!res.ok) throw new Error("API error");
 
-					const json = await res.json();
+				const json = await res.json();
 
-					setData({
-						sunrise: json.results.sunrise,
-						sunset: json.results.sunset,
-					});
-				} catch (e) {
-					console.log(e);
-				} finally {
-					setLoading(false);
-				}
-			},
-			() => {
-				setLoading(false);
-			},
-		);
+				setData({
+					sunrise: json.results.sunrise,
+					sunset: json.results.sunset,
+				});
+			} catch (e) {
+				console.log(e);
+			}
+		});
 	}, []);
 
 	useEffect(() => {
@@ -528,17 +554,18 @@ export default function HeaderMain({
 				{plan !== "free" && (
 					<div
 						className={`
-    grid grid-cols-2 gap-4
-    p-4
-
+    grid grid-cols-3 gap-4
+    p-5
     rounded-2xl
     border
+    shadow-lg
+    backdrop-blur-md
+    transition-all
 
     ${isDarkMode ? "bg-white/5 border-white/10" : "bg-black/5 border-black/10"}
-
-    shadow-lg backdrop-blur-md
   `}
 					>
+						{/* Sunrise */}
 						<div className="flex flex-col gap-1">
 							<p
 								className={`text-xs ${isDarkMode ? "text-white/60" : "text-black/60"}`}
@@ -557,6 +584,7 @@ export default function HeaderMain({
 							</p>
 						</div>
 
+						{/* Sunset */}
 						<div className="flex flex-col gap-1">
 							<p
 								className={`text-xs ${isDarkMode ? "text-white/60" : "text-black/60"}`}
@@ -572,6 +600,23 @@ export default function HeaderMain({
 											minute: "2-digit",
 										})
 									: "--:--"}
+							</p>
+						</div>
+
+						<div className="flex flex-col gap-1">
+							<p
+								className={`text-xs ${isDarkMode ? "text-white/60" : "text-black/60"}`}
+							>
+								🌬 Wind
+							</p>
+							<p
+								className={`text-lg font-semibold text-sm ${isDarkMode ? "text-white" : "text-black"}`}
+							>
+								{wind?.current?.wind_speed_10m !== undefined
+									? `${wind.current.wind_speed_10m} ${
+											wind.current_units?.wind_speed_10m ?? "m/s"
+										}`
+									: "--"}
 							</p>
 						</div>
 					</div>
@@ -883,19 +928,18 @@ export default function HeaderMain({
 				{plan !== "free" && (
 					<div
 						className={`
-      bg-black/40
-      backdrop-blur-xl
-      border border-white/10
-      rounded-2xl
-      p-4
-      shadow-lg
-      space-y-4
-    `}
+    bg-black/40
+    backdrop-blur-xl
+    border border-white/10
+    rounded-2xl
+    p-4
+    shadow-lg
+    space-y-4
+  `}
 					>
 						<p className="text-xs text-gray-400">Environment</p>
 
-						<div className="grid grid-cols-2 gap-4">
-							{/* Sunrise */}
+						<div className="grid grid-cols-3 gap-4">
 							<div className="space-y-1">
 								<p className="text-xs text-gray-400">🌅 Sunrise</p>
 								<p className="text-sm font-semibold text-white">
@@ -908,7 +952,6 @@ export default function HeaderMain({
 								</p>
 							</div>
 
-							{/* Sunset */}
 							<div className="space-y-1">
 								<p className="text-xs text-gray-400">🌇 Sunset</p>
 								<p className="text-sm font-semibold text-white">
@@ -918,6 +961,15 @@ export default function HeaderMain({
 												minute: "2-digit",
 											})
 										: "--:--"}
+								</p>
+							</div>
+
+							<div className="space-y-1">
+								<p className="text-xs text-gray-400">🌬 Wind</p>
+								<p className="text-sm font-semibold text-white">
+									{wind?.current?.wind_speed_10m !== undefined
+										? `${wind.current.wind_speed_10m} ${wind.current_units?.wind_speed_10m ?? "m/s"}`
+										: "--"}
 								</p>
 							</div>
 						</div>
