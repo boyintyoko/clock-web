@@ -575,18 +575,30 @@ export default function HeaderMain({
 						</div>
 					</div>
 				)}
-				<div className="bg-black/40 backdrop-blur-md border border-white/20 rounded-2xl px-4 py-3 shadow-lg flex gap-2">
+				<div
+					className={`backdrop-blur-md border rounded-2xl px-4 py-3 shadow-lg flex gap-2
+  ${isDarkMode ? "bg-white/5 border-white/10" : "bg-black/5 border-black/10"}`}
+				>
 					<div className="flex items-center gap-2">
-						<span className="text-xs text-gray-300">Plan:</span>
+						<span
+							className={`text-xs ${
+								isDarkMode ? "text-gray-300" : "text-gray-600"
+							}`}
+						>
+							Plan:
+						</span>
+
 						<span
 							className={`text-sm font-semibold px-2 py-0.5 rounded-full
-        ${
-					plan === "premium_plus"
-						? "bg-purple-500/20 text-purple-300"
-						: plan === "premium"
-							? "bg-yellow-500/20 text-yellow-300"
-							: "bg-gray-500/20 text-gray-300"
-				}`}
+      ${
+				plan === "premium_plus"
+					? "bg-purple-500/20 text-purple-300"
+					: plan === "premium"
+						? "bg-yellow-500/20 text-yellow-300"
+						: isDarkMode
+							? "bg-gray-500/20 text-gray-300"
+							: "bg-gray-300/40 text-gray-700"
+			}`}
 						>
 							{plan === "premium_plus"
 								? "Premium+"
@@ -597,15 +609,18 @@ export default function HeaderMain({
 					</div>
 
 					{subscriptionEnd && (
-						<p className="text-xs text-gray-400 mt-2">
+						<p
+							className={`text-xs mt-2 ${
+								isDarkMode ? "text-gray-400" : "text-gray-600"
+							}`}
+						>
 							Expires:{" "}
-							<span className="text-white">
+							<span className={isDarkMode ? "text-white" : "text-black"}>
 								{new Date(subscriptionEnd).toLocaleDateString()}
 							</span>
 						</p>
 					)}
 				</div>
-
 				<div>
 					<LogoutButton isDarkMode={isDarkMode} />
 				</div>
@@ -664,7 +679,11 @@ export default function HeaderMain({
           max-2xl:hidden
           flex flex-row-reverse gap-5 items-center
           absolute top-2 right-2 z-10 hover:top-3 transition-all
-          ${isDarkMode ? "bg-black text-white" : "bg-white text-black"}
+        ${
+					isDarkMode
+						? "bg-white/10 border-white/20 text-gray-700"
+						: "bg-black/5 border-black/10 text-white/80"
+				}
           bg-opacity-50
           rounded-md
           p-2
@@ -837,6 +856,63 @@ export default function HeaderMain({
 			</Modal>
 
 			<div className="absolute top-20 right-2 max-2xl:hidden w-[260px] space-y-3">
+				{plan !== "free" && (
+					<div
+						className={`
+    grid grid-cols-2 divide-x
+    rounded-2xl
+    border
+    shadow-md
+    backdrop-blur-md
+    transition-all duration-300
+    overflow-hidden
+
+    ${
+			!isDarkMode
+				? "bg-white/5 border-white/10 divide-white/10"
+				: "bg-black/5 border-black/10 divide-black/10"
+		}
+
+    hover:scale-[1.01] hover:shadow-lg
+  `}
+					>
+						<div className="flex flex-col items-center justify-center py-4 gap-1">
+							<p
+								className={`text-xs tracking-wide ${isDarkMode ? "text-white/60" : "text-black/60"}`}
+							>
+								🌅 Sunrise
+							</p>
+							<p
+								className={`text-2xl font-semibold ${isDarkMode ? "text-white" : "text-black"}`}
+							>
+								{data?.sunrise
+									? new Date(data.sunrise).toLocaleTimeString("ja-JP", {
+											hour: "2-digit",
+											minute: "2-digit",
+										})
+									: "--:--"}
+							</p>
+						</div>
+
+						<div className="flex flex-col items-center justify-center py-4 gap-1">
+							<p
+								className={`text-xs tracking-wide ${isDarkMode ? "text-white/60" : "text-black/60"}`}
+							>
+								🌇 Sunset
+							</p>
+							<p
+								className={`text-2xl font-semibold ${isDarkMode ? "text-white" : "text-black"}`}
+							>
+								{data?.sunset
+									? new Date(data.sunset).toLocaleTimeString("ja-JP", {
+											hour: "2-digit",
+											minute: "2-digit",
+										})
+									: "--:--"}
+							</p>
+						</div>
+					</div>
+				)}
 				<div
 					className="
     rounded-2xl
@@ -884,65 +960,6 @@ export default function HeaderMain({
 						</div>
 					)}
 				</div>
-
-				{plan !== "free" && (
-					<div
-						className={`
-    grid grid-cols-2 divide-x
-    rounded-2xl
-    border
-    shadow-md
-    backdrop-blur-md
-    transition-all duration-300
-    overflow-hidden
-
-    ${
-			isDarkMode
-				? "bg-white/5 border-white/10 divide-white/10"
-				: "bg-black/5 border-black/10 divide-black/10"
-		}
-
-    hover:scale-[1.01] hover:shadow-lg
-  `}
-					>
-						<div className="flex flex-col items-center justify-center py-4 gap-1">
-							<p
-								className={`text-xs tracking-wide ${!isDarkMode ? "text-white/60" : "text-black/60"}`}
-							>
-								🌅 Sunrise
-							</p>
-							<p
-								className={`text-2xl font-semibold ${!isDarkMode ? "text-white" : "text-black"}`}
-							>
-								{data?.sunrise
-									? new Date(data.sunrise).toLocaleTimeString("ja-JP", {
-											hour: "2-digit",
-											minute: "2-digit",
-										})
-									: "--:--"}
-							</p>
-						</div>
-
-						{/* Sunset */}
-						<div className="flex flex-col items-center justify-center py-4 gap-1">
-							<p
-								className={`text-xs tracking-wide ${!isDarkMode ? "text-white/60" : "text-black/60"}`}
-							>
-								🌇 Sunset
-							</p>
-							<p
-								className={`text-2xl font-semibold ${!isDarkMode ? "text-white" : "text-black"}`}
-							>
-								{data?.sunset
-									? new Date(data.sunset).toLocaleTimeString("ja-JP", {
-											hour: "2-digit",
-											minute: "2-digit",
-										})
-									: "--:--"}
-							</p>
-						</div>
-					</div>
-				)}
 			</div>
 		</div>
 	);
